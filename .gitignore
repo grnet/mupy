@@ -1,0 +1,5 @@
+settings.py
+urls.py
+mupy.db
+*.pyc
+

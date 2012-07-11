@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% block extrahead %}
+<script type="text/javascript">
+		var showGraphs = false;
+		var allLoaded = false;
+		var catLoaded = false;
+		var activeTabIndex = false;
+		graphs_arr = new Array();
+		selectedKeys = new Array();
+		urlTabArray = ["{% url getjson_all %}", "{% url getjson_category %}"]
+		$(document).ready(function(){
+			$("#save_dialog").hide();
+			$( "#tabs" ).tabs({
+				   show: function(event, ui) {
+					   clearGraphData();
+					   if (ui.index == 0 || ui.index == 1){
+						   activeTabIndex = ui.index;
+						   $("#tree_menu_"+ui.index).dynatree({
+								checkbox: true,
+								selectMode: 3,
+								ajaxDefaults: { 
+							        cache: true, // false: Append random '_' argument to the request url to prevent caching.
+							    },
+
+							    initAjax: 
+							    {
+							    	url: urlTabArray[ui.index],
+							    },
+							    onPostInit: function(isReloading, isError) {
+							    	allLoaded = true;
+									$("#tree_menu_"+activeTabIndex).dynatree("getRoot").visit(function(node){
+						    		 	if ($.inArray(node.data.key, selectedKeys) != -1){
+											node.select(true);
+						    		 	}
+						    		 	else{
+						    		 		node.select(false);
+						    		 	}
+									});
+							    },
+							    onSelect: function(select, node) {
+							    	var selNodes = node.tree.getSelectedNodes();
+							    	clearGraphData();
+								    selectedKeys = new Array();
+								    var selKeys = $.map(selNodes, function(node){
+									    if (node.hasChildren() == false){
+									    		countGraphs = countGraphs +1;
+									    		title = node.data.title;
+									    		nodename=node.getParent().getParent().data.title;
+									    		graphObj = new Object();
+									    		graphObj.nodename = nodename;
+									    		graphObj.title = title;
+									    		graphObj.imgurl = node.data.url
+									    		graphs_arr.push(graphObj);
+									    		$("#counted_graphs").html(countGraphs+' selected');
+									    		selectedKeys.push(node.data.key.replace("graph_",""));
+									    		//$("#selected_list").append('<span style="font-size:9px;">'+nodename+':'+title+'</span>, ')
+											}
+								    });
+							    }, 
+							});
+					   }
+				   },
+				   select: function(event, ui) {
+					   if (allLoaded == true){
+						   $("#tree_menu_"+activeTabIndex).dynatree("getRoot").visit(function(node){
+								node.select(false);
+							});
+					   }
+				   }
+				});
+			$("#fetch")
+				.button()
+				.click(function(){
+					$("#graphs").empty();
+					var period = $("input[@name=period]:checked").val();
+					for(var i=0, l=graphs_arr.length; i<l; i++){
+						graphitem = graphs_arr[i];						
+						$("#graphs").append("<li class='graph_li'><div class='graph_blockfloat'>"+graphitem.nodename+"<br>"+graphitem.title+"<br><br><img class='graph_class' src='"+graphitem.imgurl+"-"+period+".png'/></div></li>");
+					}
+					return false;
+				});
+			$("#deselect")
+			.click(function(){
+				if (allLoaded == true){
+					$("#tree_menu_"+activeTabIndex).dynatree("getRoot").visit(function(node){
+							node.select(false);
+						});
+				   }
+			clearGraphData();
+			return false
+			});
+			
+			$("#save")
+				.button()
+				.click(function(){
+					if (selectedKeys.length == 0){
+						alert("Select at least a graph from the left menu")
+						return false;
+					}
+				$("#save_dialog").toggle("slow");
+				return false
+			});
+			
+			$("#saveThisQuery")
+			.button()
+			.click(function(){
+				if (selectedKeys.length == 0){
+					alert("Select at least a graph from the left menu")
+				}
+				else{
+					$("#dialogContent").html('Not implemented yet. Will send an AJAX POST request with values:\n'+selectedKeys.join(','));
+					$( "#dialog" ).dialog( "open" );
+				}
+				return false;
+				
+				//console.log(selectedKeys.join(','));
+			});
+			
+			$( "#dialog" ).dialog({
+				autoOpen: false,
+				width: 600,
+				show: "blind",
+				hide: "blind"
+			});
+
+		});
+		
+		function clearGraphData(){
+			graphs_arr = new Array();
+			countGraphs = 0;
+			$("#counted_graphs").html("0 graphs selected");
+			$("#graphs").empty();
+		}
+		</script>
+{% endblock %}
+{% block content %}
+			<div id="results_wrapper">
+
+				
+				<div id="tabs">
+					<div style="text-align:center;">Select graphs</div>
+					<ul>
+						<li><a href="#tree_menu_0">All</a></li>
+						<li><a href="#tree_menu_1">By Type</a></li>
+						<li><a href="#saved">Saved</a></li>
+					</ul>
+					<div id="tree_menu_0"></div>
+					<div id="tree_menu_1"></div>
+					<div id="saved">(coming soon...)</div>
+				</div>
+				<div id='graphs_holder'>
+					
+					<div id="graph_results_menu">
+						<div id='selected_list'>Choose graph period:<br>
+							<form action="">
+								<input type="radio" name="period" value="day" checked="checked"> day 
+								<input type="radio" name="period" value="week"> week 
+								<input type="radio" name="period" value="month"> month 
+								<input type="radio" name="period" value="year"> year<br>
+							</form>
+						</div>
+						<div id="button_holder">
+							<div id="counted_graphs_holder"><span id="counted_graphs">0 graphs selected</span> <span>(<a href="#" id="deselect">deselect all</a>)</span></div>
+							<button id="fetch">Fetch</button><button id="save">Save...</button>
+						</div>
+						<div id="save_dialog" style="display:none">
+							<label for="saveQuery">Name</label>
+							<input name="saveQuery" id="saveQuery" type="text"></input>
+							<button id="saveThisQuery">Save</button>
+						</div>
+					</div>
+					<ul id="graphs"></ul>
+				</div>
+				<div style="clear:both"></div>
+			</div>
+			<div id="dialog"><p id="dialogContent" style="font-size: 10pt"></p></div>
+{% endblock %}

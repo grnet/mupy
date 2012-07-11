@@ -1,0 +1,8 @@
+from django.conf.urls.defaults import patterns, include, url
+
+urlpatterns = patterns('',
+    
+    url(r'^$', 'mupy.muparse.views.home', name='home'),
+    url(r'^json_cat/$', 'mupy.muparse.views.get_node_tree_category', name='getjson_category'),
+    url(r'^json/$', 'mupy.muparse.views.get_node_tree', name='getjson_all'),
+    )

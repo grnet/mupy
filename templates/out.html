@@ -6,9 +6,20 @@
 		var catLoaded = false;
 		var activeTabIndex = false;
 		graphs_arr = new Array();
-		selectedKeys = new Array();
-		urlTabArray = ["{% url getjson_all %}", "{% url getjson_category %}"]
+		var searchesNames = new Array();
+		var selectedKeys = new Array();
+		urlTabArray = ["{% url getjson_all %}", "{% url getjson_category %}"];
+		countGraphs = 0;
+		var loaded_graphs = new Array();
+				
+		{% if saved %}
+			{% for sav in saved %}
+				searchesNames.push("{{sav}}");
+			{% endfor %}
+		{% endif %}
 		$(document).ready(function(){
+			$("#counted_graphs").html("0 graphs selected");
+			$("#graphs").empty();
 			$("#save_dialog").hide();
 			$( "#tabs" ).tabs({
 				   show: function(event, ui) {
@@ -21,7 +32,6 @@
 								ajaxDefaults: { 
 							        cache: true, // false: Append random '_' argument to the request url to prevent caching.
 							    },
-
 							    initAjax: 
 							    {
 							    	url: urlTabArray[ui.index],
@@ -29,7 +39,13 @@
 							    onPostInit: function(isReloading, isError) {
 							    	allLoaded = true;
 									$("#tree_menu_"+activeTabIndex).dynatree("getRoot").visit(function(node){
-						    		 	if ($.inArray(node.data.key, selectedKeys) != -1){
+										if (node.hasChildren() == false){
+											nodekey = node.data.key.replace("graph_", "");
+										}
+										else{
+											nodekey = node.data.key;
+										}
+						    		 	if ($.inArray(nodekey, loaded_graphs) != -1){
 											node.select(true);
 						    		 	}
 						    		 	else{
@@ -40,25 +56,24 @@
 							    onSelect: function(select, node) {
 							    	var selNodes = node.tree.getSelectedNodes();
 							    	clearGraphData();
-								    selectedKeys = new Array();
 								    var selKeys = $.map(selNodes, function(node){
 									    if (node.hasChildren() == false){
 									    		countGraphs = countGraphs +1;
-									    		title = node.data.title;
-									    		nodename=node.getParent().getParent().data.title;
 									    		graphObj = new Object();
-									    		graphObj.nodename = nodename;
-									    		graphObj.title = title;
+									    		graphObj.nodename = node.data.nodename;
+									    		graphObj.title = node.data.title;
 									    		graphObj.imgurl = node.data.url
-									    		graphs_arr.push(graphObj);
-									    		$("#counted_graphs").html(countGraphs+' selected');
+									    		graphObj.pageurl = node.data.pageurl
+									    		graphObj.nodeurl = node.data.nodeurl
+									    		graphs_arr.push(graphObj);									    			
 									    		selectedKeys.push(node.data.key.replace("graph_",""));
-									    		//$("#selected_list").append('<span style="font-size:9px;">'+nodename+':'+title+'</span>, ')
+									    		$("#counted_graphs").html(selectedKeys.length+' graphs selected');
 											}
 								    });
 							    }, 
 							});
 					   }
+					   
 				   },
 				   select: function(event, ui) {
 					   if (allLoaded == true){
@@ -72,11 +87,7 @@
 				.button()
 				.click(function(){
 					$("#graphs").empty();
-					var period = $("input[@name=period]:checked").val();
-					for(var i=0, l=graphs_arr.length; i<l; i++){
-						graphitem = graphs_arr[i];						
-						$("#graphs").append("<li class='graph_li'><div class='graph_blockfloat'>"+graphitem.nodename+"<br>"+graphitem.title+"<br><br><img class='graph_class' src='"+graphitem.imgurl+"-"+period+".png'/></div></li>");
-					}
+					fetchGraphs();
 					return false;
 				});
 			$("#deselect")
@@ -108,12 +119,34 @@
 					alert("Select at least a graph from the left menu")
 				}
 				else{
-					$("#dialogContent").html('Not implemented yet. Will send an AJAX POST request with values:\n'+selectedKeys.join(','));
-					$( "#dialog" ).dialog( "open" );
+					if ($.inArray($("#id_description").val(), searchesNames) != -1){
+						var r=confirm("There is a saved search with the same name: "+$("#id_description").val()+"\n"
+								+"Press OK to ovewrite or Cancel to cancel save");
+						if (r==false){
+							$("#id_is_edit").empty();
+							return false;
+						}
+						else{
+							$("#id_is_edit").val('edit');
+						}
+	    		 	}
+	    		 	
+					$("#id_graphs").val(selectedKeys.join(','));
+					$("#id_display_type").val(activeTabIndex);
+					data = $("#saveQueryForm").serialize();
+					$.post('{% url save_search %}', data, 
+						function(out) {
+						  alert(out.result);
+						  if (out.errors == "None"){
+							  searchesNames.push($("#id_description").val());
+						  }
+						  $("#id_is_edit").empty();
+						  $("#save_dialog").toggle("slow");
+						}
+					);
+					
 				}
 				return false;
-				
-				//console.log(selectedKeys.join(','));
 			});
 			
 			$( "#dialog" ).dialog({
@@ -130,28 +163,93 @@
 			countGraphs = 0;
 			$("#counted_graphs").html("0 graphs selected");
 			$("#graphs").empty();
+			selectedKeys = new Array();
 		}
+		
+		function fetchGraphs(){
+			var period = $("input:radio[name=period]:checked").val();
+			var grouptype = $("input:radio[name=grouping]:checked").val();
+			grouppedgraphs = groupGraphs(grouptype);
+			for (var j=0, k=grouppedgraphs.length; j<k; j++){
+				graph_group = grouppedgraphs[j];
+				$("#graphs").append("<div class='group_graph_holder'><h3 class='group_title'>"+graph_group[grouptype]+"</h3><ul id='graph_group_"+j+"' class='graphs_no_list'></ul></div>")
+				for(var i=0, l=graph_group.graphs.length; i<l; i++){
+					graphitem = graph_group.graphs[i];
+					$("#graph_group_"+j+"").append(
+							"<li class='graph_li'>"+
+								"<div class='graph_blockfloat'>"+
+								"<a href='"+graphitem.nodeurl+"' target='_blank'>"+
+									graphitem.nodename+"</a>"+
+									"<br>"+
+									"<a href='"+graphitem.pageurl+"' target='_blank'>"+
+									graphitem.title+"<br><br>"+
+									"<img class='graph_class' src='"+graphitem.imgurl+"-"+period+".png'/></a>"+
+							"</div></li>");
+				}
+			}
+		}
+		function groupGraphs(type){
+			graphGroupArr = new Array();
+			graphGroup = new Object();
+			graphGroup.graphs = new Array();
+			for(var i=0, l=graphs_arr.length; i<l; i++){
+				graphitem = graphs_arr[i];
+				if (type == 'nogroup')
+				{
+					graphGroup[type] = "No grouping"
+					graphGroup.graphs.push(graphitem);
+				}
+				else
+				{
+					found = findIndexByKeyValue(graphGroupArr, type, graphitem[type]);
+					if (found == null){
+						graphGroup = new Object();
+						graphGroup.graphs = new Array();
+						graphGroup[type] = graphitem[type];
+						graphGroup.graphs.push(graphitem);
+						graphGroupArr.push(graphGroup);
+					}
+					else{
+						graphGroupArr[found].graphs.push(graphitem)
+					}
+				}
+			}
+			if (type == 'nogroup')
+			{
+				graphGroupArr.push(graphGroup);
+			}
+			return graphGroupArr;
+			
+		}
+		function findIndexByKeyValue(obj, key, value)
+		{
+		    for (var i = 0; i < obj.length; i++) {
+		        if (obj[i][key] == value) {
+		            return i;
+		        }
+		    }
+		    return null;
+		}
+		
 		</script>
 {% endblock %}
 {% block content %}
 			<div id="results_wrapper">
 
-				
 				<div id="tabs">
 					<div style="text-align:center;">Select graphs</div>
 					<ul>
 						<li><a href="#tree_menu_0">All</a></li>
 						<li><a href="#tree_menu_1">By Type</a></li>
-						<li><a href="#saved">Saved</a></li>
+						<li><a href="{% url saved_searches %}">Saved</a></li>
 					</ul>
 					<div id="tree_menu_0"></div>
 					<div id="tree_menu_1"></div>
-					<div id="saved">(coming soon...)</div>
 				</div>
 				<div id='graphs_holder'>
 					
 					<div id="graph_results_menu">
-						<div id='selected_list'>Choose graph period:<br>
+						<div id='selected_list' class='options_menu'>Choose graph period:<br>
 							<form action="">
 								<input type="radio" name="period" value="day" checked="checked"> day 
 								<input type="radio" name="period" value="week"> week 
@@ -159,17 +257,30 @@
 								<input type="radio" name="period" value="year"> year<br>
 							</form>
 						</div>
+						<div id='grouping_list' class='options_menu'>Choose Grouping:<br>
+							<form action="">
+								<input type="radio" name="grouping" value="nogroup" checked="checked"> none 
+								<input type="radio" name="grouping" value="nodename"> hostname
+								<input type="radio" name="grouping" value="title"> type<br>
+							</form>
+						</div>
 						<div id="button_holder">
 							<div id="counted_graphs_holder"><span id="counted_graphs">0 graphs selected</span> <span>(<a href="#" id="deselect">deselect all</a>)</span></div>
 							<button id="fetch">Fetch</button><button id="save">Save...</button>
 						</div>
 						<div id="save_dialog" style="display:none">
-							<label for="saveQuery">Name</label>
-							<input name="saveQuery" id="saveQuery" type="text"></input>
-							<button id="saveThisQuery">Save</button>
+							<form action="" id="saveQueryForm">
+								{% csrf_token %}
+								<label for="id_description">Description</label>
+								<input name="description" id="id_description" type="text"></input>
+								<input type="hidden" id="id_graphs" name="graphs"></input>
+								<input type="hidden" id="id_display_type" name="display_type"></input>
+								<input type="hidden" id="id_is_edit" name="is_edit"></input>
+								<button id="saveThisQuery">Save</button>
+							</form>
 						</div>
 					</div>
-					<ul id="graphs"></ul>
+					<div id="graphs"></div>
 				</div>
 				<div style="clear:both"></div>
 			</div>

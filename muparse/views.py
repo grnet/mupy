@@ -1,15 +1,19 @@
-# Create your views here.
 from django.shortcuts import render_to_response
 from django.core.context_processors import request
 from django.template.context import RequestContext
 from django.http import HttpResponse
 from mupy.muparse.models import *
+from mupy.muparse.forms import *
 from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import never_cache
 import json
 
 def home(request):
-#    groups = NodeGroup.objects.all().select_related(depth=3)
-    return render_to_response('out.html', context_instance =RequestContext(request))
+    saved_searches = SavedSearch.objects.all()
+    searches = []
+    if saved_searches:
+        searches.extend([s.description for s in saved_searches])
+    return render_to_response('out.html', {'saved':searches}, context_instance =RequestContext(request))
 
 @cache_page(60 * 60 * 24 *5)
 def get_node_tree(request):
@@ -26,19 +30,10 @@ def get_node_tree(request):
             ndict['url'] = node.url
             nlist.append(ndict)
             graphlist = []
-#            for graph in node.nodegraphs_set.all():
-#                graphdict = {}
-#                graphdict['name'] = graph.graph.name
-#                graphdict['slug'] = graph.graph.slug
-#                graphdict['url'] = graph.baseurl
-#                graphlist.append(graphdict)
-#            ndict['graphs'] = graphlist
         gdict['nodes'] = nlist
         glist.append(gdict)
     glist = json.dumps(glist)
     return render_to_response('out.html', {"glist":glist}, context_instance =RequestContext(request))
-#    return HttpResponse(glist, mimetype="application/json")
-
 
 @cache_page(60 * 60 * 24 *5)
 def get_node_tree(request):
@@ -89,9 +84,12 @@ def get_node_tree(request):
         gdict = {}
         gdict['type'] = "graph"
         gdict['title'] = graph.graph.name
+        gdict['nodename'] = graph.node.name
         gdict['slug'] = graph.graph.slug
         gdict['url'] = graph.baseurl
         gdict['key'] = "graph_%s" %(graph.pk)
+        gdict['pageurl'] = graph.pageurl
+        gdict['nodeurl'] = graph.node.url
         gcdict['children'].append(gdict)
         if (index == (len_graphs-1)):
             nlist.append(ndict)
@@ -116,8 +114,6 @@ def get_node_tree_category(request):
         
         if graph.graph.category.name not in parsed_graph_category:
             if parsed_graph_category:
-#                gcdict['children'] = graphs_list
-#                graphs_list = []
                 grlist.append(gcdict)
             gcdict = {}
             gcdict['title'] = graph.graph.category.name
@@ -135,9 +131,7 @@ def get_node_tree_category(request):
             gdict['children'] = []
             gcdict['children'].append(gdict)
             parsed_graph_name.append(graph.graph.name)
-        
-
-        
+                
         if graph.node.group.name not in parsed_group:
             grdict = {}
             grdict['title'] = graph.node.group.name
@@ -145,24 +139,70 @@ def get_node_tree_category(request):
             grdict['href'] = graph.node.group.url
             grdict['children'] = []
             grdict['type'] = "group"
-    #        grdict['children'].append(ndict)
             gdict['children'].append(grdict)
             parsed_group.append(graph.node.group.name)
 
         ndict = {}
-        ndict['title'] = graph.node.name
+        ndict['nodename'] = graph.node.name
+        ndict['title'] = graph.graph.name
         ndict['key'] = "graph_%s" %(graph.pk)
         ndict['url'] = graph.baseurl
+        ndict['pageurl'] = graph.pageurl
+        ndict['nodeurl'] = graph.node.url
         ndict['type'] = "graph"
         grdict['children'].append(ndict)
         
         if (index == (len_graphs-1)):
-#            nlist.append(ndict)
-#            grdict['children']= nlist
             grlist.append(gcdict)
-#            ndict['children'].append(gcdict)
    
     glist = json.dumps(grlist)
     return HttpResponse(glist, mimetype="application/json")
 
 
+@never_cache
+def save_search(request):
+    request_data = request.POST.copy()
+    graph_pks = request_data.get('graphs').split(',')
+    is_edit = request_data.get('is_edit')
+    request_data.setlist('graphs', graph_pks)
+    form = SavedSearchForm(request_data)
+    if is_edit == 'edit':
+        description = request_data.get('description')
+        try:
+            existinggraphsearch = SavedSearch.objects.get(description=description)
+            form = SavedSearchForm(request_data, instance=existinggraphsearch)            
+        except SavedSearch.DoesNotExist:
+            pass
+    if form.is_valid():
+        search = form.save(commit=False)
+        search.save()
+        form.save_m2m()
+        response = json.dumps({"result": "Successfully saved %s graphs as %s"%(len(graph_pks), search.description), 'errors': 'None'})
+        return HttpResponse(response, mimetype="application/json")
+    else:
+        response = json.dumps({"result": "Errors: %s" %(form.errors), 'errors': "True"})
+        return HttpResponse(response, mimetype="application/json")
+
+@never_cache
+def load_search(request, search_id=None):
+    savedsearches = SavedSearch.objects.get(pk=search_id)
+    graphs = []
+    graphs.extend(["%s"%(i.pk) for i in savedsearches.graphs.all()])
+    graphs = ','.join(graphs)
+    result = json.dumps({'result':graphs, 'display_type': savedsearches.display_type, 'description': savedsearches.description})
+    return HttpResponse(result, mimetype="application/json")
+
+@never_cache
+def delete_search(request, search_id=None):
+    try:
+        savedsearch = SavedSearch.objects.get(pk=search_id)
+        savedsearch.delete()
+        response = json.dumps({"result": "Successfully deleted %s"%(savedsearch.description), 'errors': 'None'})
+    except Exception as e:
+        response = json.dumps({"result": "Errors: %s" %(e), 'errors': "True"})
+    return HttpResponse(response, mimetype="application/json")
+
+@never_cache  
+def saved_searches(request):
+    saved_searches = SavedSearch.objects.all().order_by('description')
+    return render_to_response('saved_searches.html', {"saved":saved_searches}, context_instance =RequestContext(request))

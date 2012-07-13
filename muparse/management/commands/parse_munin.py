@@ -35,11 +35,13 @@ class Command(NoArgsCommand):
                     gc,created = GraphCategory.objects.get_or_create(name=metricCategory)
                     self.stdout.write('-Added Category: %s\n' % gc.name.encode('utf8'))
                     for graphCategory in graphCategories:
+                        pageUrl = "%s/%s/%s/%s" %(baseUrl, nodeGroup.a.text, n.name, graphCategory.a.get('href'))
+                        self.stdout.write('-Page URL: %s\n' % pageUrl.encode('utf8'))
                         t = graphCategory.findParent('tr').find_next_sibling('tr')
                         g,created = Graph.objects.get_or_create(name=graphCategory.a.text, slug=t.img.get('src').split('/')[-1:][0].split('-')[0], category=gc)
                         self.stdout.write('--Added Graph: %s\n' % g.name.encode('utf8'))
-                        baseurl = "%s/%s" %(baseUrl, t.img.get('src').split('.png')[0].split('-day')[0])
-                        nodegraph, created = NodeGraphs.objects.get_or_create(node=n, graph=g, baseurl=baseurl)
+                        baseurl = "%s%s" %(baseUrl, t.img.get('src').split('.png')[0].split('-day')[0])
+                        nodegraph, created = NodeGraphs.objects.get_or_create(node=n, graph=g, baseurl=baseurl, pageurl=pageUrl)
                         self.stdout.write('--Added NodeGraph: %s\n' % nodegraph)
 
 a = Node.objects.all()

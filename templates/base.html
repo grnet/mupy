@@ -44,13 +44,21 @@
     		margin: 0;
     		padding: 0;
 		}
+		.graphs_no_list{
+			list-style-type: none;
+    		margin: 0;
+    		padding: 0;
+    		display: inline-block;
+		}
 		#graphs_holder{
 			/*float: left;
 			width: 88%;*/
-			float: left;
+			/*float: left;*/
     		height: 100%;
     		text-align: center;
-    		width: 1600px;
+    		/*width: 1600px;*/
+    		display: table;
+    		min-width: 800px;
 		}
 		.graph_li{
 			float: left;
@@ -66,6 +74,30 @@
 		    position: relative;
 		    text-align: center;	
 		}
+		.graph_blockfloat a{
+			text-decoration: none;
+			color:	#1C94C4;
+		}
+		.graph_blockfloat a:hover{
+			text-decoration: none;
+			color:	#C77405;
+		}
+		.savedsearches_class a{
+			text-decoration: none;
+			color:	#1C94C4;
+		}
+		.savedsearches_class a:hover{
+			text-decoration: none;
+			color:	#C77405;
+		}
+		#deselect{
+			text-decoration: none;
+			color:	#1C94C4;
+		}
+		#deselect:hover{
+			text-decoration: none;
+			color:	#C77405;
+		}
 		#header {
  			height: 100px;
     		width: 990px;
@@ -75,10 +107,14 @@
     		border: 1px solid #DDDDDD;
     		color: #333333;
     		width: 400px;
-    		margin:	auto;
+    		margin:	0 auto;
+    		padding: 0;
     		
     	}
-    	#selected_list{
+    	.graph_class{
+    		border:	0px;
+    	}
+    	.options_menu{
     		height: 40px;
     		border-bottom: 1px solid #DDDDDD;
     	}
@@ -113,6 +149,13 @@
 		    text-shadow: 1px 1px 1px #FFFFFF;
 		    width: 110px;
 		    padding-top: 5px;
+		}
+		.group_title{
+			color: #727370;
+		}
+		.group_graph_holder{
+			min-height:200px;
+		}
 	</style>
 	{% block extrahead %}{% endblock %}	
 	</head>

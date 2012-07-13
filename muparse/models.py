@@ -40,12 +40,14 @@ class NodeGraphs(models.Model):
     node = models.ForeignKey(Node)
     graph = models.ForeignKey(Graph)
     baseurl = models.CharField(max_length=512)
+    pageurl = models.CharField(max_length=512)
     
     def __unicode__(self):
         return "%s:%s:%s" %(self.node, self.graph, self.baseurl)
 
 class SavedSearch(models.Model):
     description = models.CharField(max_length=255)
+    display_type = models.CharField(max_length=64)
     graphs = models.ManyToManyField(NodeGraphs, blank=True, null=True)
     
     def __unicode__(self):

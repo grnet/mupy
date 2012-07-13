@@ -21,6 +21,18 @@
 			$("#counted_graphs").html("0 graphs selected");
 			$("#graphs").empty();
 			$("#save_dialog").hide();
+			
+			$( "#tabs" ).resizable({
+				maxWidth: 400,
+				minWidth: 252,
+				handles: "e",
+				alsoResize: ".dynatree-container",
+				resize: function(event, ui) { 
+					$("ul.dynatree-container").css('height','auto');
+					$("ul.dynatree-container").css('width','auto'); 
+					$( "#tabs" ).css('height','auto');
+					}
+			});
 			$( "#tabs" ).tabs({
 				   show: function(event, ui) {
 					   clearGraphData();
@@ -86,6 +98,10 @@
 			$("#fetch")
 				.button()
 				.click(function(){
+					if (selectedKeys.length == 0){
+						alert("Select at least a graph from the left menu");
+						return false;
+					}
 					$("#graphs").empty();
 					fetchGraphs();
 					return false;
@@ -172,7 +188,11 @@
 			grouppedgraphs = groupGraphs(grouptype);
 			for (var j=0, k=grouppedgraphs.length; j<k; j++){
 				graph_group = grouppedgraphs[j];
-				$("#graphs").append("<div class='group_graph_holder'><h3 class='group_title'>"+graph_group[grouptype]+"</h3><ul id='graph_group_"+j+"' class='graphs_no_list'></ul></div>")
+				$("#graphs").append("<div class='group_graph_holder'><h3 class='group_title'><a href='#group'"+j+">"+graph_group[grouptype]+"</a></h3><ul id='graph_group_"+j+"' class='graphs_no_list'></ul></div>");
+				$(".group_graph_holder").accordion(
+							{collapsible: true,
+							autoHeight: false,
+							});
 				for(var i=0, l=graph_group.graphs.length; i<l; i++){
 					graphitem = graph_group.graphs[i];
 					$("#graph_group_"+j+"").append(
@@ -235,8 +255,9 @@
 {% endblock %}
 {% block content %}
 			<div id="results_wrapper">
-
-				<div id="tabs">
+				
+				
+				<div id="tabs" style="overflow: visible">
 					<div style="text-align:center;">Select graphs</div>
 					<ul>
 						<li><a href="#tree_menu_0">All</a></li>
@@ -246,6 +267,7 @@
 					<div id="tree_menu_0"></div>
 					<div id="tree_menu_1"></div>
 				</div>
+				
 				<div id='graphs_holder'>
 					
 					<div id="graph_results_menu">

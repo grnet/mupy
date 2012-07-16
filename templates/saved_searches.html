@@ -3,7 +3,7 @@
 							{% for s in saved %}
 							
 							<div class="savedsearches_class">(<a href="#" id="deletesearch_{{s.pk}}" style="text-decoration:none">
-<img src="/mupy/static/images/icon_deletelink.gif" border="0">
+<img src="/static/images/icon_deletelink.gif" border="0">
 </a>)  <a href="#" id="savedsearch_{{s.pk}}" class="savedsearches_class">{{s.description}} ({{s.graphs.all|length}})</a></div>
 							{% endfor %}
 						

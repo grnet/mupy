@@ -85,6 +85,7 @@ def get_node_tree(request):
         gdict['type'] = "graph"
         gdict['title'] = graph.graph.name
         gdict['nodename'] = graph.node.name
+        gdict['graphname'] = graph.graph.name
         gdict['slug'] = graph.graph.slug
         gdict['url'] = graph.baseurl
         gdict['key'] = "graph_%s" %(graph.pk)
@@ -144,7 +145,8 @@ def get_node_tree_category(request):
 
         ndict = {}
         ndict['nodename'] = graph.node.name
-        ndict['title'] = graph.graph.name
+        ndict['title'] = graph.node.name
+        ndict['graphname'] = graph.graph.name
         ndict['key'] = "graph_%s" %(graph.pk)
         ndict['url'] = graph.baseurl
         ndict['pageurl'] = graph.pageurl

@@ -73,6 +73,7 @@
 									    		countGraphs = countGraphs +1;
 									    		graphObj = new Object();
 									    		graphObj.nodename = node.data.nodename;
+									    		graphObj.graphname = node.data.graphname;
 									    		graphObj.title = node.data.title;
 									    		graphObj.imgurl = node.data.url
 									    		graphObj.pageurl = node.data.pageurl
@@ -202,7 +203,7 @@
 									graphitem.nodename+"</a>"+
 									"<br>"+
 									"<a href='"+graphitem.pageurl+"' target='_blank'>"+
-									graphitem.title+"<br><br>"+
+									graphitem.graphname+"<br><br>"+
 									"<img class='graph_class' src='"+graphitem.imgurl+"-"+period+".png'/></a>"+
 							"</div></li>");
 				}
@@ -283,7 +284,7 @@
 							<form action="">
 								<input type="radio" name="grouping" value="nogroup" checked="checked"> none 
 								<input type="radio" name="grouping" value="nodename"> hostname
-								<input type="radio" name="grouping" value="title"> type<br>
+								<input type="radio" name="grouping" value="graphname"> type<br>
 							</form>
 						</div>
 						<div id="button_holder">

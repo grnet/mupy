@@ -60,16 +60,15 @@ STATIC_ROOT = ''
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = '/static/'
+STATIC_URL = 'https://netdev.grnet.gr/static/'
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
-ADMIN_MEDIA_PREFIX = '/static/admin/'
+ADMIN_MEDIA_PREFIX = '/media/admin/'
 
 # Additional locations of static files
-STATICFILES_DIRS = (
-    #"/home/leopoul/projects/mupy/static"
+STATICFILES_DIRS = (   
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -94,7 +93,7 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-     'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -108,13 +107,12 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'mupy.urls'
 
 TEMPLATE_DIRS = (
-    #"/home/leopoul/projects/mupy/templates"
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
 
-STATIC_URL = ""
+DJANGO_STATIC_URL = ""
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -122,14 +120,21 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
+    #'django.contrib.staticfiles',
     'django_extensions',
     'muparse',
     # Uncomment the next line to enable the admin:
-    'django.contrib.admin',
+    #'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
-    'django.contrib.admindocs',
+    #'django.contrib.admindocs',
+    #'debug_toolbar'
 )
 
 CACHE_BACKEND = 'memcached://127.0.0.1:11211/?timeout=50000'
+MUNIN_URL = "http://munin.example.com"
+MUNIN_CGI_PATH = "cgi-bin/munin-cgi-graph/"
+MUNIN_IMAGE_PATH = ""
+#CACHE_BACKEND = 'dummy://'
+#INTERNAL_IPS = ()
 
 

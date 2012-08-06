@@ -6,6 +6,7 @@ from django.conf import settings
 
 
 baseUrl = settings.MUNIN_URL
+cgiPath = settings.MUNIN_CGI_PATH
 
 class Command(NoArgsCommand):
     
@@ -42,7 +43,7 @@ class Command(NoArgsCommand):
                         t = graphCategory.findParent('tr').find_next_sibling('tr')
                         g,created = Graph.objects.get_or_create(name=graphCategory.a.text, slug=t.img.get('src').split('/')[-1:][0].split('-')[0], category=gc)
                         self.stdout.write('--Added Graph: %s\n' % g.name.encode('utf8'))
-                        imageUrl = "%s/%s/%s/%s" %(baseUrl, nodeGroup.a.text, n.name, g.slug)
+                        imageUrl = "%s/%s%s/%s/%s" %(baseUrl, cgiPath, nodeGroup.a.text, n.name, g.slug)
                         nodegraph, created = NodeGraphs.objects.get_or_create(node=n, graph=g, baseurl=imageUrl, pageurl=pageUrl)
                         self.stdout.write('--Added NodeGraph: %s\n' % nodegraph)
 

@@ -4,7 +4,11 @@
 							
 							<div class="savedsearches_class">(<a href="#" id="deletesearch_{{s.pk}}" style="text-decoration:none">
 <img src="/static/images/icon_deletelink.gif" border="0">
-</a>)  <a href="#" id="savedsearch_{{s.pk}}" class="savedsearches_class">{{s.description}} ({{s.graphs.all|length}})</a></div>
+</a>) <a href="{% url home s.pk %}" id="newwindowsearch_{{s.pk}}" style="text-decoration:none" target="_blank">
+<img src="/static/images/open-new-window-btn.png" border="0" title="Open in new window">
+</a>&nbsp;&nbsp;<a href="#" id="savedsearch_{{s.pk}}" class="savedsearches_class">{{s.description}} ({{s.graphs.all|length}})</a>
+
+</div>
 							{% endfor %}
 						
 						{% else %}<span>no saved searches yet</span>

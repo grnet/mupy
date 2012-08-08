@@ -3,31 +3,44 @@
 <script type="text/javascript">
 		var showGraphs = false;
 		var allLoaded = false;
+		var refreshId = false;
 		var catLoaded = false;
 		var activeTabIndex = false;
 		graphs_arr = new Array();
 		var searchesNames = new Array();
 		var selectedKeys = new Array();
-		urlTabArray = ["{% url getjson_all %}", "{% url getjson_category %}"];
+		urlTabArray = ["{% url getjson_all user.pk %}", "{% url getjson_category user.pk %}"];
 		countGraphs = 0;
 		var loaded_graphs = new Array();
-				
+		{% if new_window %}
+			mydata = "{{new_window.result}}";
+			//var nwdata = $.parseJSON(mydata)
+			var darray = ("{{new_window.result}}").split(',');
+			loaded_graphs = darray;
+		
+		{% endif %}
 		{% if saved %}
 			{% for sav in saved %}
 				searchesNames.push("{{sav}}");
 			{% endfor %}
 		{% endif %}
 		$(document).ready(function(){
+			{% if new_window %}
+				$("#tabs").hide();
+				$("#counted_graphs_holder").hide();
+				$("#user_details").hide();
+				user_details
+			{% endif %}
 			$("#counted_graphs").html("0 graphs selected");
 			$("#graphs").empty();
 			$("#save_dialog").hide();
-			
+
 			$( "#tabs" ).resizable({
 				maxWidth: 400,
 				minWidth: 252,
 				handles: "e",
 				alsoResize: ".dynatree-container",
-				resize: function(event, ui) { 
+				resize: function(event, ui) {
 					$("ul.dynatree-container").css('height','auto');
 					$("ul.dynatree-container").css('width','auto'); 
 					$( "#tabs" ).css('height','auto');
@@ -64,6 +77,9 @@
 						    		 		node.select(false);
 						    		 	}
 									});
+									{% if new_window %}
+										$("#fetch").click();
+									{% endif %}
 							    },
 							    onSelect: function(select, node) {
 							    	var selNodes = node.tree.getSelectedNodes();
@@ -105,6 +121,14 @@
 					}
 					$("#graphs").empty();
 					fetchGraphs();
+/*					if (refreshId != false){
+						clearInterval(refreshId);
+					}
+					refreshId = setInterval(function(){
+						$("#graphs").empty();
+						fetchGraphs();
+						console.log('refreshing');
+					}, 10000);*/
 					return false;
 				});
 			$("#deselect")
@@ -172,6 +196,8 @@
 				show: "blind",
 				hide: "blind"
 			});
+			
+
 
 		});
 		
@@ -257,7 +283,6 @@
 {% block content %}
 			<div id="results_wrapper">
 				
-				
 				<div id="tabs" style="overflow: visible">
 					<div style="text-align:center;">Select graphs</div>
 					<ul>
@@ -268,10 +293,10 @@
 					<div id="tree_menu_0"></div>
 					<div id="tree_menu_1"></div>
 				</div>
-				
 				<div id='graphs_holder'>
 					
 					<div id="graph_results_menu">
+						<div id='user_details' class='options_menu' style="height: 20px;">Logged in as: {{user}} (<a href="{% url logout %}" id="logout">Logout</a>)</div>
 						<div id='selected_list' class='options_menu'>Choose graph period:<br>
 							<form action="">
 								<input type="radio" name="period" value="day" checked="checked"> day 
@@ -288,8 +313,8 @@
 							</form>
 						</div>
 						<div id="button_holder">
-							<div id="counted_graphs_holder"><span id="counted_graphs">0 graphs selected</span> <span>(<a href="#" id="deselect">deselect all</a>)</span></div>
-							<button id="fetch">Fetch</button><button id="save">Save...</button>
+							<div id="counted_graphs_holder"><span id="counted_graphs">0 graphs selected</span> {% if not new_window %}<span>(<a href="#" id="deselect">deselect all</a>)</span>{% endif %}</div>
+							<button id="fetch">Fetch</button>{% if not new_window %}<button id="save">Save...</button>{% endif %}
 						</div>
 						<div id="save_dialog" style="display:none">
 							<form action="" id="saveQueryForm">

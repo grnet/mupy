@@ -6,43 +6,60 @@ from mupy.muparse.models import *
 from mupy.muparse.forms import *
 from django.views.decorators.cache import cache_page
 from django.views.decorators.cache import never_cache
-import json
+from django.contrib.auth.decorators import login_required
+from django.http import Http404
+from django.core.cache import cache
+import json, bz2
 
-def home(request):
-    saved_searches = SavedSearch.objects.all()
+@login_required
+def home(request, search_id = None):
+    result = None
+    if search_id:
+        print "koko"
+        savedsearches = SavedSearch.objects.get(pk=search_id)
+        graphs = []
+        if not request.user.is_superuser:
+            try:
+                nodegroups = request.user.get_profile().nodegroups.all()
+            except UserProfile.DoesNotExist:
+                raise Http404
+            graphs.extend(["%s"%(i.pk) for i in savedsearches.graphs.filter(node__group__in=nodegroups)])
+        else:
+            graphs.extend(["%s"%(i.pk) for i in savedsearches.graphs.all()])
+        graphs = ','.join(graphs)
+        result = {'result':graphs, 'display_type': savedsearches.display_type, 'description': savedsearches.description}
+    saved_searches = SavedSearch.objects.all().order_by('description')
+    if not request.user.is_superuser:
+        try:
+            nodegroups = request.user.get_profile().nodegroups.all()
+        except UserProfile.DoesNotExist:
+            raise Http404
+        saved_searches = saved_searches.filter(graphs__in=NodeGraphs.objects.filter(node__group__in=nodegroups)).distinct()
     searches = []
     if saved_searches:
         searches.extend([s.description for s in saved_searches])
-    return render_to_response('out.html', {'saved':searches}, context_instance =RequestContext(request))
+    return render_to_response('out.html', {'saved':searches, "new_window": result}, context_instance =RequestContext(request))
 
-@cache_page(60 * 60 * 24 *5)
-def get_node_tree(request):
-    glist = []
-    groups = NodeGroup.objects.select_related(depth=5)
-    for group in groups:
-        gdict = {}
-        gdict['name'] = group.name
-        gdict['url'] = group.url
-        nlist = []
-        for node in group.node_set.all():
-            ndict = {}
-            ndict['name'] = node.name
-            ndict['url'] = node.url
-            nlist.append(ndict)
-            graphlist = []
-        gdict['nodes'] = nlist
-        glist.append(gdict)
-    glist = json.dumps(glist)
-    return render_to_response('out.html', {"glist":glist}, context_instance =RequestContext(request))
 
-@cache_page(60 * 60 * 24 *5)
-def get_node_tree(request):
+@login_required
+def get_node_tree(request, user_id):    
+    if int(request.user.pk) != int(user_id):
+        raise Http404
+    glist = cache.get('user_%s_tree'%(request.user.pk))
+    if glist:
+        glist = bz2.decompress(glist)
+        return HttpResponse(glist, mimetype="application/json")
     grlist = []
     nlist = []
     parsed_node = []
     parsed_group = []
-    
     graphs = NodeGraphs.objects.all().select_related('node', 'graph', 'node__group', 'graph__category').order_by('node', 'graph__category__name')
+    if not request.user.is_superuser:
+        try:
+            nodegroups = request.user.get_profile().nodegroups.all()
+        except UserProfile.DoesNotExist:
+            raise Http404
+        graphs = graphs.filter(node__group__in=nodegroups)
     len_graphs = len(graphs)
     for index, graph in enumerate(graphs):
         if graph.node not in parsed_node:
@@ -96,11 +113,19 @@ def get_node_tree(request):
             nlist.append(ndict)
             grdict['children']= nlist
             grlist.append(grdict)
-            ndict['children'].append(gcdict)            
+            ndict['children'].append(gcdict)    
     glist = json.dumps(grlist)
+    cache.set('user_%s_tree'%(request.user.pk), bz2.compress(glist), 60 * 60 * 24 *5)
     return HttpResponse(glist, mimetype="application/json")
 
-def get_node_tree_category(request):
+@login_required
+def get_node_tree_category(request, user_id):
+    if int(request.user.pk) != int(user_id):
+        raise Http404
+    glist = cache.get('user_%s_tree_cat'%(request.user.pk))
+    if glist:
+        glist = bz2.decompress(glist)
+        return HttpResponse(glist, mimetype="application/json")
     grlist = []
     nlist = []
     graphs_list = []
@@ -109,6 +134,12 @@ def get_node_tree_category(request):
     parsed_graph_category = []
     parsed_graph_name =[]
     graphs = NodeGraphs.objects.all().select_related('node', 'graph', 'node__group', 'graph__category').order_by('graph__category__name', 'graph__name', 'node__group', 'node__name')
+    if not request.user.is_superuser:
+        try:
+            nodegroups = request.user.get_profile().nodegroups.all()
+        except UserProfile.DoesNotExist:
+            raise Http404
+        graphs = graphs.filter(node__group__in=nodegroups)
     len_graphs = len(graphs)
     for index, graph in enumerate(graphs):
         current_category = graph.graph.category.name
@@ -156,11 +187,11 @@ def get_node_tree_category(request):
         
         if (index == (len_graphs-1)):
             grlist.append(gcdict)
-   
     glist = json.dumps(grlist)
+    cache.set('user_%s_tree_cat'%(request.user.pk), bz2.compress(glist), 60 * 60 * 24 *5)
     return HttpResponse(glist, mimetype="application/json")
 
-
+@login_required
 @never_cache
 def save_search(request):
     request_data = request.POST.copy()
@@ -184,16 +215,41 @@ def save_search(request):
     else:
         response = json.dumps({"result": "Errors: %s" %(form.errors), 'errors': "True"})
         return HttpResponse(response, mimetype="application/json")
-
+    
+@login_required
 @never_cache
 def load_search(request, search_id=None):
     savedsearches = SavedSearch.objects.get(pk=search_id)
     graphs = []
-    graphs.extend(["%s"%(i.pk) for i in savedsearches.graphs.all()])
+    if not request.user.is_superuser:
+        try:
+            nodegroups = request.user.get_profile().nodegroups.all()
+        except UserProfile.DoesNotExist:
+            raise Http404
+        graphs.extend(["%s"%(i.pk) for i in savedsearches.graphs.filter(node__group__in=nodegroups)])
+    else:
+        graphs.extend(["%s"%(i.pk) for i in savedsearches.graphs.all()])
     graphs = ','.join(graphs)
     result = json.dumps({'result':graphs, 'display_type': savedsearches.display_type, 'description': savedsearches.description})
     return HttpResponse(result, mimetype="application/json")
 
+@login_required
+@never_cache
+def load_search_blank(request, search_id=None):
+    savedsearches = SavedSearch.objects.get(pk=search_id)
+    graphs = []
+    if not request.user.is_superuser:
+        try:
+            nodegroups = request.user.get_profile().nodegroups.all()
+        except UserProfile.DoesNotExist:
+            raise Http404
+        graphs.extend([int("%s"%(i.pk)) for i in savedsearches.graphs.filter(node__group__in=nodegroups)])
+    else:
+        graphs.extend([int("%s"%(i.pk)) for i in savedsearches.graphs.all()])
+    nodegraphs = NodeGraphs.objects.filter(pk__in=graphs)
+    return render_to_response('searches_window.html', {'graphs':nodegraphs}, context_instance =RequestContext(request))
+
+@login_required
 @never_cache
 def delete_search(request, search_id=None):
     try:
@@ -204,7 +260,27 @@ def delete_search(request, search_id=None):
         response = json.dumps({"result": "Errors: %s" %(e), 'errors': "True"})
     return HttpResponse(response, mimetype="application/json")
 
+@login_required
 @never_cache  
 def saved_searches(request):
+    searches = []
     saved_searches = SavedSearch.objects.all().order_by('description')
-    return render_to_response('saved_searches.html', {"saved":saved_searches}, context_instance =RequestContext(request))
+    searches = saved_searches
+    if not request.user.is_superuser:
+        try:
+            nodegroups = request.user.get_profile().nodegroups.all()
+        except UserProfile.DoesNotExist:
+            raise Http404
+        searches = []
+        saved_searches = saved_searches.filter(graphs__in=NodeGraphs.objects.filter(node__group__in=nodegroups)).distinct()
+        for s in saved_searches:
+            s_graphs = s.graphs.filter(node__group__in=nodegroups)
+            if s_graphs:
+                search_dict = {
+                               'pk': s.pk,
+                               'description': s.description,
+                               'graphs': s_graphs
+                               }
+                searches.append(search_dict)
+    return render_to_response('saved_searches.html', {"saved":searches}, context_instance =RequestContext(request))
+

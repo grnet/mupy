@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+				<div id='graphs_holder'>
+					
+					<div id="graph_results_menu">
+						<div id='user_details' class='options_menu' style="height: 20px;">Logged in as: {{user}} (<a href="{% url logout %}" id="logout">Logout</a>)</div>
+						<div id='selected_list' class='options_menu'>Choose graph period:<br>
+							<form action="">
+								<input type="radio" name="period" value="day" checked="checked"> day 
+								<input type="radio" name="period" value="week"> week 
+								<input type="radio" name="period" value="month"> month 
+								<input type="radio" name="period" value="year"> year<br>
+							</form>
+						</div>
+						<div id='grouping_list' class='options_menu'>Choose Grouping:<br>
+							<form action="">
+								<input type="radio" name="grouping" value="nogroup" checked="checked"> none 
+								<input type="radio" name="grouping" value="nodename"> hostname
+								<input type="radio" name="grouping" value="graphname"> type<br>
+							</form>
+						</div>
+						<div id="button_holder">
+							<div id="counted_graphs_holder"><span id="counted_graphs">0 graphs selected</span> <span>(<a href="#" id="deselect">deselect all</a>)</span></div>
+							<button id="fetch">Fetch</button><button id="save">Save...</button>
+						</div>
+						<div id="save_dialog" style="display:none">
+							<form action="" id="saveQueryForm">
+								{% csrf_token %}
+								<label for="id_description">Description</label>
+								<input name="description" id="id_description" type="text"></input>
+								<input type="hidden" id="id_graphs" name="graphs"></input>
+								<input type="hidden" id="id_display_type" name="display_type"></input>
+								<input type="hidden" id="id_is_edit" name="is_edit"></input>
+								<button id="saveThisQuery">Save</button>
+							</form>
+						</div>
+					</div>
+					<div id="graphs">
+					{% for graph in graphs %}
+						<a href='{{graph.pageurl}}' target='_blank'>{{graph.graph.name}}<br><br>
+									<img class='graph_class' src='{{graph.baseurl}}-day.png'/>
+						</a>
+					{% endfor %}					
+					</div>
+				</div>
+{% endblock %}
+				

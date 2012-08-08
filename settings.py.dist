@@ -68,7 +68,7 @@ STATIC_URL = 'https://netdev.grnet.gr/static/'
 ADMIN_MEDIA_PREFIX = '/media/admin/'
 
 # Additional locations of static files
-STATICFILES_DIRS = (   
+STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -100,13 +100,18 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware'
+)
+
+AUTHENTICATION_BACKENDS = (
+    #'mupy.djangobackends.ldapBackend.ldapBackend',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 ROOT_URLCONF = 'mupy.urls'
 
 TEMPLATE_DIRS = (
+    "/home/leopoul/projects/mupy/templates"
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -123,18 +128,25 @@ INSTALLED_APPS = (
     #'django.contrib.staticfiles',
     'django_extensions',
     'muparse',
+    'accounts',
     # Uncomment the next line to enable the admin:
-    #'django.contrib.admin',
+    'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     #'django.contrib.admindocs',
-    #'debug_toolbar'
 )
 
-CACHE_BACKEND = 'memcached://127.0.0.1:11211/?timeout=50000'
-MUNIN_URL = "http://munin.example.com"
+#CACHE_BACKEND = 'memcached://127.0.0.1:11211/?timeout=50000'
+MUNIN_URL = "http://munin.grnet.gr"
 MUNIN_CGI_PATH = "cgi-bin/munin-cgi-graph/"
 MUNIN_IMAGE_PATH = ""
-#CACHE_BACKEND = 'dummy://'
-#INTERNAL_IPS = ()
+CACHE_BACKEND = 'dummy://'
 
+AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 
+LDAP_AUTH_SETTINGS = (
+    { 'url': 'ldap://example.com/', 'base': 'dc=ex,dc=amp,dc=le' },
+)
+# If defined as a string new users will belong in this group. Group must exist
+LDAP_AUTH_GROUP = None
+# Whether new users will have admin access
+LDAP_AUTH_IS_STAFF = False

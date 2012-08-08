@@ -5,6 +5,7 @@
 		var allLoaded = false;
 		var refreshId = false;
 		var catLoaded = false;
+		var refreshTime = 5;
 		var activeTabIndex = false;
 		graphs_arr = new Array();
 		var searchesNames = new Array();
@@ -24,7 +25,11 @@
 				searchesNames.push("{{sav}}");
 			{% endfor %}
 		{% endif %}
+		
+		
+		
 		$(document).ready(function(){
+			
 			{% if new_window %}
 				$("#tabs").hide();
 				$("#counted_graphs_holder").hide();
@@ -34,7 +39,22 @@
 			$("#counted_graphs").html("0 graphs selected");
 			$("#graphs").empty();
 			$("#save_dialog").hide();
-
+			$( "#slider" ).slider({
+				range: "max",
+				min: 3,
+				max: 15,
+				value: 5,
+				slide: function( event, ui ) {
+					refreshTime = ui.value ;
+					console.log(refreshTime);
+					if (refreshId != false){
+						clearInterval(refreshId);
+					}
+					$( "#refreshIndicator" ).text( ui.value );
+				}
+			});
+			$( "#refreshIndicator" ).text( $( "#slider" ).slider( "value" ) );
+			
 			$( "#tabs" ).resizable({
 				maxWidth: 400,
 				minWidth: 252,
@@ -121,18 +141,21 @@
 					}
 					$("#graphs").empty();
 					fetchGraphs();
-/*					if (refreshId != false){
+					if (refreshId != false){
 						clearInterval(refreshId);
 					}
 					refreshId = setInterval(function(){
 						$("#graphs").empty();
 						fetchGraphs();
 						console.log('refreshing');
-					}, 10000);*/
+					}, refreshTime*1000*60);
 					return false;
 				});
 			$("#deselect")
 			.click(function(){
+				if (refreshId != false){
+					clearInterval(refreshId);
+				}
 				if (allLoaded == true){
 					$("#tree_menu_"+activeTabIndex).dynatree("getRoot").visit(function(node){
 							node.select(false);
@@ -222,6 +245,7 @@
 							});
 				for(var i=0, l=graph_group.graphs.length; i<l; i++){
 					graphitem = graph_group.graphs[i];
+					var randomNo = Math.floor(Math.random()*9999999);
 					$("#graph_group_"+j+"").append(
 							"<li class='graph_li'>"+
 								"<div class='graph_blockfloat'>"+
@@ -230,7 +254,7 @@
 									"<br>"+
 									"<a href='"+graphitem.pageurl+"' target='_blank'>"+
 									graphitem.graphname+"<br><br>"+
-									"<img class='graph_class' src='"+graphitem.imgurl+"-"+period+".png'/></a>"+
+									"<img class='graph_class' src='"+graphitem.imgurl+"-"+period+".png?r="+randomNo+"'/></a>"+
 							"</div></li>");
 				}
 			}
@@ -312,9 +336,12 @@
 								<input type="radio" name="grouping" value="graphname"> type<br>
 							</form>
 						</div>
+						<div id='refresh_interval' class='options_menu' style="height: 40px;">Refresh Interval: <span id="refreshIndicator"></span> mins<br>
+							<div id="slider"></div>
+						</div>
 						<div id="button_holder">
 							<div id="counted_graphs_holder"><span id="counted_graphs">0 graphs selected</span> {% if not new_window %}<span>(<a href="#" id="deselect">deselect all</a>)</span>{% endif %}</div>
-							<button id="fetch">Fetch</button>{% if not new_window %}<button id="save">Save...</button>{% endif %}
+							<button id="fetch">Apply</button>{% if not new_window %}<button id="save">Save...</button>{% endif %}
 						</div>
 						<div id="save_dialog" style="display:none">
 							<form action="" id="saveQueryForm">

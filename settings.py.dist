@@ -150,3 +150,4 @@ LDAP_AUTH_SETTINGS = (
 LDAP_AUTH_GROUP = None
 # Whether new users will have admin access
 LDAP_AUTH_IS_STAFF = False
+

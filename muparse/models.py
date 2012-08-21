@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 
 class NodeGroup(models.Model):
@@ -43,7 +44,7 @@ class NodeGraphs(models.Model):
     pageurl = models.CharField(max_length=512)
     
     def __unicode__(self):
-        return "%s:%s:%s" %(self.node, self.graph, self.baseurl)
+        return u"%s:%s:%s" %(self.node, self.graph, self.baseurl)
 
 class SavedSearch(models.Model):
     description = models.CharField(max_length=255)

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.core.management.base import NoArgsCommand
 from bs4 import BeautifulSoup
 import urllib

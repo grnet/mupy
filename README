@@ -1,0 +1,47 @@
+MUPY
+<><><><><><><><><><><>
+
+What is Mupy?
+======================
+
+Mupy is a Munin Python Parser. It is written in Python and is powered by Django framework.
+Its functionality is pretty straightforward. It parses the HTML DOM of a munin site, stores the graphable
+data into a db and provides a friendly user interface for retrieving munin graphs.
+
+
+Munin version compatibility
+=====================
+
+Mupy was built on Munin version 1.4.5, though compatibility with the latest version of Munin will be soon available.
+
+
+Installation Requirements
+=====================
+
+Mupy's installation and operation depends on the following modules/packages
+
+* python-django (>=1.2.3)
+* python-mysqldb
+* python-ldap (if ldap user auth is needed)
+* python-beautifulsoup4
+* memcached
+
+
+Installation
+====================
+
+1. Untar the package to your desired location and edit settings.py according to your needs. Pay special attention to:
+MUNIN_URL : url that munin welcome page lives, eg. "http://munin.example.com"
+MUNIN_CGI_PATH : if images are updated frequently (without the need to visit) then set the cgi path here, eg. "cgi-bin/munin-cgi-graph/"
+ 
+2. To serve via Apache (static files),
+create an alias for the static dir in your apache conf and a WSGI script alias eg.  
+
+Alias /static       /<installation_location>/mupy/static
+WSGIScriptAlias /      /<installation_location>/mupy/apache/django.wsgi
+
+3. Run syncdb and create an admin user. Admin users have permissions to all nodegroups/nodes/graphs
+4. Run ./manage.py parse_munin to parse the MUNIN_URL and store data into db
+5. Restart Apache (or "touch apache/django.wsgi") and enjoy
+
+ 

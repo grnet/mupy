@@ -1,4 +1,17 @@
 # -*- coding: utf-8 -*-
+# Copyright 2012 Leonidas Poulopoulos
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 from django.core.management.base import NoArgsCommand
 from bs4 import BeautifulSoup
 import urllib
@@ -47,42 +60,4 @@ class Command(NoArgsCommand):
                         imageUrl = "%s/%s%s/%s/%s" %(baseUrl, cgiPath, nodeGroup.a.text, n.name, g.slug)
                         nodegraph, created = NodeGraphs.objects.get_or_create(node=n, graph=g, baseurl=imageUrl, pageurl=pageUrl)
                         self.stdout.write('--Added NodeGraph: %s\n' % nodegraph)
-
-a = Node.objects.all()
-for i in a:
-    print "Node:",i
-    for g in i.graphs.all():
-        print "=====>", g
-                #n,created = Node.objects.get_or_create(name=node.a.text, url=n_url, group=ng)
-                
-#            domainSoup = self.parseUrlSoup(i.a.get('href'))
-#            servers = domainSoup.find('td', attrs={'class':'linkbox'})
-#            
-#            for server in servers.ul.find_all('span', attrs={'class':'domain'}):
-#                if 'diskstats' in server.a.text:
-#                    continue
-#                print "+", server.a
-#                n_url = "%s/%s/%s" %(baseUrl, i.a.text, server.a.get('href'))
-##                n,created = Node.objects.get_or_create(name=server.a.text, url=n_url, group=ng)
-##                self.stdout.write('-Added node: %s\n' % n.name.encode('utf8'))
-#                for metric in server.findParent('li').findChildren('span', attrs={'class':'host'}):
-#                    if "diskstats" in metric.a.get('href'):
-#                        continue
-##                    gc,created = GraphCategory.objects.get_or_create(name=metric.text)
-##                    self.stdout.write('-Added Category: %s\n' % gc.name.encode('utf8'))
-##                    print "==>", metric.a.text, metric.a.get('href')
-#                    node_services = []
-#                    for service in metric.findParent('li').findChildren('span', attrs={'class':'service'}):
-#                        service_text = service.a.text
-#                        service_slug = service.a.get('href').split('/')[-1:][0].rstrip('.html')
-#                        print service_text, service.a.get('href')
-##                        c,created = Graph.objects.get_or_create(name=service_text, slug=service_slug, category=gc)
-##                        self.stdout.write('--Added Graph: %s\n' % c.name.encode('utf8'))
-#                        node_services.append(c)
-#                    n.graphs = node_services
-#                    n.save()
-##                        serviceContents = self.parseUrlSoup("%s/%s" %(i.a.text, service.a.get('href')))
-##                        graphs = serviceContents.find_all('img')
-##                        for graph in graphs:
-##                            print "==========>", graph
 

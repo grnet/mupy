@@ -3,3 +3,4 @@ urls.py
 mupy.db
 *.pyc
 *.gz
+*.wsgi

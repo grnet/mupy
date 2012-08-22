@@ -111,7 +111,6 @@ AUTHENTICATION_BACKENDS = (
 ROOT_URLCONF = 'mupy.urls'
 
 TEMPLATE_DIRS = (
-    "/home/leopoul/projects/mupy/templates"
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -126,7 +125,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     #'django.contrib.staticfiles',
-    'django_extensions',
+    #'django_extensions',
     'muparse',
     'accounts',
     # Uncomment the next line to enable the admin:

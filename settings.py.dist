@@ -60,7 +60,7 @@ STATIC_ROOT = ''
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = 'https://netdev.grnet.gr/static/'
+STATIC_URL = 'https://example.com/static/'
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
@@ -136,7 +136,7 @@ INSTALLED_APPS = (
 )
 
 #CACHE_BACKEND = 'memcached://127.0.0.1:11211/?timeout=50000'
-MUNIN_URL = "http://munin.grnet.gr"
+MUNIN_URL = "http://munin.example.com"
 MUNIN_CGI_PATH = "cgi-bin/munin-cgi-graph/"
 MUNIN_IMAGE_PATH = ""
 CACHE_BACKEND = 'dummy://'

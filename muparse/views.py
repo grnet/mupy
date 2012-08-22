@@ -30,7 +30,6 @@ import json, bz2
 def home(request, search_id = None):
     result = None
     if search_id:
-        print "koko"
         savedsearches = SavedSearch.objects.get(pk=search_id)
         graphs = []
         if not request.user.is_superuser:

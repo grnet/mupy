@@ -46,7 +46,6 @@
 				value: 5,
 				slide: function( event, ui ) {
 					refreshTime = ui.value ;
-					console.log(refreshTime);
 					if (refreshId != false){
 						clearInterval(refreshId);
 					}
@@ -147,7 +146,6 @@
 					refreshId = setInterval(function(){
 						$("#graphs").empty();
 						fetchGraphs();
-						console.log('refreshing');
 					}, refreshTime*1000*60);
 					return false;
 				});

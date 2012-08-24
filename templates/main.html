@@ -34,7 +34,6 @@
 				$("#tabs").hide();
 				$("#counted_graphs_holder").hide();
 				$("#user_details").hide();
-				user_details
 			{% endif %}
 			$("#counted_graphs").html("0 graphs selected");
 			$("#graphs").empty();
@@ -73,6 +72,7 @@
 						   $("#tree_menu_"+ui.index).dynatree({
 								checkbox: true,
 								selectMode: 3,
+								debugLevel: 0,
 								ajaxDefaults: { 
 							        cache: true, // false: Append random '_' argument to the request url to prevent caching.
 							    },

@@ -52,7 +52,7 @@ def home(request, search_id = None):
     searches = []
     if saved_searches:
         searches.extend([s.description for s in saved_searches])
-    return render_to_response('out.html', {'saved':searches, "new_window": result}, context_instance =RequestContext(request))
+    return render_to_response('main.html', {'saved':searches, "new_window": result}, context_instance =RequestContext(request))
 
 
 @login_required

@@ -67,7 +67,7 @@ def get_node_tree(request, user_id):
     nlist = []
     parsed_node = []
     parsed_group = []
-    graphs = NodeGraphs.objects.all().select_related('node', 'graph', 'node__group', 'graph__category').order_by('node', 'graph__category__name')
+    graphs = NodeGraphs.objects.all().select_related('node', 'graph', 'node__group', 'graph__category').order_by('node__group', 'node', 'graph__category__name')
     if not request.user.is_superuser:
         try:
             nodegroups = request.user.get_profile().nodegroups.all()
@@ -91,6 +91,7 @@ def get_node_tree(request, user_id):
 
         if graph.node.group not in parsed_group:
             if parsed_group:
+                nlist.sort(key=lambda item:item['title'], reverse=False)
                 grdict['children']= nlist
                 grlist.append(grdict)
                 nlist = []
@@ -125,9 +126,10 @@ def get_node_tree(request, user_id):
         gcdict['children'].append(gdict)
         if (index == (len_graphs-1)):
             nlist.append(ndict)
+            nlist.sort(key=lambda item:item['title'], reverse=False)
             grdict['children']= nlist
             grlist.append(grdict)
-            ndict['children'].append(gcdict)    
+            ndict['children'].append(gcdict)
     glist = json.dumps(grlist)
     cache.set('user_%s_tree'%(request.user.pk), bz2.compress(glist), 60 * 60 * 24 *5)
     return HttpResponse(glist, mimetype="application/json")

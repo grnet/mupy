@@ -1,6 +1,6 @@
 settings.py
-urls.py
-mupy.db
+/urls.py
+*.db
 *.pyc
 *.gz
 *.wsgi

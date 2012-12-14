@@ -1,9 +1,21 @@
-MUPY
-<><><><><><><><><><><>
+# Copyright 2012 Leonidas Poulopoulos
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+===MUPY===
 
 What is Mupy?
 ======================
-
 Mupy is a Munin Python Parser. It is written in Python and is powered by Django framework.
 Its functionality is pretty straightforward. It parses the HTML DOM of a munin site, stores the graphable
 data into a db and provides a friendly user interface for retrieving munin graphs.
@@ -11,26 +23,23 @@ data into a db and provides a friendly user interface for retrieving munin graph
 
 Munin version compatibility
 =====================
-
 Mupy was built on Munin version 1.4.5, though compatibility with the latest version of Munin will be soon available.
 
 
 Installation Requirements
 =====================
-
 Mupy's installation and operation depends on the following modules/packages
 
 * python-django (>=1.2.3)
 * python-mysqldb
 * python-ldap (if ldap user auth is needed)
-* python-beautifulsoup4
+* python-beautifulsoup4 (won't work with <4)
 * memcached
 
 
 Installation
 ====================
-
-1. Untar the package to your desired location, copy settings.py.dist, urls.py.dist, apache/django.wsgi.dist to local files ommiting dist and edit settings.py and apache/django.wsgi according to your needs. Pay special attention to:
+1. Untar the package (or clone via git) to your desired location, copy settings.py.dist, urls.py.dist, apache/django.wsgi.dist to local files ommiting dist and edit settings.py and apache/django.wsgi according to your needs. Pay special attention to:
 MUNIN_URL : url that munin welcome page lives, eg. "http://munin.example.com"
 MUNIN_CGI_PATH : if images are updated frequently (without the need to visit) then set the cgi path here, eg. "cgi-bin/munin-cgi-graph/"
  

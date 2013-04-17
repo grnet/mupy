@@ -136,6 +136,10 @@ INSTALLED_APPS = (
 )
 
 #CACHE_BACKEND = 'memcached://127.0.0.1:11211/?timeout=50000'
+MUNIN_NODES = (
+               (1, {'name':'munin1', 'url':"http://munin1.example.com", 'cgi_path': "cgi-bin/munin-cgi-graph/", 'image_path': ''}),
+               (2, {'name':'munin2', 'url':"http://munin2.example.com", 'cgi_path': "cgi-bin/munin-cgi-graph/", 'image_path': ''}),
+               )
 MUNIN_URL = "http://munin.example.com"
 MUNIN_CGI_PATH = "cgi-bin/munin-cgi-graph/"
 MUNIN_IMAGE_PATH = ""

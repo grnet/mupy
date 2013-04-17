@@ -1,0 +1,12 @@
+===========
+0.9 RELEASE
+New Feature (check Requirements)
+
+Requirements:
+	-south migration to include database changes
+	-changes in settings.py.dist: MUNIN_NODES (update your settings.py)
+
+Features:
+	-Add support for multiple munin instance parsing
+
+

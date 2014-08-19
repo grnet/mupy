@@ -1,12 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
-from mupy.muparse.models import *
+from muparse.models import *
 
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
     nodegroups = models.ManyToManyField(NodeGroup, blank=True, null=True)
-    
+
     def get_nodegroups(self):
         ret = ''
         ngs = self.nodegroups.all()
@@ -17,6 +17,6 @@ class UserProfile(models.Model):
             return ngroups
         else:
             return None
-    
+
     def __unicode__(self):
         return "%s:%s" %(self.user.username, self.get_nodegroups())

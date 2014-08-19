@@ -17,14 +17,15 @@ from django.shortcuts import render_to_response
 from django.core.context_processors import request
 from django.template.context import RequestContext
 from django.http import HttpResponse
-from mupy.muparse.models import *
-from mupy.muparse.forms import *
+from muparse.models import *
+from muparse.forms import *
 from django.views.decorators.cache import cache_page
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.core.cache import cache
 import json, bz2
+
 
 @login_required
 def home(request, search_id = None):
@@ -52,11 +53,11 @@ def home(request, search_id = None):
     searches = []
     if saved_searches:
         searches.extend([s.description for s in saved_searches])
-    return render_to_response('main.html', {'saved':searches, "new_window": result}, context_instance =RequestContext(request))
+    return render_to_response('main.html', {'saved':searches, "new_window": result}, context_instance = RequestContext(request))
 
 
 @login_required
-def get_node_tree(request, user_id):    
+def get_node_tree(request, user_id):
     if int(request.user.pk) != int(user_id):
         raise Http404
     glist = cache.get('user_%s_tree'%(request.user.pk))
@@ -112,7 +113,7 @@ def get_node_tree(request, user_id):
             gcdict['children'] = []
             gcdict['type'] = "graph_category"
             parsed_graph_category.append(graph.graph.category.name)
-            
+
         gdict = {}
         gdict['type'] = "graph"
         gdict['title'] = graph.graph.name
@@ -159,7 +160,7 @@ def get_node_tree_category(request, user_id):
     len_graphs = len(graphs)
     for index, graph in enumerate(graphs):
         current_category = graph.graph.category.name
-        
+
         if graph.graph.category.name not in parsed_graph_category:
             if parsed_graph_category:
                 grlist.append(gcdict)
@@ -169,7 +170,7 @@ def get_node_tree_category(request, user_id):
             gcdict['children'] = []
             gcdict['type'] = "graph_category"
             parsed_graph_category.append(graph.graph.category.name)
-                 
+
         if graph.graph.name not in parsed_graph_name:
             parsed_group = []
             gdict = {}
@@ -179,7 +180,7 @@ def get_node_tree_category(request, user_id):
             gdict['children'] = []
             gcdict['children'].append(gdict)
             parsed_graph_name.append(graph.graph.name)
-                
+
         if graph.node.group.name not in parsed_group:
             grdict = {}
             grdict['title'] = graph.node.group.name
@@ -200,7 +201,7 @@ def get_node_tree_category(request, user_id):
         ndict['nodeurl'] = graph.node.url
         ndict['type'] = "graph"
         grdict['children'].append(ndict)
-        
+
         if (index == (len_graphs-1)):
             grlist.append(gcdict)
     glist = json.dumps(grlist)
@@ -219,7 +220,7 @@ def save_search(request):
         description = request_data.get('description')
         try:
             existinggraphsearch = SavedSearch.objects.get(description=description)
-            form = SavedSearchForm(request_data, instance=existinggraphsearch)            
+            form = SavedSearchForm(request_data, instance=existinggraphsearch)
         except SavedSearch.DoesNotExist:
             pass
     if form.is_valid():
@@ -231,7 +232,7 @@ def save_search(request):
     else:
         response = json.dumps({"result": "Errors: %s" %(form.errors), 'errors': "True"})
         return HttpResponse(response, mimetype="application/json")
-    
+
 @login_required
 @never_cache
 def load_search(request, search_id=None):
@@ -277,7 +278,7 @@ def delete_search(request, search_id=None):
     return HttpResponse(response, mimetype="application/json")
 
 @login_required
-@never_cache  
+@never_cache
 def saved_searches(request):
     searches = []
     saved_searches = SavedSearch.objects.all().order_by('description')

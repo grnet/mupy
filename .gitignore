@@ -4,3 +4,4 @@ settings.py
 *.pyc
 *.gz
 *.wsgi
+local_settings.py

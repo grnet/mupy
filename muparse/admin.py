@@ -14,7 +14,7 @@
 # limitations under the License.
 
 from django.contrib import admin
-from mupy.muparse.models import *
+from muparse.models import *
 
 admin.site.register(NodeGroup)
 admin.site.register(GraphCategory)

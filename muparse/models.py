@@ -24,15 +24,15 @@ class NodeGroup(models.Model):
 
 class GraphCategory(models.Model):
     name = models.SlugField(max_length=255)
-    
+
     def __unicode__(self):
         return self.name
-    
+
 class Graph(models.Model):
     name = models.SlugField(max_length=255)
     slug = models.CharField(max_length=128, blank=True, null=True)
     category = models.ForeignKey(GraphCategory)
-        
+
     def __unicode__(self):
         return self.name
 
@@ -41,10 +41,10 @@ class Node(models.Model):
     url = models.CharField(max_length=512)
     group = models.ForeignKey(NodeGroup)
     graphs = models.ManyToManyField(Graph, blank=True, null=True, through='NodeGraphs')
-    
+
     def __unicode__(self):
         return self.name
-    
+
     def get_graph_categories(self):
         cat_list = []
         for graph in self.graphs.all():
@@ -56,7 +56,8 @@ class NodeGraphs(models.Model):
     graph = models.ForeignKey(Graph)
     baseurl = models.CharField(max_length=512)
     pageurl = models.CharField(max_length=512)
-    
+    updated = models.DateTimeField(auto_now=True)
+
     def __unicode__(self):
         return u"%s:%s:%s" %(self.node, self.graph, self.baseurl)
 
@@ -64,6 +65,6 @@ class SavedSearch(models.Model):
     description = models.CharField(max_length=255)
     display_type = models.CharField(max_length=64)
     graphs = models.ManyToManyField(NodeGraphs, blank=True, null=True)
-    
+
     def __unicode__(self):
         return self.description

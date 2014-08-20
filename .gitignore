@@ -5,3 +5,4 @@ settings.py
 *.gz
 *.wsgi
 local_settings.py
+mupy.db

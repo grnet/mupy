@@ -1,7 +1,5 @@
-/urls.py
 *.db
 *.pyc
 *.gz
 *.wsgi
 local_settings.py
-mupy.db

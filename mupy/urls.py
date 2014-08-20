@@ -7,7 +7,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'mupy.views.home', name='home'),
-    url(r'^mupy/', include('muparse.urls')),
+    url(r'^', include('muparse.urls')),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
     url(r'^logout/?', 'django.contrib.auth.views.logout', {'next_page': '/mupy'}, name="logout"),
     # Uncomment the admin/doc line below to enable admin documentation:

@@ -16,21 +16,21 @@
 from django.core.management.base import NoArgsCommand
 from bs4 import BeautifulSoup
 import urllib
-from mupy.muparse.models import *
+from muparse.models import *
 from django.conf import settings
 
 mnodes = settings.MUNIN_NODES
 
 
 class Command(NoArgsCommand):
-    
+
     def parseUrlSoup(self, baseUrl, urlPage):
         serverListPage = urllib.urlopen("%s/%s" %(baseUrl, urlPage))
         htmlText = serverListPage.read()
         serverListPage.close()
         return BeautifulSoup(htmlText)
 
-    
+
     def handle_noargs(self, **options):
         for mnode in mnodes:
             mnode_dict = mnode[1]

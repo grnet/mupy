@@ -15,10 +15,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from django.core.management.base import NoArgsCommand
 from bs4 import BeautifulSoup
 import urllib
+from datetime import timedelta
+from django.utils import timezone
+
+from django.core.management.base import NoArgsCommand
+from django.core.cache import cache
 from django.conf import settings
+from django.contrib.auth.models import User
+
 from muparse.models import *
 
 MNODES = settings.MUNIN_NODES
@@ -35,11 +41,26 @@ class Command(NoArgsCommand):
         serverListPage.close()
         return BeautifulSoup(htmlText)
 
+    def delete_garbage(self):
+        self.stdout.write('Deleting junk from %s day(s) ago.\n' % settings.DATA_EXPIRES)
+        date_N_days_ago = timezone.now() - timedelta(days=int(settings.DATA_EXPIRES))
+        NodeGroup.objects.filter(updated__lt=date_N_days_ago).delete()
+        GraphCategory.objects.filter(updated__lt=date_N_days_ago).delete()
+        Node.objects.filter(updated__lt=date_N_days_ago).delete()
+        Graph.objects.filter(updated__lt=date_N_days_ago).delete()
+        NodeGraphs.objects.filter(updated__lt=date_N_days_ago).delete()
+        # delete cache
+        for u in User.objects.all():
+            cache.delete('user_%s_tree' % (u.pk))
+            cache.delete('user_%s_tree_cat' % (u.pk))
+        self.stdout.write('Done...\n')
+
     def handle_noargs(self, **options):
+        self.delete_garbage()
+
         for mnode in MNODES:
             mnode_dict = mnode[1]
             baseUrl = mnode_dict['url']
-
             soup = self.parseUrlSoup(baseUrl, "index.html")
             homePage = soup.find_all('span', attrs={'class': 'domain'})
             for nodeGroup in homePage:

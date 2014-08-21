@@ -29,6 +29,9 @@ TIME_ZONE = 'Europe/Athens'
 
 CACHE_BACKEND = ''
 
+# how many days should we keep data in the db
+DATA_EXPIRES = '2'
+
 MUNIN_NODES = (
     (
         1, {

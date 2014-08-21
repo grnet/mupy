@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright 2014 Leonidas Poulopoulos
 # Copyright 2014 Costas Drogos
+# Copyright 2014 Stavros Kroustouris
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,9 +28,9 @@ class Command(NoArgsCommand):
 
     def parseUrlSoup(self, baseUrl, urlPage):
         if urlPage:
-            serverListPage = urllib.urlopen("%s/%s" %(baseUrl, urlPage))
+            serverListPage = urllib.urlopen('%s/%s' % (baseUrl, urlPage))
         else:
-            serverListPage = urllib.urlopen("%s" %(baseUrl))
+            serverListPage = urllib.urlopen('%s' % (baseUrl))
         htmlText = serverListPage.read()
         serverListPage.close()
         return BeautifulSoup(htmlText)
@@ -41,16 +42,16 @@ class Command(NoArgsCommand):
             soup = self.parseUrlSoup(baseUrl, "index.html")
             homePage = soup.find_all('span', attrs={'class': 'domain'})
             for nodeGroup in homePage:
-                ng_url = "%s/%s" %(baseUrl, nodeGroup.a.get('href'))
-                ng,created = NodeGroup.objects.get_or_create(name="%s@%s"%(nodeGroup.a.text, mnode_dict['name']), url=ng_url)
+                ng_url = '%s/%s' % (baseUrl, nodeGroup.a.get('href'))
+                ng, created = NodeGroup.objects.get_or_create(name='%s@%s' % (nodeGroup.a.text, mnode_dict['name']), url=ng_url)
                 # self.stdout.write('NodeCategory: %s\n' % ng.name)
                 nodegroupSoup = self.parseUrlSoup(ng_url, "")
                 nodes = nodegroupSoup.find('div', attrs={'id': 'content'})\
                                      .find('ul', recursive=False).find_all('li', recursive=False)
                 for node in nodes:
-                    node_name = node.find('span', attrs={'class':'domain'}, recursive=False)
-                    n_url = "%s/%s/%s" %(baseUrl, nodeGroup.a.text, node_name.a.get('href'))
-                    n,created = Node.objects.get_or_create(name=node.a.text, url=n_url, group=ng)
+                    node_name = node.find('span', attrs={'class': 'domain'}, recursive=False)
+                    n_url = '%s/%s/%s' % (baseUrl, nodeGroup.a.text, node_name.a.get('href'))
+                    n, created = Node.objects.get_or_create(name=node.a.text, url=n_url, group=ng)
                     self.stdout.write('-Node: %s\n' % (n.name))
                     services_categories = node.find_all('ul', recursive=False)
                     # get inside node
@@ -65,8 +66,8 @@ class Command(NoArgsCommand):
                                 self.stdout.write('--GraphCategory: %s\n' % gc.name)
                                 last_cat = gc
                             else:
-                                slug = category.a.get('href').replace(node_name.text, '').replace('.html', '')[1:].replace('/index', '')
-                                g, created = Graph.objects.get_or_create(name=category.a.text, slug=slug, category=last_cat)
+                                slug = category.a.get('href').replace(node_name.text, '').replace('.html', '')[1:].replace('/index', '').partition('/')[0]
+                                g, created = Graph.objects.get_or_create(name=category.a.text.partition('for')[0], slug=slug, category=last_cat)
                                 self.stdout.write('---Graph: %s\n' % (g.name))
                                 services = category.findChildren('span', attrs={'class': 'service'})
                                 for service in services:

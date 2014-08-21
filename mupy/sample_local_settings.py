@@ -39,12 +39,7 @@ MUNIN_NODES = (
         }
     ),
 )
-MUNIN_URL = "http://munin.example.org"
-#MUNIN_URL = "http://munin.ping.uio.no"
-MUNIN_CGI_PATH = "cgi-bin/munin-cgi-graph/"
-#MUNIN_CGI_PATH = ""
-MUNIN_IMAGE_PATH = ""
-#CACHE_BACKEND = 'dummy://'
+
 
 LDAP_AUTH_SETTINGS = (
     { 'url': 'ldap://ds.example.org/', 'base': 'dc=noc,dc=example,dc=org' },

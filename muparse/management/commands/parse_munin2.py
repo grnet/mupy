@@ -39,12 +39,13 @@ class Command(NoArgsCommand):
         for mnode in MNODES:
             mnode_dict = mnode[1]
             baseUrl = mnode_dict['url']
+
             soup = self.parseUrlSoup(baseUrl, "index.html")
             homePage = soup.find_all('span', attrs={'class': 'domain'})
             for nodeGroup in homePage:
                 ng_url = '%s/%s' % (baseUrl, nodeGroup.a.get('href'))
                 ng, created = NodeGroup.objects.get_or_create(name='%s@%s' % (nodeGroup.a.text, mnode_dict['name']), url=ng_url)
-                # self.stdout.write('NodeCategory: %s\n' % ng.name)
+                self.stdout.write('NodeCategory: %s\n' % ng.name)
                 nodegroupSoup = self.parseUrlSoup(ng_url, "")
                 nodes = nodegroupSoup.find('div', attrs={'id': 'content'})\
                                      .find('ul', recursive=False).find_all('li', recursive=False)
@@ -66,14 +67,15 @@ class Command(NoArgsCommand):
                                 self.stdout.write('--GraphCategory: %s\n' % gc.name)
                                 last_cat = gc
                             else:
-                                slug = category.a.get('href').replace(node_name.text, '').replace('.html', '')[1:].replace('/index', '').partition('/')[0]
-                                g, created = Graph.objects.get_or_create(name=category.a.text.partition('for')[0], slug=slug, category=last_cat)
+                                slug = category.a.get('href').replace(node_name.text, '').replace('.html', '')[1:].replace('/index', '')
+                                g, created = Graph.objects.get_or_create(name=category.a.text.partition('for')[0], slug=slug.partition('/')[0], category=last_cat)
                                 self.stdout.write('---Graph: %s\n' % (g.name))
                                 services = category.findChildren('span', attrs={'class': 'service'})
                                 for service in services:
-                                    graph_base_url = baseUrl + '/munin-cgi/munin-cgi-graph/' + nodeGroup.a.text + '/' + service.a.get('href').replace('.html', '').replace('/index', '')
-                                    pageurl = baseUrl + '/' + nodeGroup.a.text + '/' + service.a.get('href')
+                                    if 'for' not in service.a.text:
+                                        graph_base_url = baseUrl + '/munin-cgi/munin-cgi-graph/' + nodeGroup.a.text + '/' + service.a.get('href').replace('.html', '').replace('/index', '')
+                                        pageurl = baseUrl + '/' + nodeGroup.a.text + '/' + service.a.get('href')
+                                        nodegraph, created = NodeGraphs.objects.get_or_create(node=n, graph=g, baseurl=graph_base_url, pageurl=pageurl)
+                                        #  this is the link for the four final graphs (day, week, month, year)
+                                        self.stdout.write('---Service: %s, %s\n' % (service.a.text, pageurl))
 
-                                    nodegraph, created = NodeGraphs.objects.get_or_create(node=n, graph=g, baseurl=graph_base_url, pageurl=pageurl)
-                                    #  this is the link for the four final graphs (day, week, month, year)
-                                    self.stdout.write('---Service: %s, %s\n' % (service.a.text, pageurl))

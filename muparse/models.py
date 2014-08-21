@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright 2012 Leonidas Poulopoulos
+# Copyright 2014 Stavros Kroustouris
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,6 +16,7 @@
 
 from django.db import models
 
+
 class NodeGroup(models.Model):
     name = models.CharField(max_length=255)
     url = models.CharField(max_length=512)
@@ -22,11 +24,19 @@ class NodeGroup(models.Model):
     def __unicode__(self):
         return self.name
 
+    class Meta:
+        ordering = ['name']
+
+
 class GraphCategory(models.Model):
     name = models.SlugField(max_length=255)
 
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        ordering = ['name']
+
 
 class Graph(models.Model):
     name = models.SlugField(max_length=255)
@@ -35,6 +45,10 @@ class Graph(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        ordering = ['name']
+
 
 class Node(models.Model):
     name = models.SlugField(max_length=255)
@@ -51,6 +65,10 @@ class Node(models.Model):
             cat_list.append(graph.category.pk)
         return GraphCategory.objects.filter(pk__in=list(set(cat_list)))
 
+    class Meta:
+        ordering = ['name']
+
+
 class NodeGraphs(models.Model):
     node = models.ForeignKey(Node)
     graph = models.ForeignKey(Graph)
@@ -60,6 +78,7 @@ class NodeGraphs(models.Model):
 
     def __unicode__(self):
         return u"%s:%s:%s" %(self.node, self.graph, self.baseurl)
+
 
 class SavedSearch(models.Model):
     description = models.CharField(max_length=255)

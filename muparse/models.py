@@ -20,6 +20,7 @@ from django.db import models
 class NodeGroup(models.Model):
     name = models.CharField(max_length=255)
     url = models.CharField(max_length=512)
+    updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return self.name
@@ -30,6 +31,7 @@ class NodeGroup(models.Model):
 
 class GraphCategory(models.Model):
     name = models.SlugField(max_length=255)
+    updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return self.name
@@ -39,9 +41,10 @@ class GraphCategory(models.Model):
 
 
 class Graph(models.Model):
-    name = models.SlugField(max_length=255)
-    slug = models.CharField(max_length=128, blank=True, null=True)
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=128, blank=True, null=True)
     category = models.ForeignKey(GraphCategory)
+    updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return self.name
@@ -55,6 +58,7 @@ class Node(models.Model):
     url = models.CharField(max_length=512)
     group = models.ForeignKey(NodeGroup)
     graphs = models.ManyToManyField(Graph, blank=True, null=True, through='NodeGraphs')
+    updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return self.name
@@ -77,7 +81,7 @@ class NodeGraphs(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return u"%s:%s:%s" %(self.node, self.graph, self.baseurl)
+        return u'%s:%s:%s' %(self.node, self.graph, self.baseurl)
 
 
 class SavedSearch(models.Model):

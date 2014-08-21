@@ -41,8 +41,29 @@ MUNIN_NODES = (
             'image_path': ''
         }
     ),
+    (
+        2, {
+            'name': 'extra',
+            'url': 'http://extra.example.org',
+            'cgi_path': 'cgi-bin/munin-cgi-graph/',
+            'image_path': ''
+        }
+    )
 )
 
+
+AUTHENTICATION_BACKENDS = (
+    'django_auth_ldap.backend.LDAPBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+# If defined as a string new users will belong in this group. Group must exist
+LDAP_AUTH_GROUP = None
+# Whether new users will have admin access
+LDAP_AUTH_IS_STAFF = False
+
+# how many days should we keep data in the db
+DATA_EXPIRES = '2'
 
 LDAP_AUTH_SETTINGS = (
     { 'url': 'ldap://ds.example.org/', 'base': 'dc=noc,dc=example,dc=org' },

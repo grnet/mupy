@@ -113,44 +113,6 @@ INSTALLED_APPS = (
 
 AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 
-CACHE_BACKEND = ''
-MUNIN_NODES = (
-    (
-        1, {
-            'name': 'example1',
-            'url': 'http://one.example.com',
-            'cgi_path': 'cgi-bin/munin-cgi-graph/',
-            'image_path': ''
-        }
-    ),
-    (
-        2, {
-            'name': 'example2',
-            'url': 'http://two.example.com',
-            'cgi_path': 'cgi-bin/munin-cgi-graph/',
-            'image_path': ''
-        }
-    ),
-)
-
-MUNIN_URL = "http://munin.example.com"
-#MUNIN_URL = "http://munin.ping.uio.no"
-MUNIN_CGI_PATH = "cgi-bin/munin-cgi-graph/"
-#MUNIN_CGI_PATH = ""
-MUNIN_IMAGE_PATH = ""
-#CACHE_BACKEND = 'dummy://'
-
-LDAP_AUTH_SETTINGS = (
-    {
-        'url': 'ldap://ldap.example.com/',
-        'base': 'dc=dc,dc=example,dc=com'
-    },
-)
-# If defined as a string new users will belong in this group. Group must exist
-LDAP_AUTH_GROUP = None
-# Whether new users will have admin access
-LDAP_AUTH_IS_STAFF = False
-
 
 def _dictmerge(a, b):
     """ deep merge two dictionaries """

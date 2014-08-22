@@ -259,15 +259,24 @@ ul.dynatree-container {
 }
 
 #mupy_container {
-	box-shadow: 0px 0 20px 2px silver;
 	margin-top: 65px;
 	z-index: 10;
 	position: relative;
 	background: white;
 	padding: 20px;
-	min-height: 1000px;
 }
 
+#mupy_container:before {
+	display: block;
+	content: "";
+
+	position: absolute;
+	top: -10px;
+	left: 0;
+	right: 0;
+	box-shadow: 0px 0 20px 2px silver;
+	width: 100%;
+}
 
 #graph_results_menu > div {
 	padding: 10px;

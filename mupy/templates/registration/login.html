@@ -12,7 +12,7 @@
 		<form method="post" action="{% url django.contrib.auth.views.login %}">
 			{% csrf_token %}
 			{{form.as_p}}
-			<input type="submit" value="Login" id="login"/><input type="hidden"
+			<input class="btn btn-default" type="submit" value="Login" id="login"/><input type="hidden"
 				name="next" value="{{ next }}" />
 		</form>
 	</div>

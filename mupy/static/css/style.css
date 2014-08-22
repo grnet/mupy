@@ -1,0 +1,276 @@
+body{
+	font-family: tahoma,arial,helvetica !important;
+	font-size: 10pt !important;
+	background: none repeat scroll 0 0 white;
+	margin: 0;
+}
+
+#mupy_container{
+	clear: both;
+    content: ".";
+    display: block;
+}
+
+#tree_menu{
+	display: block;
+	float:left;
+	width: 250px;
+	padding-left: 5px;
+
+}
+
+/*#tree_menu_0 {
+	background: red;
+	max-height: 300px;
+	overflow: auto;
+}*/
+
+#tabs{
+	/*display: block;
+	float:left;
+	width: 252px;*/
+	/*padding-left: 5px;
+	margin-left: 2px;*/
+	background: none;
+	border: none;
+	/*position: fixed;
+	top: 85px;*/
+	border-radius: 20px;
+	background: #eeeeee;
+}
+
+#tabs h4 {
+	text-align: center;
+	padding: 5px 0;
+}
+
+#graphs{
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+
+	padding-right: 15px;
+	margin-top: 10px;
+}
+
+.graphs_no_list{
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	display: inline-block;
+}
+
+#graphs_holder{
+	/*float: left;
+	width: 88%;*/
+	/*float: left;*/
+	height: 100%;
+	text-align: center;
+	/*width: 1600px;*/
+	display: table;
+	margin: auto;
+	/*min-width: 800px;*/
+	-moz-box-sizing: border-box;
+    box-sizing: border-box;
+    float: right;
+}
+
+.graph_li{
+	display: inline;
+    margin: 3px 3px 3px 0;
+    padding: 1px;
+    text-align: center;
+    min-height: 410px;
+}
+
+.graph_blockfloat{
+	display: inline-block;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    position: relative;
+    text-align: center;
+}
+
+.graph_blockfloat a{
+	text-decoration: none;
+	color:	#1C94C4;
+}
+
+.graph_blockfloat a:hover{
+	text-decoration: none;
+	color:	#C77405;
+}
+
+.savedsearches_class a{
+	text-decoration: none;
+	color:	#1C94C4;
+}
+
+.savedsearches_class a:hover{
+	text-decoration: none;
+	color:	#C77405;
+}
+
+#deselect{
+	text-decoration: none;
+	color:	#1C94C4;
+}
+
+#deselect:hover{
+	text-decoration: none;
+	color:	#C77405;
+}
+
+#logout{
+	text-decoration: none;
+	color:	#1C94C4;
+}
+
+#logout:hover{
+	text-decoration: none;
+	color:	#C77405;
+}
+
+#graph_results_menu{
+	/*background: url("/static/css/images/ui-bg_highlight-soft_100_eeeeee_1x100.png") repeat-x scroll 50% top #EEEEEE;*/
+	/*border: 1px solid #DDDDDD;*/
+	color: #333333;
+	/*width: 400px;*/
+	padding: 20px;
+	display: inline-block;
+	width: 100%;
+	background: #eeeeee;
+	border-radius: 20px;
+	-moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.graph_class{
+	border:	0px;
+	display: block;
+}
+
+.options_menu{
+	height: 40px;
+	border-bottom: 1px solid #DDDDDD;
+}
+
+#button_holder{
+	margin: 5px;
+}
+
+#counted_graphs_holder{
+	margin: 2px;
+	padding: 5px;
+}
+
+#save_dialog{
+	height: 40px;
+	border-top: 1px solid #DDDDDD;
+	padding-top: 10px;
+}
+
+#save_dialog input{
+	background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #DDDDDD;
+    border-radius: 3px 3px 3px 3px;
+    float: left;
+    outline: medium none;
+    width: 150px;
+    padding: 10px;
+}
+
+#save_dialog label {
+    color: #666666;
+    float: left;
+    font-weight: bold;
+    line-height: 26px;
+    margin-right: 15px;
+    text-align: right;
+    text-shadow: 1px 1px 1px #FFFFFF;
+    width: 110px;
+    padding-top: 5px;
+}
+
+.navbar-inverse {
+	background: #eeeeee;
+}
+
+.group_title{
+	color: #727370;
+}
+
+.group_graph_holder{
+	/*min-height:200px;
+	border: 1px solid #DDDDDD;
+	margin: 2px;*/
+
+	border-left-width: 0px; border-right-width: 3px; padding-left: 10px; padding-right: 0px;
+}
+
+ul.dynatree-container {
+    height: auto !important;
+}
+
+.errorlist{
+	color: red;
+ 	list-style-type: none;
+}
+
+#slider{
+	width: 300px;
+	margin:auto;
+}
+
+#tabs .ui-widget-header {
+	background: #E78F08;
+	border: none;
+}
+
+#tabs .ui-widget-header a {
+	display: block;
+}
+
+
+
+#header div {
+	display: block;
+	width: 900px;
+	margin: 0 auto;
+	padding: 5px 0;
+}
+
+#header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 65px;
+	z-index: 0;
+}
+
+#header a {
+	display: block;
+}
+
+#header a img {
+	width: 150px;
+	height: auto;
+	display: block;
+}
+
+#mupy_container {
+	box-shadow: 0px 0 20px 2px silver;
+	margin-top: 65px;
+	z-index: 10;
+	position: relative;
+	background: white;
+	padding: 20px;
+	min-height: 1000px;
+}
+
+
+#graph_results_menu > div {
+	padding: 10px;
+	height: auto !important;
+}

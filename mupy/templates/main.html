@@ -18,18 +18,18 @@
 			//var nwdata = $.parseJSON(mydata)
 			var darray = ("{{new_window.result}}").split(',');
 			loaded_graphs = darray;
-		
+
 		{% endif %}
 		{% if saved %}
 			{% for sav in saved %}
 				searchesNames.push("{{sav}}");
 			{% endfor %}
 		{% endif %}
-		
-		
-		
+
+
+
 		$(document).ready(function(){
-			
+
 			{% if new_window %}
 				$("#tabs").hide();
 				$("#counted_graphs_holder").hide();
@@ -52,7 +52,7 @@
 				}
 			});
 			$( "#refreshIndicator" ).text( $( "#slider" ).slider( "value" ) );
-			
+
 			$( "#tabs" ).resizable({
 				maxWidth: 400,
 				minWidth: 252,
@@ -60,7 +60,7 @@
 				alsoResize: ".dynatree-container",
 				resize: function(event, ui) {
 					$("ul.dynatree-container").css('height','auto');
-					$("ul.dynatree-container").css('width','auto'); 
+					$("ul.dynatree-container").css('width','auto');
 					$( "#tabs" ).css('height','auto');
 					}
 			});
@@ -73,10 +73,10 @@
 								checkbox: true,
 								selectMode: 3,
 								debugLevel: 0,
-								ajaxDefaults: { 
+								ajaxDefaults: {
 							        cache: true, // false: Append random '_' argument to the request url to prevent caching.
 							    },
-							    initAjax: 
+							    initAjax:
 							    {
 							    	url: urlTabArray[ui.index],
 							    },
@@ -113,15 +113,15 @@
 									    		graphObj.imgurl = node.data.url
 									    		graphObj.pageurl = node.data.pageurl
 									    		graphObj.nodeurl = node.data.nodeurl
-									    		graphs_arr.push(graphObj);									    			
+									    		graphs_arr.push(graphObj);
 									    		selectedKeys.push(node.data.key.replace("graph_",""));
 									    		$("#counted_graphs").html(selectedKeys.length+' graphs selected');
 											}
 								    });
-							    }, 
+							    },
 							});
 					   }
-					   
+
 				   },
 				   select: function(event, ui) {
 					   if (allLoaded == true){
@@ -162,7 +162,7 @@
 			clearGraphData();
 			return false
 			});
-			
+
 			$("#save")
 				.button()
 				.click(function(){
@@ -173,7 +173,7 @@
 				$("#save_dialog").toggle("slow");
 				return false
 			});
-			
+
 			$("#saveThisQuery")
 			.button()
 			.click(function(){
@@ -192,11 +192,11 @@
 							$("#id_is_edit").val('edit');
 						}
 	    		 	}
-	    		 	
+
 					$("#id_graphs").val(selectedKeys.join(','));
 					$("#id_display_type").val(activeTabIndex);
 					data = $("#saveQueryForm").serialize();
-					$.post('{% url save_search %}', data, 
+					$.post('{% url save_search %}', data,
 						function(out) {
 						  alert(out.result);
 						  if (out.errors == "None"){
@@ -206,22 +206,22 @@
 						  $("#save_dialog").toggle("slow");
 						}
 					);
-					
+
 				}
 				return false;
 			});
-			
+
 			$( "#dialog" ).dialog({
 				autoOpen: false,
 				width: 600,
 				show: "blind",
 				hide: "blind"
 			});
-			
+
 
 
 		});
-		
+
 		function clearGraphData(){
 			graphs_arr = new Array();
 			countGraphs = 0;
@@ -229,7 +229,7 @@
 			$("#graphs").empty();
 			selectedKeys = new Array();
 		}
-		
+
 		function fetchGraphs(){
 			var period = $("input:radio[name=period]:checked").val();
 			var grouptype = $("input:radio[name=grouping]:checked").val();
@@ -288,7 +288,7 @@
 				graphGroupArr.push(graphGroup);
 			}
 			return graphGroupArr;
-			
+
 		}
 		function findIndexByKeyValue(obj, key, value)
 		{
@@ -299,39 +299,38 @@
 		    }
 		    return null;
 		}
-		
+
 		</script>
 {% endblock %}
 {% block content %}
 			<div id="results_wrapper">
-				
-				<div id="tabs" style="overflow: visible">
-					<div style="text-align:center;">Select graphs</div>
-					<ul>
-						<li><a href="#tree_menu_0">All</a></li>
-						<li><a href="#tree_menu_1">By Type</a></li>
-						<li><a href="{% url saved_searches %}">Saved</a></li>
-					</ul>
-					<div id="tree_menu_0"></div>
-					<div id="tree_menu_1"></div>
+
+				<div id="tabs" class="col-xs-2" >
+						<h4>SELECT GRAPHS</h4>
+						<ul>
+							<li><a href="#tree_menu_0">All</a></li>
+							<li><a href="#tree_menu_1">By Type</a></li>
+							<li><a href="{% url saved_searches %}">Saved</a></li>
+						</ul>
+						<div id="tree_menu_0"></div>
+						<div id="tree_menu_1"></div>
 				</div>
-				<div id='graphs_holder'>
-					
+				<div id='graphs_holder' class="{% if not new_window %} col-xs-10 {% else %} col-xs-12{% endif %}">
 					<div id="graph_results_menu">
 						<div id='user_details' class='options_menu' style="height: 20px;">Logged in as: {{user}} (<a href="{% url logout %}" id="logout">Logout</a>)</div>
 						<div id='selected_list' class='options_menu'>Choose graph period:<br>
 							<form action="">
-								<input type="radio" name="period" value="day" checked="checked"> day 
-								<input type="radio" name="period" value="week"> week 
-								<input type="radio" name="period" value="month"> month 
-								<input type="radio" name="period" value="year"> year<br>
+								<label><input type="radio" name="period" value="day" checked="checked"> day</label>
+								<label><input type="radio" name="period" value="week"> week</label>
+								<label><input type="radio" name="period" value="month"> month</label>
+								<label><input type="radio" name="period" value="year"> year<br></label>
 							</form>
 						</div>
 						<div id='grouping_list' class='options_menu'>Choose Grouping:<br>
 							<form action="">
-								<input type="radio" name="grouping" value="nogroup" checked="checked"> none 
-								<input type="radio" name="grouping" value="nodename"> hostname
-								<input type="radio" name="grouping" value="graphname"> type<br>
+								<label><input type="radio" name="grouping" value="nogroup" checked="checked"> none</label>
+								<label><input type="radio" name="grouping" value="nodename"> hostname</label>
+								<label><input type="radio" name="grouping" value="graphname"> type</label><br>
 							</form>
 						</div>
 						<div id='refresh_interval' class='options_menu' style="height: 40px;">Refresh Interval: <span id="refreshIndicator"></span> mins<br>
@@ -339,7 +338,12 @@
 						</div>
 						<div id="button_holder">
 							<div id="counted_graphs_holder"><span id="counted_graphs">0 graphs selected</span> {% if not new_window %}<span>(<a href="#" id="deselect">deselect all</a>)</span>{% endif %}</div>
-							<button id="fetch">Apply</button>{% if not new_window %}<button id="save">Save...</button>{% endif %}
+							<button class="btn btn-primary" id="fetch">Apply</button>
+							{% if not new_window %}
+								<button class="btn btn-default" id="save">
+									Save...
+								</button>
+								{% endif %}
 						</div>
 						<div id="save_dialog" style="display:none">
 							<form action="" id="saveQueryForm">
@@ -349,7 +353,7 @@
 								<input type="hidden" id="id_graphs" name="graphs">
 								<input type="hidden" id="id_display_type" name="display_type">
 								<input type="hidden" id="id_is_edit" name="is_edit">
-								<button id="saveThisQuery">Save</button>
+								<button class="btn btn-default" id="saveThisQuery">Save</button>
 							</form>
 						</div>
 					</div>

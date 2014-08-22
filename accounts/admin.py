@@ -7,15 +7,15 @@ from django.forms import ModelForm
 from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
 
-class NodeGroupAdminForm(ModelForm):
-    nodegroups=forms.ModelMultipleChoiceField(NodeGroup.objects.all(),widget=
-            FilteredSelectMultiple("NodeGroup",True), required=False)
+class NodeForm(ModelForm):
+    nodes=forms.ModelMultipleChoiceField(Node.objects.all(),widget=
+            FilteredSelectMultiple("Node",True), required=False)
     class Meta:
         model= UserProfile
 
 class UserNodeGroupAdmin(admin.ModelAdmin):
-    list_display = ('user', 'get_nodegroups')
-    form = NodeGroupAdminForm
+    list_display = ('user', 'get_nodes')
+    form = NodeForm
 
 
 admin.site.register(UserProfile, UserNodeGroupAdmin)

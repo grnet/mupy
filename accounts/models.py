@@ -1,22 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import User
-from muparse.models import *
+from muparse.models import Node
 
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
-    nodegroups = models.ManyToManyField(NodeGroup, blank=True, null=True)
+    nodes = models.ManyToManyField(Node, blank=True, null=True)
 
-    def get_nodegroups(self):
+    def get_nodes(self):
         ret = ''
-        ngs = self.nodegroups.all()
+        ngs = self.nodes.all()
         for ng in ngs:
             ret = "%s, %s" %(ng, ret)
         if ret:
-            ngroups = ret.rstrip(', ')
-            return ngroups
+            nodes = ret.rstrip(', ')
+            return nodes
         else:
             return None
 
     def __unicode__(self):
-        return "%s:%s" %(self.user.username, self.get_nodegroups())
+        return "%s:%s" %(self.user.username, self.get_nodes())

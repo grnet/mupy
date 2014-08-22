@@ -19,6 +19,7 @@ from django.template.context import RequestContext
 from django.http import HttpResponse
 from muparse.models import *
 from muparse.forms import *
+from accounts.models import UserProfile
 from django.views.decorators.cache import cache_page
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
@@ -35,10 +36,10 @@ def home(request, search_id = None):
         graphs = []
         if not request.user.is_superuser:
             try:
-                nodegroups = request.user.get_profile().nodegroups.all()
+                nodes = request.user.get_profile().nodes.all()
             except UserProfile.DoesNotExist:
                 raise Http404
-            graphs.extend(["%s"%(i.pk) for i in savedsearches.graphs.filter(node__group__in=nodegroups)])
+            graphs.extend(["%s"%(i.pk) for i in savedsearches.graphs.filter(node__in=nodes)])
         else:
             graphs.extend(["%s"%(i.pk) for i in savedsearches.graphs.all()])
         graphs = ','.join(graphs)
@@ -46,10 +47,10 @@ def home(request, search_id = None):
     saved_searches = SavedSearch.objects.all().order_by('description')
     if not request.user.is_superuser:
         try:
-            nodegroups = request.user.get_profile().nodegroups.all()
+            nodes = request.user.get_profile().nodes.all()
         except UserProfile.DoesNotExist:
             raise Http404
-        saved_searches = saved_searches.filter(graphs__in=NodeGraphs.objects.filter(node__group__in=nodegroups)).distinct()
+        saved_searches = saved_searches.filter(graphs__in=NodeGraphs.objects.filter(node__in=nodes)).distinct()
     searches = []
     if saved_searches:
         searches.extend([s.description for s in saved_searches])
@@ -71,10 +72,10 @@ def get_node_tree(request, user_id):
     graphs = NodeGraphs.objects.all().select_related('node', 'graph', 'node__group', 'graph__category').order_by('node__group', 'node', 'graph__category__name')
     if not request.user.is_superuser:
         try:
-            nodegroups = request.user.get_profile().nodegroups.all()
+            nodes = request.user.get_profile().nodes.all()
         except UserProfile.DoesNotExist:
             raise Http404
-        graphs = graphs.filter(node__group__in=nodegroups)
+        graphs = graphs.filter(node__in=nodes)
     len_graphs = len(graphs)
     for index, graph in enumerate(graphs):
         if graph.node not in parsed_node:
@@ -153,10 +154,10 @@ def get_node_tree_category(request, user_id):
     graphs = NodeGraphs.objects.all().select_related('node', 'graph', 'node__group', 'graph__category').order_by('graph__category__name', 'graph__name', 'node__group', 'node__name')
     if not request.user.is_superuser:
         try:
-            nodegroups = request.user.get_profile().nodegroups.all()
+            nodes = request.user.get_profile().nodes.all()
         except UserProfile.DoesNotExist:
             raise Http404
-        graphs = graphs.filter(node__group__in=nodegroups)
+        graphs = graphs.filter(node__in=nodes)
     len_graphs = len(graphs)
     for index, graph in enumerate(graphs):
         current_category = graph.graph.category.name
@@ -240,10 +241,10 @@ def load_search(request, search_id=None):
     graphs = []
     if not request.user.is_superuser:
         try:
-            nodegroups = request.user.get_profile().nodegroups.all()
+            nodes = request.user.get_profile().nodes.all()
         except UserProfile.DoesNotExist:
             raise Http404
-        graphs.extend(["%s"%(i.pk) for i in savedsearches.graphs.filter(node__group__in=nodegroups)])
+        graphs.extend(["%s"%(i.pk) for i in savedsearches.graphs.filter(node__in=nodes)])
     else:
         graphs.extend(["%s"%(i.pk) for i in savedsearches.graphs.all()])
     graphs = ','.join(graphs)
@@ -257,10 +258,10 @@ def load_search_blank(request, search_id=None):
     graphs = []
     if not request.user.is_superuser:
         try:
-            nodegroups = request.user.get_profile().nodegroups.all()
+            nodes = request.user.get_profile().nodes.all()
         except UserProfile.DoesNotExist:
             raise Http404
-        graphs.extend([int("%s"%(i.pk)) for i in savedsearches.graphs.filter(node__group__in=nodegroups)])
+        graphs.extend([int("%s"%(i.pk)) for i in savedsearches.graphs.filter(node__in=nodes)])
     else:
         graphs.extend([int("%s"%(i.pk)) for i in savedsearches.graphs.all()])
     nodegraphs = NodeGraphs.objects.filter(pk__in=graphs)
@@ -285,13 +286,13 @@ def saved_searches(request):
     searches = saved_searches
     if not request.user.is_superuser:
         try:
-            nodegroups = request.user.get_profile().nodegroups.all()
+            nodes = request.user.get_profile().nodes.all()
         except UserProfile.DoesNotExist:
             raise Http404
         searches = []
-        saved_searches = saved_searches.filter(graphs__in=NodeGraphs.objects.filter(node__group__in=nodegroups)).distinct()
+        saved_searches = saved_searches.filter(graphs__in=NodeGraphs.objects.filter(node__in=nodes)).distinct()
         for s in saved_searches:
-            s_graphs = s.graphs.filter(node__group__in=nodegroups)
+            s_graphs = s.graphs.filter(node__in=nodes)
             if s_graphs:
                 search_dict = {
                                'pk': s.pk,

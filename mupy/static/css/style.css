@@ -72,7 +72,6 @@ body{
 	/*min-width: 800px;*/
 	-moz-box-sizing: border-box;
     box-sizing: border-box;
-    float: right;
 }
 
 .graph_li{

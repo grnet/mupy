@@ -53,17 +53,6 @@
 			});
 			$( "#refreshIndicator" ).text( $( "#slider" ).slider( "value" ) );
 
-			$( "#tabs" ).resizable({
-				maxWidth: 400,
-				minWidth: 252,
-				handles: "e",
-				alsoResize: ".dynatree-container",
-				resize: function(event, ui) {
-					$("ul.dynatree-container").css('height','auto');
-					$("ul.dynatree-container").css('width','auto');
-					$( "#tabs" ).css('height','auto');
-					}
-			});
 			$( "#tabs" ).tabs({
 				   show: function(event, ui) {
 					   clearGraphData();

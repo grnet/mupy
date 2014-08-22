@@ -9,7 +9,7 @@ urlpatterns = patterns('',
     # url(r'^$', 'mupy.views.home', name='home'),
     url(r'^', include('muparse.urls')),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
-    url(r'^logout/?', 'django.contrib.auth.views.logout', name="logout"),
+    url(r'^logout/?', 'django.contrib.auth.views.logout', {'next_page': '/'}, name="logout"),
     # Uncomment the admin/doc line below to enable admin documentation:
     #url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

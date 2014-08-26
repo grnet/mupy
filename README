@@ -19,7 +19,7 @@ Mupy's installation and operation depends on the following modules/packages
 * python-django (>=1.4.5)
 * python-mysqldb
 * python-ldap (if ldap user auth is needed)
-* python-beautifulsoup4 (won't work with <4)
+* python-bs4 (won't work with <4)
 * memcached
 
 
@@ -36,5 +36,5 @@ Alias /static       /<installation_location>/mupy/static
 WSGIScriptAlias /      /<installation_location>/mupy/apache/django.wsgi
 
 3. Run syncdb and create an admin user. Admin users have permissions to all nodegroups/nodes/graphs
-4. Run ./manage.py parse_munin2 to parse the MUNIN_URL and store data into db. In case you have an older version of munin you have to run ./manage parse_munin
+4. Run ./manage.py parse_munin2 to parse the MUNIN_URL and store data into db. In case you have an older version of munin you have to run ./manage parse_munin. A daily cronjob of this command is suggested.
 5. Restart Apache (or "touch apache/django.wsgi") and enjoy

@@ -249,7 +249,7 @@ ul.dynatree-container {
 }
 
 #header a {
-	display: block;
+	display: inline-block;
 }
 
 #header a img {

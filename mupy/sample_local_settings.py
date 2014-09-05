@@ -9,6 +9,12 @@ ALLOWED_HOSTS = ['*']
 
 SECRET_KEY = ''
 
+ADMINS = (
+    ('example', 'foo@example.org'),
+)
+
+DEFAULT_FROM_EMAIL = 'foo@bar.com'
+
 # db connection info
 DATABASES = {
     'default': {
@@ -26,6 +32,7 @@ MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 
 TIME_ZONE = 'Europe/Athens'
+
 
 CACHE_BACKEND = ''
 

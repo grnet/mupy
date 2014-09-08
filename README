@@ -35,6 +35,7 @@ create an alias for the static dir in your apache conf and a WSGI script alias e
 Alias /static       /<installation_location>/mupy/static
 WSGIScriptAlias /      /<installation_location>/mupy/apache/django.wsgi
 
-3. Run syncdb and create an admin user. Admin users have permissions to all nodegroups/nodes/graphs
-4. Run ./manage.py parse_munin2 to parse the MUNIN_URL and store data into db. In case you have an older version of munin you have to run ./manage parse_munin. A daily cronjob of this command is suggested.
-5. Restart Apache (or "touch apache/django.wsgi") and enjoy
+3. Run ./manage.py collectstatic
+4. Run syncdb and create an admin user. Admin users have permissions to all nodegroups/nodes/graphs
+5. Run ./manage.py parse_munin2 to parse the MUNIN_URL and store data into db. In case you have an older version of munin you have to run ./manage parse_munin. A daily cronjob of this command is suggested.
+6. Restart Apache (or "touch apache/django.wsgi") and enjoy

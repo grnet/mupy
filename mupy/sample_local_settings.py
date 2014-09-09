@@ -109,3 +109,33 @@ LDAP_AUTH_IS_STAFF = False
 #         },
 #     }
 # }
+
+# LDAP CONFIG
+# import ldap
+# from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
+
+# AUTH_LDAP_BIND_DN = ""
+# AUTH_LDAP_BIND_PASSWORD = ""
+# AUTH_LDAP_SERVER_URI = "ldap://foo.bar.org"
+# AUTH_LDAP_START_TLS = True
+# AUTH_LDAP_USER_SEARCH = LDAPSearch("ou=People, dc=bar, dc=foo",
+#             ldap.SCOPE_SUBTREE, "(uid=%(user)s)")
+# AUTH_LDAP_USER_ATTR_MAP = {
+#         "first_name": "givenName",
+#         "last_name": "sn",
+#         "email": "mail"
+#       }
+
+# # Set up the basic group parameters.
+# AUTH_LDAP_GROUP_SEARCH = LDAPSearch("ou=Groups,dc=foo, dc=bar, dc=org",
+#     ldap.SCOPE_SUBTREE, "(objectClass=groupOfNames)"
+# )
+# AUTH_LDAP_GROUP_TYPE = GroupOfNamesType()
+
+# AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+#     "is_active": "cn=NOC, ou=Groups, dc=foo, dc=bar, dc=org",
+#     "is_staff": "cn=staff, ou=Groups, dc=foo, dc=bar, dc=org",
+#     "is_superuser": "cn=NOC, ou=Groups,dc=foo, dc=bar, dc=org"
+# }
+
+

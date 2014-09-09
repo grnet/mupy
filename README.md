@@ -1,19 +1,17 @@
-===MUPY===
+# MUPY
 
-What is Mupy?
-======================
+## What is Mupy?
+
 Mupy is a Munin Python Parser. It is written in Python and is powered by Django framework.
 Its functionality is pretty straightforward. It parses the HTML DOM of a munin site, stores the graphable
 data into a db and provides a friendly user interface for retrieving munin graphs.
 
 
-Munin version compatibility
-=====================
+### Munin version compatibility
 Mupy was built on Munin version 1.4.5, but is supports version 2 as well.
 
 
-Installation Requirements
-=====================
+### Installation Requirements
 Mupy's installation and operation depends on the following modules/packages
 
 * python-django (>=1.4.5)
@@ -23,17 +21,17 @@ Mupy's installation and operation depends on the following modules/packages
 * memcached
 
 
-Installation
-====================
+## Installation
+
 1. Untar the package (or clone via git) to your desired location, copy sample_local_settings.py to local_settings.py, apache/django.wsgi.dist to local files ommiting dist and edit loca_settings.py and apache/django.wsgi according to your needs. Pay special attention to:
-MUNIN_URL : url that munin welcome page lives, eg. "http://munin.example.com"
-MUNIN_CGI_PATH : if images are updated frequently (without the need to visit) then set the cgi path here, eg. "cgi-bin/munin-cgi-graph/"
+	- `MUNIN_URL` : url that munin welcome page lives, eg. "http://munin.example.com"
+	- `MUNIN_CGI_PATH` : if images are updated frequently (without the need to visit) then set the cgi path here, eg. "cgi-bin/munin-cgi-graph/"
 
 2. To serve via Apache (static files),
 create an alias for the static dir in your apache conf and a WSGI script alias eg.
 
-Alias /static       /<installation_location>/mupy/static
-WSGIScriptAlias /      /<installation_location>/mupy/apache/django.wsgi
+		Alias /static       /<installation_location>/mupy/static
+		WSGIScriptAlias /      /<installation_location>/mupy/apache/django.wsgi
 
 3. Run ./manage.py collectstatic
 4. Run syncdb and create an admin user. Admin users have permissions to all nodegroups/nodes/graphs

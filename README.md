@@ -1,5 +1,7 @@
 # MUPY
 
+<img src="https://github.com/grnet/mupy/blob/master/mupy/static/images/mupy_logo.png" alt="MuPy">
+
 ## What is Mupy?
 
 Mupy is a Munin Python Parser. It is written in Python and is powered by Django framework.
@@ -66,4 +68,8 @@ should be a select input with the names of the existing users (you can add a
 new one by clicking the `+` button). Then there is a multy-select box with host
 names. Move the nodes that the user will be able to see on the box below. Save
 the changes.
+
+### Screenshot
+
+<img src="https://github.com/grnet/mupy/blob/master/mupy/static/images/mupy_screenshot.jpeg" alt="MuPy">
 

@@ -74,3 +74,7 @@ the changes.
 
 <img src="https://github.com/grnet/mupy/blob/master/mupy/static/images/mupy_screenshot.jpeg" alt="MuPy">
 
+## Demo
+Feel free to play with the [demo](http://mupy-demo.grnet.gr/ "Mupy Demo") we have set up at `http://mupy-demo.grnet.gr`.
+It parses `http://demo.munin-monitoring.org`.
+

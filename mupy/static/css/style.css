@@ -25,18 +25,13 @@ body{
 	overflow: auto;
 }*/
 
-#tabs{
-	/*display: block;
-	float:left;
-	width: 252px;*/
-	/*padding-left: 5px;
-	margin-left: 2px;*/
+#tabs {
+	margin-top: 1%;
 	background: none;
 	border: none;
-	/*position: fixed;
-	top: 85px;*/
 	border-radius: 20px;
 	background: #eeeeee;
+	padding-left: 1%;
 }
 
 #tabs h4 {
@@ -61,17 +56,14 @@ body{
 }
 
 #graphs_holder{
-	/*float: left;
-	width: 88%;*/
-	/*float: left;*/
 	height: 100%;
 	text-align: center;
-	/*width: 1600px;*/
-	display: table;
 	margin: auto;
-	/*min-width: 800px;*/
 	-moz-box-sizing: border-box;
     box-sizing: border-box;
+    padding: 0;
+	margin-top: 1%;
+	padding-left: 1%;
 }
 
 .graph_li{

@@ -294,7 +294,7 @@
 {% block content %}
 			<div id="results_wrapper">
 
-				<div id="tabs" class="col-xs-2" >
+				<div id="tabs" class="col-md-3" >
 						<h4>SELECT GRAPHS</h4>
 						<ul>
 							<li><a href="#tree_menu_0">All</a></li>
@@ -304,7 +304,7 @@
 						<div id="tree_menu_0"></div>
 						<div id="tree_menu_1"></div>
 				</div>
-				<div id='graphs_holder' class="{% if not new_window %} col-xs-10 {% else %} col-xs-12{% endif %}">
+				<div id='graphs_holder' class="{% if not new_window %} col-md-9 {% else %} col-xs-12{% endif %}">
 					<div id="graph_results_menu">
 						<div id='user_details' class='options_menu' style="height: 20px;">Logged in as: {{user}} (<a href="{% url logout %}" id="logout">Logout</a>)</div>
 						<div id='selected_list' class='options_menu'>Choose graph period:<br>

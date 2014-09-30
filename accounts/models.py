@@ -21,6 +21,7 @@ from django.db.models.signals import post_save
 from django.core.mail import send_mail
 from django.conf import settings
 from muparse.models import Node
+from django.core.exceptions import ImproperlyConfigured
 
 
 class UserProfile(models.Model):
@@ -31,7 +32,7 @@ class UserProfile(models.Model):
         ret = ''
         ngs = self.nodes.all()
         for ng in ngs:
-            ret = "%s, %s" %(ng, ret)
+            ret = "%s, %s" % (ng, ret)
         if ret:
             nodes = ret.rstrip(', ')
             return nodes
@@ -44,21 +45,25 @@ class UserProfile(models.Model):
         super(UserProfile, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return "%s:%s" %(self.user.username, self.get_nodes())
+        return "%s:%s" % (self.user.username, self.get_nodes())
 
 
 def create_user_profile(sender, instance, created, **kwargs):
     if created and not kwargs.get('raw', False):
         UserProfile.objects.create(user=instance)
         to_emails = [admin[1] for admin in settings.ADMINS]
-        send_mail(
-            '[Mupy] new user',
-            'New user created: %s. Give him some nodes to watch!' % (
-                instance.username
-            ),
-            settings.DEFAULT_FROM_EMAIL,
-            to_emails,
-            fail_silently=False
-        )
+        try:
+            send_mail(
+                '[Mupy] new user',
+                'New user created: %s. Give him some nodes to watch!' % (
+                    instance.username
+                ),
+                settings.DEFAULT_FROM_EMAIL,
+                to_emails,
+                fail_silently=False
+            )
+        except:
+            raise ImproperlyConfigured('Could not notify admin about user creation. Please make sure django can send Emails')
+
 
 post_save.connect(create_user_profile, sender=User, dispatch_uid='create_UserProfile')

@@ -45,17 +45,19 @@ create an alias for the static dir in your apache conf and a WSGI script alias e
 5. Run `./manage.py migrate`
 6. Run `./manage.py createsuperuser`
 7. Run `./manage.py collectstatic`
-8. Run `./manage.py parse_munin2` to parse the `MUNIN_URL` and store data into db. In case you have an older version of munin you have to run `./manage parse_munin`. A daily cronjob of this command is suggested.
-9. Restart Apache (or `touch apache/django.wsgi`) and enjoy
+8. Add the nodes you need to parse. See Adding Nodes.
+9. Run `./manage.py parse_munin` to parse the `MUNIN_URL` and store data into db. A daily cronjob of this command is suggested.
+10. Restart Apache (or `touch apache/django.wsgi`) and enjoy
 
 
 ## Documentation
 Here is a small description of the way that mupy should be used.
 The idea is to let each account monitor only some of the hosts.
 
-### Settings
+### Adding Nodes
 The munin nodes are stored in the dictionary `MUNIN_NODES` in local_settings.py.
-Look at sample_local_settings for an example.
+Look at sample_local_settings for an example. If a node is older than v2 an extra
+attribute must be set, `version`. Nodes can also be added through the admin interface.
 
 ### Usage
 Whenever a user is created, the administrator (set in the `ADMIN` in

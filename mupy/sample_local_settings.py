@@ -45,7 +45,8 @@ MUNIN_NODES = (
             'name': 'main',
             'url': 'http://asd.example.org',
             'cgi_path': 'cgi-bin/munin-cgi-graph/',
-            'image_path': ''
+            'image_path': '',
+            'version': 'v1'
         }
     ),
     (

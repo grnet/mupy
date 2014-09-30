@@ -18,6 +18,7 @@ from django.contrib import admin
 from muparse.models import *
 
 admin.site.register(NodeGroup)
+admin.site.register(MuninNodes)
 admin.site.register(GraphCategory)
 admin.site.register(Graph)
 admin.site.register(Node)

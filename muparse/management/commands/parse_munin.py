@@ -18,9 +18,9 @@ from django.core.management.base import NoArgsCommand
 from bs4 import BeautifulSoup
 import urllib
 from muparse.models import *
-from django.conf import settings
 
-mnodes = settings.MUNIN_NODES
+from utils import get_v1_nodes
+mnodes = get_v1_nodes()
 
 
 class Command(NoArgsCommand):

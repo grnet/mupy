@@ -26,8 +26,9 @@ from django.conf import settings
 from django.contrib.auth.models import User
 
 from muparse.models import *
+from utils import get_v2_nodes
 
-MNODES = settings.MUNIN_NODES
+MNODES = get_v2_nodes()
 
 
 class Command(NoArgsCommand):

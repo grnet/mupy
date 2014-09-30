@@ -17,6 +17,35 @@
 from django.db import models
 
 
+MUNIN_VERSION_CHOICES = (
+    ('v1', 'version 1'),
+    ('v2', 'version 2'),
+)
+
+
+class MuninNodes(models.Model):
+    name = models.CharField(max_length=255)
+    url = models.URLField(max_length=255)
+    cgi_path = models.CharField(max_length=255)
+    image_path = models.CharField(max_length=255, blank=True)
+    munin_version = models.CharField(
+        max_length=2,
+        choices=MUNIN_VERSION_CHOICES
+    )
+
+    def __unicode__(self):
+        return self.name
+
+    def as_dict(self):
+        return {
+            'name': self.name,
+            'url': self.url,
+            'cgi_path': self.cgi_path,
+            'image_path': self.image_path,
+            'version': self.munin_version
+        }
+
+
 class NodeGroup(models.Model):
     name = models.CharField(max_length=255)
     url = models.CharField(max_length=512)

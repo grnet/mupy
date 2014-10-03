@@ -63,7 +63,11 @@ def create_user_profile(sender, instance, created, **kwargs):
                 fail_silently=False
             )
         except:
-            raise ImproperlyConfigured('Could not notify admin about user creation. Please make sure django can send Emails')
+            raise ImproperlyConfigured(
+                'Account Created. Could not notify'
+                ' admin about user creation. Please make sure django can'
+                ' send Emails'
+            )
 
 
 post_save.connect(create_user_profile, sender=User, dispatch_uid='create_UserProfile')

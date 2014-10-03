@@ -43,7 +43,6 @@ CACHES = {
     # },
 }
 
-
 # how many days should we keep data in the db
 DATA_EXPIRES = '2'
 

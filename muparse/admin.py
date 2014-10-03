@@ -17,10 +17,15 @@
 from django.contrib import admin
 from muparse.models import *
 
+
+class GraphAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+
+
 admin.site.register(NodeGroup)
 admin.site.register(MuninNodes)
 admin.site.register(GraphCategory)
-admin.site.register(Graph)
+admin.site.register(Graph, GraphAdmin)
 admin.site.register(Node)
 admin.site.register(NodeGraphs)
 admin.site.register(SavedSearch)

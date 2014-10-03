@@ -31,8 +31,6 @@ Mupy's installation and operation depends on the following modules/packages
 * memcached
 * python-django-south
 
-
-
 1. Untar the package (or clone via git) to your desired location, copy sample_local_settings.py to local_settings.py, apache/django.wsgi.dist to local files ommiting dist and edit loca_settings.py and apache/django.wsgi according to your needs. Pay special attention to:
 	- `MUNIN_URL` : url that munin welcome page lives, eg. "http://munin.example.com"
 	- `MUNIN_CGI_PATH` : if images are updated frequently (without the need to visit) then set the cgi path here, eg. "cgi-bin/munin-cgi-graph/"
@@ -66,6 +64,11 @@ attribute must be set, `version`. Nodes can also be added through the admin inte
 Whenever a user is created, the administrator (set in the `ADMIN` in
 local_settings), receives an email notification to go and chose which hosts can
  be viewed by the new user. The new user cannot see any host by default.
+
+### Attention - Notes
+- If using sqlite3, migrations dont work, some changes must be made manually.
+
+- If using ldap without groups, all new users are marked as inactive by default. This will change in future releases.
 
 #### Selecting which hosts can be viewed by users
 In the administration panel (`/admin/`), there is a link named `user profiles`

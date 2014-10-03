@@ -33,8 +33,16 @@ STATIC_URL = '/static/'
 
 TIME_ZONE = 'Europe/Athens'
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    },
+    # 'memcached_example': {
+    # 'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+    # 'LOCATION': '127.0.0.1:11211',
+    # },
+}
 
-CACHE_BACKEND = ''
 
 # how many days should we keep data in the db
 DATA_EXPIRES = '2'

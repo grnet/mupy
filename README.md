@@ -26,9 +26,12 @@ Mupy's installation and operation depends on the following modules/packages
 * python-django (>=1.4.5)
 * python-mysqldb
 * python-ldap (if ldap user auth is needed)
+* django_auth_ldap
 * python-bs4 (won't work with <4)
 * memcached
 * python-django-south
+
+
 
 1. Untar the package (or clone via git) to your desired location, copy sample_local_settings.py to local_settings.py, apache/django.wsgi.dist to local files ommiting dist and edit loca_settings.py and apache/django.wsgi according to your needs. Pay special attention to:
 	- `MUNIN_URL` : url that munin welcome page lives, eg. "http://munin.example.com"

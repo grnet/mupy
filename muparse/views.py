@@ -14,23 +14,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import json
+import bz2
+
 from django.shortcuts import render_to_response
-from django.core.context_processors import request
 from django.template.context import RequestContext
 from django.http import HttpResponse
 from muparse.models import *
 from muparse.forms import *
 from accounts.models import UserProfile
-from django.views.decorators.cache import cache_page
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.core.cache import cache
-import json, bz2
 
 
 @login_required
-def home(request, search_id = None):
+def home(request, search_id=None):
     result = None
     if search_id:
         savedsearches = SavedSearch.objects.get(pk=search_id)
@@ -62,7 +62,7 @@ def home(request, search_id = None):
 def get_node_tree(request, user_id):
     if int(request.user.pk) != int(user_id):
         raise Http404
-    glist = cache.get('user_%s_tree'%(request.user.pk))
+    glist = cache.get('user_%s_tree' % (request.user.pk))
     if glist:
         glist = bz2.decompress(glist)
         return HttpResponse(glist, mimetype="application/json")
@@ -86,7 +86,7 @@ def get_node_tree(request, user_id):
                 nlist.append(ndict)
             ndict = {}
             ndict['title'] = graph.node.name
-            ndict['key'] = "node_%s" %(graph.node.pk)
+            ndict['key'] = "node_%s" % (graph.node.pk)
             ndict['href'] = graph.node.url
             ndict['children'] = []
             ndict['type'] = "node"
@@ -94,13 +94,13 @@ def get_node_tree(request, user_id):
 
         if graph.node.group not in parsed_group:
             if parsed_group:
-                nlist.sort(key=lambda item:item['title'], reverse=False)
-                grdict['children']= nlist
+                nlist.sort(key=lambda item: item['title'], reverse=False)
+                grdict['children'] = nlist
                 grlist.append(grdict)
                 nlist = []
-            grdict={}
+            grdict = {}
             grdict['title'] = graph.node.group.name
-            grdict['key'] = "group_%s" %(graph.node.group.pk)
+            grdict['key'] = "group_%s" % (graph.node.group.pk)
             grdict['href'] = graph.node.group.url
             grdict['children'] = []
             grdict['type'] = "group"
@@ -137,18 +137,16 @@ def get_node_tree(request, user_id):
     cache.set('user_%s_tree'%(request.user.pk), bz2.compress(glist), 60 * 60 * 24 *5)
     return HttpResponse(glist, mimetype="application/json")
 
+
 @login_required
 def get_node_tree_category(request, user_id):
     if int(request.user.pk) != int(user_id):
         raise Http404
-    glist = cache.get('user_%s_tree_cat'%(request.user.pk))
+    glist = cache.get('user_%s_tree_cat' % (request.user.pk))
     if glist:
         glist = bz2.decompress(glist)
         return HttpResponse(glist, mimetype="application/json")
     grlist = []
-    nlist = []
-    graphs_list = []
-    parsed_node = []
     parsed_group = []
     parsed_graph_category = []
     parsed_graph_name =[]
@@ -161,8 +159,6 @@ def get_node_tree_category(request, user_id):
         graphs = graphs.filter(node__in=nodes)
     len_graphs = len(graphs)
     for index, graph in enumerate(graphs):
-        current_category = graph.graph.category.name
-
         if graph.graph.category.name not in parsed_graph_category:
             if parsed_graph_category:
                 grlist.append(gcdict)

@@ -26,8 +26,6 @@
 			{% endfor %}
 		{% endif %}
 
-
-
 		$(document).ready(function(){
 
 			{% if new_window %}
@@ -234,18 +232,20 @@
 					graphitem = graph_group.graphs[i];
 					var randomNo = Math.floor(Math.random()*9999999);
 					$("#graph_group_"+j+"").append(
-							"<li class='graph_li'>"+
-								"<div class='graph_blockfloat'>"+
-								"<a href='"+graphitem.nodeurl+"' target='_blank'>"+
-									graphitem.nodename+"</a>"+
-									"<br>"+
-									"<a href='"+graphitem.pageurl+"' target='_blank'>"+
-									graphitem.graphname+"<br><br>"+
-									"<img class='graph_class' width='479' height='280' src='"+graphitem.imgurl+"-"+period+".png?r="+randomNo+"'/></a>"+
-							"</div></li>");
+						"<li class='graph_li'>"+
+							"<div class='graph_blockfloat'>"+
+							"<a href='"+graphitem.nodeurl+"' target='_blank'>"+
+								graphitem.nodename+"</a>"+
+								"<br>"+
+								"<a href='"+graphitem.pageurl+"' target='_blank'>"+
+								graphitem.graphname+"<br><br>"+
+								"<img class='graph_class' width='479' height='280' src='"+graphitem.imgurl+"-"+period+".png?r="+randomNo+"'/></a>"+
+						"</div></li>"
+					);
 				}
 			}
 		}
+
 		function groupGraphs(type){
 			graphGroupArr = new Array();
 			graphGroup = new Object();
@@ -291,20 +291,21 @@
 
 		</script>
 {% endblock %}
+{% block menu %}
+	<div id="tabs" class="col-md-12" >
+			<h4>Select Graphs</h4>
+			<ul>
+				<li><a href="#tree_menu_0">All</a></li>
+				<li><a href="#tree_menu_1">By Type</a></li>
+				<li><a href="{% url saved_searches %}">Saved</a></li>
+			</ul>
+			<div id="tree_menu_0"></div>
+			<div id="tree_menu_1"></div>
+	</div>
+{% endblock %}
 {% block content %}
 			<div id="results_wrapper">
-
-				<div id="tabs" class="col-md-3" >
-						<h4>SELECT GRAPHS</h4>
-						<ul>
-							<li><a href="#tree_menu_0">All</a></li>
-							<li><a href="#tree_menu_1">By Type</a></li>
-							<li><a href="{% url saved_searches %}">Saved</a></li>
-						</ul>
-						<div id="tree_menu_0"></div>
-						<div id="tree_menu_1"></div>
-				</div>
-				<div id='graphs_holder' class="{% if not new_window %} col-md-9 {% else %} col-xs-12{% endif %}">
+				<div id='graphs_holder' class="{% if not new_window %} col-md-12 {% else %} col-xs-12{% endif %}">
 					<div id="graph_results_menu">
 						<div id='user_details' class='options_menu' style="height: 20px;">Logged in as: {{user}} (<a href="{% url logout %}" id="logout">Logout</a>)</div>
 						<div id='selected_list' class='options_menu'>Choose graph period:<br>

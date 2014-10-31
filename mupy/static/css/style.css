@@ -415,3 +415,10 @@ ul.dynatree-container {
 	transition: left 0.5s;
 	-webkit-transition: left 0.5s;
 }
+
+footer {
+	text-align: center;
+	color: white;
+	background: #888888;
+	padding: 10px;
+}

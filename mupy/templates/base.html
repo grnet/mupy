@@ -14,22 +14,31 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}" />
 
     <title>Mupy</title>
-
     <script src="{% static 'js/jquery/jquery.js' %}" type="text/javascript"></script>
 	<script src="{% static 'js/jquery/jquery-ui.custom.js' %}" type="text/javascript"></script>
 	{% block extrahead %}{% endblock %}
 	</head>
 	<body>
-		<div id="mupy_page">
-			<div id="header" class="navbar-inverse ">
-				<div>
-					<a href="{% url home %}"><img src="{% static '' %}images/mupy_logo.png" class="logoimg" height='104px'></a>
+		<input type="checkbox" id="menu-toggle">
+		<div class="body-wrapper">
+			<div id="menu">
+				<label for="menu-toggle" class="menu-toggle"><i class="fa fa-navicon fa-3x"></i></label>
+				{% block menu %}{% endblock %}
+			</div>
+			<div id="mupy_page">
+				<div id="header" class="navbar-inverse ">
+					<div>
+						<a href="{% url home %}"><img src="{% static '' %}images/mupy_logo.png" class="logoimg" height='104px'></a>
+					</div>
+				</div>
+				<div id="mupy_container">
+					{% block content %}{% endblock %}
 				</div>
 			</div>
-			<div id="mupy_container">
-				{% block content %}{% endblock %}
-			</div>
 		</div>
+		<footer>
+			{{ version }}
+		</footer>
 	</body>
     <script src='{% static 'js/bootstrap.min.js' %}' type="text/javascript"></script>
 	<script src='{% static 'js/jquery/jquery.cookie.js' %}' type="text/javascript"></script>

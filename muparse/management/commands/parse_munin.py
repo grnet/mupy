@@ -189,5 +189,7 @@ class Command(NoArgsCommand):
 
     def handle_noargs(self, **options):
         self.delete_garbage()
+        nodes = {}
+
         self.parse_v1()
         self.parse_v2()

@@ -24,7 +24,7 @@ def get_v2_nodes():
         url = node[1].get('url')
         try:
             html = requests.get(url).text
-            if html[html.find('version ') + 8] == '2':
+            if html[html.find('version ') + 8] != '1':
                 nodes.append(node)
         except:
             print 'Could not fetch %s' % (url)

@@ -1,7 +1,6 @@
 body{
-	font-family: tahoma,arial,helvetica !important;
-	font-size: 10pt !important;
-	background: #333333;
+	font-family: tahoma,arial,helvetica;
+	font-size: 10pt;
 	margin: 0;
 	overflow-x: hidden;
 }
@@ -13,24 +12,12 @@ body{
     display: block;
 }
 
-#tree_menu{
-	display: block;
-	float:left;
-	width: 250px;
-	padding-left: 5px;
-
-}
-
-.ui-widget-content {
-	background: none !important;
-}
-
 
 #tabs {
 	background: none;
 	border: none;
 	background: #eeeeee;
-	padding-left: 1%;
+	padding: 0;
 	margin: 0;
 }
 
@@ -235,7 +222,7 @@ ul.dynatree-container {
 	text-align: center;
 	font-size: 14px;
 	font-weight: 300;
-	padding: 1% 0;
+	padding: 10px 0;
 	cursor: pointer;
 }
 
@@ -255,51 +242,18 @@ ul.dynatree-container {
 }
 
 
-
-#header div {
-	display: block;
-	width: 150px;
-	margin: 0 auto;
-	padding: 5px 0;
-}
-
-#header {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	height: 65px;
-	z-index: 0;
-}
-
-#header a {
-	display: inline-block;
-}
-
-#header a img {
+#menu .header img {
 	width: 150px;
 	height: auto;
 	display: block;
+	margin: 0 auto;
+	padding: 8px;
 }
 
 #mupy_container {
-	margin-top: 65px;
-	z-index: 10;
 	position: relative;
 	background: white;
 	padding: 20px;
-}
-
-#mupy_container:before {
-	display: block;
-	content: "";
-
-	position: absolute;
-	top: -10px;
-	left: 0;
-	right: 0;
-	box-shadow: 0px 0 20px 2px silver;
-	width: 100%;
 }
 
 #graph_results_menu > div {
@@ -346,7 +300,7 @@ ul.dynatree-container {
 
 #menu-toggle:checked ~ .body-wrapper #menu:after {
 	width: 30%;
-	background: #333333;
+	background: #eeeeee;
 	height: 65px;
 
 }
@@ -355,11 +309,42 @@ ul.dynatree-container {
 	position: absolute;
 	left: -30%;
 	width: 30%;
-	background: #333333;
-	top: -65px;
+	background: #EEEEEE;
 	z-index: 1000;
 	min-height: 800px;
+	transition: width 0.5s, left 0.5s;
+	webkit-transition: width 0.5s, left 0.5s;
+
 }
+
+#menu.initial {
+	width: 100%;
+	left: 0;
+}
+
+
+#menu .item:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+#menu .item .menu-header a {
+	color: white;
+}
+
+#menu .item .menu-content a {
+	display: block;
+	padding: 10px;
+	text-align: center;
+	background: white;
+	color: #222222;
+}
+
+#menu .item .menu-content a:hover {
+	background: #dddddd;
+}
+
 
 #menu:after {
 	position: fixed;
@@ -385,17 +370,50 @@ footer {
 	color: white;
 	background: #888888;
 	padding: 10px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.black {
+	width: 100px;
 }
 
 .menu-header {
-	height: 65px;
-	background: #E78F08;
+	background: #cccccc;
 	color: white;
 	font-weight: 300;
-	font-size: 20px;
+	font-size: 15px;
 	text-transform: uppercase;
 	text-align: center;
-	line-height: 65px;
+	padding: 10px;
+	cursor: pointer;
+}
+
+.menu-header > span {
+	margin: 0 10px;
+}
+
+
+#menu .item .menu-header .submit.hidden {
+	display: none;
+}
+
+.menu-content {
+	max-height: 0;
+	overflow: hidden;
+	background: white;
+	-webkit-transition: max-height .5s, margin-left .5s;
+    transition: max-height .5s, margin-left .5s;
+}
+
+.menu-header.active ~ .menu-content {
+	max-height: 4000px;
+}
+
+.menu-header.active, .menu-header:hover {
+	background: #E78F08;
 }
 
 #panes {
@@ -407,6 +425,12 @@ footer {
 
 #panes > li {
 	display: none;
+}
+
+
+#panes > li .empty {
+	padding: 10px;
+	text-align: center;
 }
 
 #panes > li ul {
@@ -428,13 +452,14 @@ footer {
 }
 
 #panes ul li label {
-	padding: 2%;
-	border-bottom: 1px solid #DDDDDD;
+	padding: 5px;
 	display: inline-block;
 	width: 90%;
 	line-height: 15px;
 	margin:0 ;
+	cursor: pointer;
 }
+
 
 #panes ul.active {
 	margin-left: 5%;

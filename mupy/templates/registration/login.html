@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% block extrahead %}
 <script type="text/javascript">
 		$(document).ready(function(){
@@ -6,9 +7,12 @@
 		});
 </script>
 {% endblock %}
+{% block menu_button %}{% endblock %}
 {% block content %}
 <div id="graphs_holder">
+	<img class="black" src="{% static 'images/mupy-black.png' %}" alt="">
 	<div id="graph_results_menu">
+		<h1>Welcome to mupy!</h1>
 		<form method="post" action="{% url django.contrib.auth.views.login %}">
 			{% csrf_token %}
 			{{form.as_p}}

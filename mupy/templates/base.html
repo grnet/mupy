@@ -16,24 +16,21 @@
 	<body>
 		<input type="checkbox" id="menu-toggle">
 		<div class="body-wrapper">
-			<div id="menu">
+			{% block menu_button %}
+			<div id="menu" class="initial">
 				<label for="menu-toggle" class="menu-toggle"><i class="fa fa-navicon fa-4x"></i></label>
 				{% block menu %}{% endblock %}
+				<footer>
+					Mupy v{{ version }}
+				</footer>
 			</div>
+			{% endblock %}
 			<div id="mupy_page">
-				<div id="header" class="navbar-inverse ">
-					<div>
-						<a href="{% url home %}"><img src="{% static '' %}images/mupy_logo.png" class="logoimg" height='104px'></a>
-					</div>
-				</div>
 				<div id="mupy_container">
 					{% block content %}{% endblock %}
 				</div>
 			</div>
 		</div>
-		<footer>
-			{{ version }}
-		</footer>
 	</body>
     <script src='{% static 'js/bootstrap.min.js' %}' type="text/javascript"></script>
 	<script src='{% static 'js/jquery/jquery.cookie.js' %}' type="text/javascript"></script>

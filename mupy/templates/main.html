@@ -1,13 +1,22 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% block extrahead %}
 	<script>
 	$('document').ready(function () {
+		$('.menu-header').on('click', function (e) {
+			// $('.menu-header').not(this).removeClass('active');
+			$(this).toggleClass('active');
+		});
 
 		function getChildren(data) {
 			if (data) {
 				var html = '<ul>';
 				for (var i=0; i<data.length; i++) {
-					html +='<li><label><input type="checkbox"><span class="ui-input"><i class="checked fa fa-check-circle"></i><i class="unchecked fa fa-circle-thin"></i></span>'+ data[i].title + '</label>';
+					html +='<li ';
+					if (!data[i].children) {
+						html += 'class="last"';
+					}
+					html += '><label><input type="checkbox"><span class="ui-input"><i class="checked fa fa-check-circle"></i><i class="unchecked fa fa-circle-thin"></i></span>'+ data[i].title + '</label>'
 					if (data[i].children) {
 						html += '<span class="expand"><i class="plus fa fa-plus-square"></i><i class="minus fa fa-minus-square"></i></span>';
 						html += getChildren(data[i].children);
@@ -35,7 +44,11 @@
 				var html = '<ul class="active">';
 				$.getJSON(url, function (data) {
 					for (var i=0; i < data.length; i++) {
-						html +='<li><label><input type="checkbox"><span class="ui-input"><i class="checked fa fa-check-circle"></i><i class="unchecked fa fa-circle-thin"></i></span>'+ data[i].title + '</label>'
+						html +='<li';
+						if (!data[i].children) {
+							html += 'class="last"';
+						}
+						html += '><label><input type="checkbox"><span class="ui-input"><i class="checked fa fa-check-circle"></i><i class="unchecked fa fa-circle-thin"></i></span>'+ data[i].title + '</label>'
 						if (data[i].children) {
 							html += '<span class="expand"><i class="plus fa fa-plus-square"></i><i class="minus fa fa-minus-square"></i></span>';
 							html += getChildren(data[i].children);
@@ -51,14 +64,31 @@
 
 		loadTab($('#tabs li.active'));
 
+		function refreshChecked() {
+			var checked = $('#panes li.active li.last input:checked').length;
+			if (checked !== 0) {
+				console.log(checked);
+				$('.menu-header.submit').removeClass('hidden');
+				$('.menu-header.submit .selected').text(checked);
+			} else {
+				$('.menu-header.submit').addClass('hidden');
+			}
+		}
+
 		$('#tabs li').on('click', function () {
 			loadTab(this);
+			refreshChecked();
 		});
 
 		$('#panes li').on('click', '.expand', function () {
 			$(this).toggleClass('open')
 			$(this).parent().find('> ul').toggleClass('active');
-		})
+		});
+
+		$('.submit').on('click', function () {
+			$('#menu').removeClass('initial');
+		});
+
 
 		$('#panes li').on('change', 'ul li input', function () {
 			if ($(this).prop('checked')) {
@@ -70,6 +100,7 @@
 					$(this).prop('checked', '');
 				});
 			}
+			refreshChecked();
 		});
 	});
 	</script>
@@ -366,70 +397,97 @@
 // 		</script>
 
 {% block menu %}
-	<div class="menu-header">
-		Select Graphs
+	<div class="header">
+		<a href="{% url home %}"><img src="{% static 'images/mupy_logo.png' %}" class="logoimg" height='104px'></a>
 	</div>
-	<ul id="tabs" class="col-md-12">
-		<li data-href="{% url getjson_all user.pk %}" class="active">All</li>
-		<li data-href="{% url getjson_category user.pk %}">By Type</li>
-		<li data-href="{% url saved_searches %}">Saved</li>
-	</ul>
-	<ul id="panes"  class="col-md-12">
-		<li class="active">
-			loading
-		</li>
-		<li>loading2</li>
-		<li>loading3</li>
-	</ul>
-
+	<div class="item">
+		<div class="menu-header">
+			<i class="fa fa-area-chart"></i><span>Graphs</span>
+		</div>
+		<div class="menu-content">
+			<ul id="tabs" class="col-md-12">
+				<li data-href="{% url getjson_all user.pk %}" class="active">All</li>
+				<li data-href="{% url getjson_category user.pk %}">By Type</li>
+				<li data-href="{% url saved_searches %}">Saved</li>
+			</ul>
+			<ul id="panes"  class="col-md-12">
+				<li class="active">
+					<div class="empty">
+						<i class="fa fa-cog fa-spin fa-2x"></i>
+					</div>
+				</li>
+				<li>
+					<div class="empty">
+						<i class="fa fa-cog fa-spin  fa-2x"></i>
+					</div>
+				</li>
+				<li>
+					<div class="empty">
+						<i class="fa fa-cog fa-spin  fa-2x"></i>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="item">
+		<div class="menu-header">
+			<i class="fa fa-cogs"></i><span>Views options</span>
+		</div>
+		<div class="menu-content">
+			<div id='selected_list' class='options_menu'>Choose graph period:<br>
+				<form action="">
+					<label><input type="radio" name="period" value="day" checked="checked"> day</label>
+					<label><input type="radio" name="period" value="week"> week</label>
+					<label><input type="radio" name="period" value="month"> month</label>
+					<label><input type="radio" name="period" value="year"> year<br></label>
+				</form>
+			</div>
+			<div id='grouping_list' class='options_menu'>Choose Grouping:<br>
+				<form action="">
+					<label><input type="radio" name="grouping" value="nogroup" checked="checked"> none</label>
+					<label><input type="radio" name="grouping" value="nodename"> hostname</label>
+					<label><input type="radio" name="grouping" value="graphname"> type</label><br>
+				</form>
+			</div>
+			<div id='refresh_interval' class='options_menu' style="height: 40px;">Refresh Interval: <span id="refreshIndicator"></span> mins<br>
+				<div id="slider">slider</div>
+			</div>
+		</div>
+	</div>
+	<div class="item">
+		<div class="menu-header">
+			<i class="fa fa-floppy-o"></i><span>Save</span>
+		</div>
+		<div class="menu-content">
+			<div id="save_dialog">
+				<form action="" id="saveQueryForm">
+					{% csrf_token %}
+					<label for="id_description">Description</label>
+					<input name="description" id="id_description" type="text">
+					<input type="hidden" id="id_graphs" name="graphs">
+					<input type="hidden" id="id_display_type" name="display_type">
+					<input type="hidden" id="id_is_edit" name="is_edit">
+					<button class="btn btn-default" id="saveThisQuery">Save</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="item">
+		<div class="menu-header submit hidden">
+			<span>Show <span class="selected"></span> graphs</span><i class="fa fa-arrow-right"></i>
+		</div>
+	</div>
+	<div class="item">
+		<div class="menu-header">
+			<i class="fa fa-user"></i><span><a href="{% url logout %}" id="logout">Logout</a></span>
+		</div>
+	</div>
 {% endblock %}
+
 {% block content %}
 			<div id="results_wrapper">
-				<div id='graphs_holder' class="{% if not new_window %} col-md-12 {% else %} col-xs-12{% endif %}">
-					<div id="graph_results_menu">
-						<div id='user_details' class='options_menu' style="height: 20px;">Logged in as: {{user}} (<a href="{% url logout %}" id="logout">Logout</a>)</div>
-						<div id='selected_list' class='options_menu'>Choose graph period:<br>
-							<form action="">
-								<label><input type="radio" name="period" value="day" checked="checked"> day</label>
-								<label><input type="radio" name="period" value="week"> week</label>
-								<label><input type="radio" name="period" value="month"> month</label>
-								<label><input type="radio" name="period" value="year"> year<br></label>
-							</form>
-						</div>
-						<div id='grouping_list' class='options_menu'>Choose Grouping:<br>
-							<form action="">
-								<label><input type="radio" name="grouping" value="nogroup" checked="checked"> none</label>
-								<label><input type="radio" name="grouping" value="nodename"> hostname</label>
-								<label><input type="radio" name="grouping" value="graphname"> type</label><br>
-							</form>
-						</div>
-						<div id='refresh_interval' class='options_menu' style="height: 40px;">Refresh Interval: <span id="refreshIndicator"></span> mins<br>
-							<div id="slider"></div>
-						</div>
-						<div id="button_holder">
-							<div id="counted_graphs_holder"><span id="counted_graphs">0 graphs selected</span> {% if not new_window %}<span>(<a href="#" id="deselect">deselect all</a>)</span>{% endif %}</div>
-							<button class="btn btn-primary" id="fetch">Apply</button>
-							{% if not new_window %}
-								<button class="btn btn-default" id="save">
-									Save...
-								</button>
-								{% endif %}
-						</div>
-						<div id="save_dialog" style="display:none">
-							<form action="" id="saveQueryForm">
-								{% csrf_token %}
-								<label for="id_description">Description</label>
-								<input name="description" id="id_description" type="text">
-								<input type="hidden" id="id_graphs" name="graphs">
-								<input type="hidden" id="id_display_type" name="display_type">
-								<input type="hidden" id="id_is_edit" name="is_edit">
-								<button class="btn btn-default" id="saveThisQuery">Save</button>
-							</form>
-						</div>
-					</div>
+				<div id='graphs_holder' class="col-md-12">
 					<div id="graphs"></div>
 				</div>
-				<div style="clear:both"></div>
 			</div>
-			<div id="dialog"><p id="dialogContent" style="font-size: 10pt"></p></div>
 {% endblock %}

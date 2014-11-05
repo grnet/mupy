@@ -27,17 +27,19 @@ body{
 
 
 #tabs {
-	margin-top: 1%;
 	background: none;
 	border: none;
 	background: #eeeeee;
 	padding-left: 1%;
+	margin: 0;
 }
 
-
-#tabs .ui-widget-header {
-	backround: none !important;
+#tabs:after {
+  content:"";
+  display:table;
+  clear:both;
 }
+
 
 #tabs h4 {
 	text-align: center;
@@ -48,6 +50,8 @@ body{
 
 #tabs ul {
 	width: 100%;
+	margin: 0;
+	padding: 0;
 }
 
 #graphs{
@@ -221,75 +225,36 @@ ul.dynatree-container {
 	margin:auto;
 }
 
-#tabs .ui-widget-header {
-	background: none;
-	border: none;
-}
-
-#tabs .ui-widget-header a {
-	display: block;
-}
-
-
-#tabs .ui-state-default {
-	border-radius: none !important;
-	border-bottom-left-radius: none !important;
-	border-bottom-right-radius: none !important;
-	border-top-left-radius: none !important;
-	border-top-right-radius: none !important;
-}
-
-#tabs .ui-tabs-nav {
-	background: white;
-	padding: 0;
-	margin :0;
-	border: none;
-}
-
-#tabs .ui-tabs-nav:after {
-   content: " "; /* Older browser do not support empty content */
-   visibility: hidden;
-   display: block;
-   height: 0;
-   clear: both;
-}
-
-#tabs .ui-tabs-nav li {
-	width: 33%;
+#tabs li {
+	width: 33.3%;
 	margin: 0 !important;
 	float: left;
 	padding: 0;
-	borner: none;
-	border-radius: none;
 	box-sizing: border-box;
-
-}
-
-#tabs .ui-tabs-nav li a {
-	padding: 10px 0;
-	border-radius: none;
-	box-sizing: border-box;
-}
-
-#tabs .ui-tabs-panel {
-	background: #eeeeee !important;
-	margin-top: 20px;
-	border-radius: 4px;
-}
-
-#tabs .ui-tabs-nav li:hover {
-	color: #333333;
-}
-.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-	background: none;
-	border: none;
-}
-
-#tabs .ui-tabs-nav li a {
-	display: inline-block;
-	width: 100%;
+	list-style: none;
 	text-align: center;
+	font-size: 14px;
+	font-weight: 300;
+	padding: 1% 0;
+	cursor: pointer;
 }
+
+#tabs li.active {
+	background: #E78F08;
+	color: white;
+}
+
+#tabs li.active:hover {
+	background: #E7AF08;
+}
+
+
+#tabs li:hover {
+	background: #888888;
+	color: white;
+}
+
+
 
 #header div {
 	display: block;
@@ -355,25 +320,24 @@ ul.dynatree-container {
 	top: 0;
 	z-index: 1000;
 	cursor: pointer;
+	text-align: center;
 }
 
-.menu-toggle:after {
-	content: "";
-	display: block;
+.menu-toggle i {
+	line-height: 65px;
+	vertical-align: middle;
 	position: absolute;
-	width: 80%;
-	height: 5px;
-	background: white;
+	display: block;
+	margin: auto;
 	top: 0;
+	bottom: 0;
 	left: 0;
 	right: 0;
-	bottom: 0;
-	margin: auto;
-	box-shadow: 0 15px 0 white, 0 -15px 0 white;
 }
 
 .menu-toggle:hover {
 	background: #fbaa2b;
+	color: white;
 }
 
 #menu-toggle:checked ~ .body-wrapper {
@@ -421,4 +385,101 @@ footer {
 	color: white;
 	background: #888888;
 	padding: 10px;
+}
+
+.menu-header {
+	height: 65px;
+	background: #E78F08;
+	color: white;
+	font-weight: 300;
+	font-size: 20px;
+	text-transform: uppercase;
+	text-align: center;
+	line-height: 65px;
+}
+
+#panes {
+	background: white;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#panes > li {
+	display: none;
+}
+
+#panes > li ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+#panes > li ul li {
+	text-align: left;
+}
+
+#panes ul {
+	max-height: 0;
+	overflow: hidden;
+	margin-left: 5%;
+	-webkit-transition: max-height .5s, margin-left .5s;
+    transition: max-height .5s, margin-left .5s;
+}
+
+#panes ul li label {
+	padding: 2%;
+	border-bottom: 1px solid #DDDDDD;
+	display: inline-block;
+	width: 90%;
+	line-height: 15px;
+	margin:0 ;
+}
+
+#panes ul.active {
+	margin-left: 5%;
+	max-height: 3000px;
+	overflow: auto;
+}
+
+
+#panes > li ul li label input {
+	display: none;
+}
+
+#panes > li ul li .expand {
+	cursor: pointer;
+	display: inline-block;
+}
+
+
+#panes > li ul li .expand .plus, #panes > li ul li .expand.open .minus {
+	display: inline-block;
+}
+
+#panes > li ul li .expand.open .plus, #panes > li ul li .expand .minus {
+	display: none;
+}
+
+
+#panes > li ul li label .ui-input {
+	margin-right: 10px;
+	font-size: 20px;
+}
+
+#panes > li ul li label .ui-input .unchecked{
+	color: #aaaaaa;
+}
+
+#panes > li ul li label .ui-input .checked, #panes > li ul li label input:checked ~ .ui-input .unchecked {
+	display: none;
+}
+
+#panes > li ul li label input:checked ~ .ui-input .checked{
+	display: inline-block;
+	color: #3b68f3;
+}
+
+#panes > li.active {
+	display: block;
 }

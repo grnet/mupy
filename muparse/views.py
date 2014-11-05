@@ -91,7 +91,6 @@ def get_node_tree(request, user_id):
             ndict['children'] = []
             ndict['type'] = "node"
             parsed_node.append(graph.node)
-
         if graph.node.group not in parsed_group:
             if parsed_group:
                 nlist.sort(key=lambda item: item['title'], reverse=False)
@@ -105,17 +104,15 @@ def get_node_tree(request, user_id):
             grdict['children'] = []
             grdict['type'] = "group"
             parsed_group.append(graph.node.group)
-
         if graph.graph.category.name not in parsed_graph_category:
             if parsed_graph_category:
                 ndict['children'].append(gcdict)
             gcdict = {}
             gcdict['title'] = graph.graph.category.name
-            gcdict['key'] = "graphCategory_%s_%s" %(graph.node.pk, graph.graph.category.pk)
+            gcdict['key'] = 'graphCategory_%s_%s'  % (graph.node.pk, graph.graph.category.pk)
             gcdict['children'] = []
             gcdict['type'] = "graph_category"
             parsed_graph_category.append(graph.graph.category.name)
-
         gdict = {}
         gdict['type'] = "graph"
         gdict['title'] = graph.graph.name

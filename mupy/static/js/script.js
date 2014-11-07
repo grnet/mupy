@@ -47,7 +47,13 @@ $('document').ready(function () {
 			var html = '<ul class="active">';
 			$.getJSON(url, function (data) {
 				if (data.length === 0) {
-					alert('You have no access to any nodes... Please ask your admin to give you some!')
+					swal({
+						title: "No access",
+						text: "You have no access to any nodes... Please ask your admin to give you some!",
+						type: "warning",
+						confirmButtonClass: "btn-danger",
+						confirmButtonText: "OK",
+					});
 				}
 				for (var i=0; i < data.length; i++) {
 					html +='<li';
@@ -96,7 +102,7 @@ $('document').ready(function () {
 
 	$('#menu .item.saved_searches .menu-content').on('click', '.delete', function () {
 		$.getJSON($(this).data('url'), function (data) {
-			alert(data.result);
+			swal("Deleted", data.result, "success")
 			loadSavedSearches();
 		});
 	});
@@ -105,7 +111,7 @@ $('document').ready(function () {
 	$('#menu .item.saved_searches .menu-content').on('change', 'label input', function () {
 		$.getJSON($(this).closest('label').data('url'), function (data) {
 			if (data.errors) {
-				alert('Error');
+				swal('Error', 'An error occured', 'warning');
 			}
 			loadSavedSearches();
 		});
@@ -114,7 +120,7 @@ $('document').ready(function () {
 	$('#saveQueryForm').on('submit', function (e) {
 		e.preventDefault();
 		if (selected.length == 0){
-			alert('Select at least a graph from the left menu');
+			swal('Warning','Select at least a graph from the left menu', 'warning');
 		} else{
 			if ($.inArray($("#id_description").val(), []) != -1){
 				var r=confirm('There is a saved search with the same name: '+ $("#id_description").val()+ '\nPress OK to ovewrite or Cancel to cancel save');
@@ -131,7 +137,7 @@ $('document').ready(function () {
 		$("#id_display_type").val($('#tabs li').index($('#tabs li.active')));
 		var formData = $(this).serialize();
 		$.post($(this).data('post'), formData, function(out) {
-			alert(out.result);
+			swal('Success', out.result, 'success');
 			loadSavedSearches();
 		});
 	})
@@ -162,6 +168,8 @@ $('document').ready(function () {
 		loadSavedSearches(function () {
 			loadDefaultSearch();
 		});
+		swal('Acess Denied', 'You have no access to any nodes... Please ask your admin to give you some!', 'warning');
+
 	}
 
 	function refreshChecked() {

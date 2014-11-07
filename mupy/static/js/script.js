@@ -18,6 +18,8 @@ $('document').ready(function () {
 					html += 'data-img="' + data[i].url +'"';
 					html += 'data-page="' + data[i].pageurl + '"';
 					html += 'data-key="' + data[i].key + '"';
+					html += 'data-host="' + data[i].nodename + '"';
+					html += 'data-type="' + data[i].graphname + '"';
 				}
 				html += '><label><input type="checkbox"><span class="ui-input"><i class="checked fa fa-check-circle"></i><i class="unchecked fa fa-circle-thin"></i></span>'+ data[i].title + '</label>'
 				if (data[i].children) {
@@ -156,6 +158,7 @@ $('document').ready(function () {
 				current.find('input').prop('checked', 'checked');
 			}
 			$('.menu-header.submit').trigger('click');
+			refreshChecked();
 		});
 	});
 
@@ -168,7 +171,6 @@ $('document').ready(function () {
 		loadSavedSearches(function () {
 			loadDefaultSearch();
 		});
-		swal('Acess Denied', 'You have no access to any nodes... Please ask your admin to give you some!', 'warning');
 
 	}
 
@@ -205,14 +207,39 @@ $('document').ready(function () {
 		$('#menu').removeClass('initial');
 		var html = '';
 		var graphsDiv = $('#graphs');
+		var period = $('input:radio[name=period]:checked').val();
+		var grouping = $('input:radio[name=grouping]:checked').val();
+		var graphs = [];
 		$('#panes li.active li.last input:checked').each(function () {
 			var current = $(this).closest('li');
-			var period = $('input:radio[name=period]:checked').val();
 			var randomNo = Math.floor(Math.random()*9999999);
-			html += '<a class="col-4" href="' + current.data('page') + '" target="_blank"><img src="' + current.data('img') + '-' + period + '.png?r=' + randomNo + '"  width="479" height="280"></a>';
+			graphs.push({'host': current.data('host'), 'type': current.data('type'), 'html': '<a data-host="' + current.data('host') + '" class="col-4" href="' + current.data('page') + '" target="_blank"><h4>' + current.data('host') + ' - ' + current.data('type') + '</h4><img src="' + current.data('img') + '-' + period + '.png?r=' + randomNo + '"  width="479" height="280"></a>'});
 		});
+		if  (grouping === 'nodename') {
+			graphs.sort(function (a, b) {
+				if (a.host > b.host) {
+					return 1;
+				}
+				if (a.host < b.host) {
+					return -1;
+				}
+				return 0;
+			});
+		} else if (grouping === 'graphname') {
+			graphs.sort(function (a, b) {
+				if (a.type > b.type) {
+					return 1;
+				}
+				if (a.type < b.type) {
+					return -1;
+				}
+				return 0;
+			});
+		}
+		for (var item in graphs) {
+			html += graphs[item].html;
+		}
 		graphsDiv.html(html);
-
 	});
 
 	$('#panes li').on('change', 'ul li input', function () {

@@ -541,16 +541,16 @@ label {
 input[type="radio"] {
 	display: none;
 }
-input[type="radio"]:checked
+
 input[type="radio"]:checked ~ .ui-input .checked {
 	display: inline-block;
 	color: #3b68f3;
 }
 
- input[type="radio"] ~ .ui-input .unchecked {
+input[type="radio"] ~ .ui-input .unchecked {
 	display: inline-block;
 	color: #aaaaaa;
- }
+}
 
 input[type="radio"]:checked ~ .ui-input .unchecked, input[type="radio"] ~ .ui-input .checked{
 	display: none;

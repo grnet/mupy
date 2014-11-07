@@ -339,6 +339,7 @@ ul.dynatree-container {
 	min-height: 800px;
 	transition: width 0.5s, left 0.5s;
 	webkit-transition: width 0.5s, left 0.5s;
+	border-right: 1px solid #dddddd;
 
 }
 
@@ -600,4 +601,11 @@ textarea {
 	padding: 10px;
 	color: white;
 	cursor: pointer;
+}
+.profile {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin-bottom: 40px;
 }

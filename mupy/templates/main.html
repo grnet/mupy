@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block menu %}
-	<div class="menu-wrapper">
+	<div class="menu-wrapper {% if request.user.userprofile.read_only %} read_only {% endif %}">
 		<div class="header">
 			<a href="{% url home %}"><img src="{% static 'images/mupy_logo.png' %}" class="logoimg" height='104px'></a>
 		</div>
@@ -26,7 +26,7 @@
 				{% endfor %}
 			</div>
 		</div>
-		<div class="item">
+		<div class="item ">
 			<div class="menu-header">
 				<i class="fa fa-area-chart"></i><span>Graphs</span>
 			</div>
@@ -96,11 +96,6 @@
 		<div class="item">
 			<div class="menu-header submit hidden">
 				<span>Show <span class="selected"></span> graphs</span><i class="fa fa-arrow-right"></i>
-			</div>
-		</div>
-		<div class="item profile">
-			<div class="menu-header">
-				<i class="fa fa-user"></i><span><a href="{% url logout %}" id="logout">Logout</a></span>
 			</div>
 		</div>
 	</div>

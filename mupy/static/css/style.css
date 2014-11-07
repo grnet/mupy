@@ -291,7 +291,7 @@ ul.dynatree-container {
 	top: 0;
 	left: 0;
 	right: 0;
-	bottom: 0;
+	bottom: 80px;
 }
 
 .menu-toggle i {
@@ -608,4 +608,16 @@ textarea {
 	left: 0;
 	right: 0;
 	margin-bottom: 40px;
+}
+
+.read_only .delete {
+	display: none;
+}
+
+.read_only .item.save {
+	display: none;
+}
+
+.read_only .clear-selection {
+	display: none;
 }

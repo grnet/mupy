@@ -27,6 +27,7 @@ from django.core.exceptions import ImproperlyConfigured
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
     nodes = models.ManyToManyField(Node, blank=True, null=True)
+    read_only = models.BooleanField(default=True)
 
     def get_nodes(self):
         ret = ''

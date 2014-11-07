@@ -76,6 +76,41 @@ body{
     min-height: 410px;
 }
 
+#menu .item.saved_searches.hidden {
+	display: none;
+
+}
+
+#menu .item .menu-content a.loadsearch {
+	display: inline-block;
+	width: 80%;
+}
+
+a.loadsearch ~ label {
+	display: inline-block;
+	width: 10%;
+}
+
+#menu .item a.loadsearch ~ label input ~ .default-search {
+	display: none;
+}
+
+#menu .item a.loadsearch ~ label input:checked ~ .default-search {
+	display: inline-block;
+}
+
+#menu .item a.loadsearch ~ label input:checked ~ .default-search-empty {
+	display: none;
+}
+
+#menu .item a.loadsearch.active {
+	font-weight: 800;
+}
+#menu .item .menu-content a.loadsearch:hover {
+	background: white;
+	font-weight: 300;
+}
+
 .graph_blockfloat{
 	display: inline-block;
     margin-bottom: 5px;
@@ -94,19 +129,20 @@ body{
 	color:	#C77405;
 }
 
-.savedsearches_class a{
-	text-decoration: none;
-	color:	#1C94C4;
-}
-
-.savedsearches_class a:hover{
-	text-decoration: none;
-	color:	#C77405;
-}
 
 #deselect{
 	text-decoration: none;
 	color:	#1C94C4;
+}
+
+#save_dialog {
+	padding: 10px;
+}
+
+#save_dialog:after {
+	content: "";
+	display: table;
+	clear: both;
 }
 
 #deselect:hover{
@@ -154,33 +190,6 @@ body{
 	padding: 5px;
 }
 
-#save_dialog{
-	height: 40px;
-	border-top: 1px solid #DDDDDD;
-	padding-top: 10px;
-}
-
-#save_dialog input{
-	background: none repeat scroll 0 0 #FFFFFF;
-    border: 1px solid #DDDDDD;
-    border-radius: 3px 3px 3px 3px;
-    float: left;
-    outline: medium none;
-    width: 150px;
-    padding: 10px;
-}
-
-#save_dialog label {
-    color: #666666;
-    float: left;
-    font-weight: bold;
-    line-height: 26px;
-    margin-right: 15px;
-    text-align: right;
-    text-shadow: 1px 1px 1px #FFFFFF;
-    width: 110px;
-    padding-top: 5px;
-}
 
 .navbar-inverse {
 	background: #eeeeee;
@@ -213,7 +222,7 @@ ul.dynatree-container {
 }
 
 #tabs li {
-	width: 33.3%;
+	width: 50%;
 	margin: 0 !important;
 	float: left;
 	padding: 0;
@@ -266,19 +275,27 @@ ul.dynatree-container {
 }
 
 .menu-toggle {
-	width: 65px;
-	height: 65px;
+	width: 40px;
+	height: 40px;
 	background: #E78F08;
 	position: absolute;
-	right: -65px;
+	right: -40px;
 	top: 0;
 	z-index: 1000;
 	cursor: pointer;
 	text-align: center;
 }
+#menu > .menu-wrapper {
+	position: absolute;
+	overflow: auto;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
 
 .menu-toggle i {
-	line-height: 65px;
+	line-height: 40px;
 	vertical-align: middle;
 	position: absolute;
 	display: block;
@@ -298,6 +315,10 @@ ul.dynatree-container {
 	left: 30%;
 }
 
+#menu-toggle:checked ~ .body-wrapper #menu {
+	left: 0;
+}
+
 #menu-toggle:checked ~ .body-wrapper #menu:after {
 	width: 30%;
 	background: #eeeeee;
@@ -306,9 +327,13 @@ ul.dynatree-container {
 }
 
 #menu {
-	position: absolute;
+	position: fixed;
 	left: -30%;
 	width: 30%;
+	top: 0;
+	bottom: 0;
+	/*overflow-y: auto;
+	overflow-x:visible;*/
 	background: #EEEEEE;
 	z-index: 1000;
 	min-height: 800px;
@@ -381,7 +406,7 @@ footer {
 }
 
 .menu-header {
-	background: #cccccc;
+	background: #aaaaaa;
 	color: white;
 	font-weight: 300;
 	font-size: 15px;
@@ -389,6 +414,10 @@ footer {
 	text-align: center;
 	padding: 10px;
 	cursor: pointer;
+}
+
+.item.save.hidden {
+	display: none;
 }
 
 .menu-header > span {
@@ -500,11 +529,68 @@ footer {
 	display: none;
 }
 
+label {
+	cursor: pointer;
+}
+
 #panes > li ul li label input:checked ~ .ui-input .checked{
 	display: inline-block;
 	color: #3b68f3;
 }
 
+input[type="radio"] {
+	display: none;
+}
+input[type="radio"]:checked
+input[type="radio"]:checked ~ .ui-input .checked {
+	display: inline-block;
+	color: #3b68f3;
+}
+
+ input[type="radio"] ~ .ui-input .unchecked {
+	display: inline-block;
+	color: #aaaaaa;
+ }
+
+input[type="radio"]:checked ~ .ui-input .unchecked, input[type="radio"] ~ .ui-input .checked{
+	display: none;
+}
+
+
 #panes > li.active {
 	display: block;
+}
+
+#graphs a {
+	padding: 1%;
+	display: inline-block;
+	box-sizing: "border-box";
+}
+
+h5 {
+	text-align: center;
+}
+
+.options {
+	text-align: center;
+}
+
+textarea {
+	border: none;
+	border-radius: 0;
+	resize: none;
+	width: 100%;
+	border-bottom: 1px solid silver;
+	margin-bottom: 10px;
+}
+
+
+.default-search {
+	color: orange;
+}
+
+
+.delete {
+	color: red;
+	cursor: pointer;
 }

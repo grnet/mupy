@@ -17,7 +17,7 @@
 import json
 import bz2
 
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template.context import RequestContext
 from django.http import HttpResponse
 from muparse.models import *
@@ -30,32 +30,10 @@ from django.core.cache import cache
 
 
 @login_required
-def home(request, search_id=None):
-    result = None
-    if search_id:
-        savedsearches = SavedSearch.objects.get(pk=search_id)
-        graphs = []
-        if not request.user.is_superuser:
-            try:
-                nodes = request.user.get_profile().nodes.all()
-            except UserProfile.DoesNotExist:
-                raise Http404
-            graphs.extend(["%s"%(i.pk) for i in savedsearches.graphs.filter(node__in=nodes)])
-        else:
-            graphs.extend(["%s"%(i.pk) for i in savedsearches.graphs.all()])
-        graphs = ','.join(graphs)
-        result = {'result':graphs, 'display_type': savedsearches.display_type, 'description': savedsearches.description}
-    saved_searches = SavedSearch.objects.all().order_by('description')
-    if not request.user.is_superuser:
-        try:
-            nodes = request.user.get_profile().nodes.all()
-        except UserProfile.DoesNotExist:
-            raise Http404
-        saved_searches = saved_searches.filter(graphs__in=NodeGraphs.objects.filter(node__in=nodes)).distinct()
-    searches = []
-    if saved_searches:
-        searches.extend([s.description for s in saved_searches])
-    return render_to_response('main.html', {'saved':searches, "new_window": result}, context_instance = RequestContext(request))
+def home(request):
+    saved_searches = SavedSearch.objects.filter(user=request.user)
+    default = saved_searches.filter(default=True) or False
+    return render(request, 'main.html', {'saved': saved_searches, 'default': default})
 
 
 @login_required
@@ -228,6 +206,7 @@ def save_search(request):
         response = json.dumps({"result": "Errors: %s" %(form.errors), 'errors': "True"})
         return HttpResponse(response, mimetype="application/json")
 
+
 @login_required
 @never_cache
 def load_search(request, search_id=None):
@@ -245,21 +224,7 @@ def load_search(request, search_id=None):
     result = json.dumps({'result':graphs, 'display_type': savedsearches.display_type, 'description': savedsearches.description})
     return HttpResponse(result, mimetype="application/json")
 
-@login_required
-@never_cache
-def load_search_blank(request, search_id=None):
-    savedsearches = SavedSearch.objects.get(pk=search_id)
-    graphs = []
-    if not request.user.is_superuser:
-        try:
-            nodes = request.user.get_profile().nodes.all()
-        except UserProfile.DoesNotExist:
-            raise Http404
-        graphs.extend([int("%s"%(i.pk)) for i in savedsearches.graphs.filter(node__in=nodes)])
-    else:
-        graphs.extend([int("%s"%(i.pk)) for i in savedsearches.graphs.all()])
-    nodegraphs = NodeGraphs.objects.filter(pk__in=graphs)
-    return render_to_response('searches_window.html', {'graphs':nodegraphs}, context_instance =RequestContext(request))
+
 
 @login_required
 @never_cache
@@ -267,32 +232,39 @@ def delete_search(request, search_id=None):
     try:
         savedsearch = SavedSearch.objects.get(pk=search_id)
         savedsearch.delete()
-        response = json.dumps({"result": "Successfully deleted %s"%(savedsearch.description), 'errors': 'None'})
+        response = json.dumps({"result": "Successfully deleted %s" % (savedsearch.description), 'errors': False})
     except Exception as e:
-        response = json.dumps({"result": "Errors: %s" %(e), 'errors': "True"})
+        response = json.dumps({"result": "Errors: %s" % (e), 'errors': True})
     return HttpResponse(response, mimetype="application/json")
+
 
 @login_required
 @never_cache
 def saved_searches(request):
     searches = []
-    saved_searches = SavedSearch.objects.all().order_by('description')
-    searches = saved_searches
-    if not request.user.is_superuser:
-        try:
-            nodes = request.user.get_profile().nodes.all()
-        except UserProfile.DoesNotExist:
-            raise Http404
-        searches = []
-        saved_searches = saved_searches.filter(graphs__in=NodeGraphs.objects.filter(node__in=nodes)).distinct()
-        for s in saved_searches:
-            s_graphs = s.graphs.filter(node__in=nodes)
-            if s_graphs:
-                search_dict = {
-                               'pk': s.pk,
-                               'description': s.description,
-                               'graphs': s_graphs
-                               }
-                searches.append(search_dict)
-    return render_to_response('saved_searches.html', {"saved":searches}, context_instance =RequestContext(request))
+    saved_searches = SavedSearch.objects.filter(user=request.user).order_by('description')
+    for s in saved_searches:
+        searches.append({
+            'id': s.id,
+            'description': s.description,
+            'url': s.get_absolute_url(),
+            'default': s.default,
+            'default_url': s.get_default_url(),
+            'delete_url': s.get_delete_url()
+        })
+    return HttpResponse(json.dumps({"saved": searches}), mimetype="application/json")
 
+
+@login_required
+@never_cache
+def default_search(request, search_id):
+    default_searches = SavedSearch.objects.filter(user=request.user, default=True)
+    for search in default_searches:
+        search.default = False
+        search.save()
+    new_search = SavedSearch.objects.get(id=search_id, user=request.user)
+    if not new_search:
+        return HttpResponse(json.dumps({"erros": True, 'message': 'Permission Denied'}), mimetype="application/json")
+    new_search.default = True
+    new_search.save()
+    return HttpResponse(json.dumps({"erros": False}), mimetype="application/json")

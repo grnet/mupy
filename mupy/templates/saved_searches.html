@@ -1,7 +1,6 @@
 {% if saved %}
-						
-							{% for s in saved %}
-							
+	{% for s in saved %}
+
 							<div class="savedsearches_class">(<a href="#" id="deletesearch_{{s.pk}}" style="text-decoration:none">
 <img src="/static/images/icon_deletelink.gif" border="0">
 </a>) <a href="{% url home s.pk %}" id="newwindowsearch_{{s.pk}}" style="text-decoration:none" target="_blank">
@@ -10,7 +9,7 @@
 
 </div>
 							{% endfor %}
-						
+
 						{% else %}<span>no saved searches yet</span>
 						{% endif %}
 <script>
@@ -41,11 +40,11 @@ $("[id^=deletesearch_]").click(function(){
 	}
 	else{
 		$.getJSON(url, function(data){
-				alert(data.result)			
+				alert(data.result)
 				clearGraphData();
 				tab = 2;
 				$( "#tabs" ).tabs('load', tab);
-				
+
 			});
 	}
 	return false;

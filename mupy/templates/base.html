@@ -17,8 +17,8 @@
 		<input type="checkbox" id="menu-toggle">
 		<div class="body-wrapper">
 			{% block menu_button %}
-			<div id="menu" class="initial">
-				<label for="menu-toggle" class="menu-toggle"><i class="fa fa-navicon fa-4x"></i></label>
+			<div id="menu" {% if not default %} class="initial" {% endif %}>
+				<label for="menu-toggle" class="menu-toggle"><i class="fa fa-navicon fa-2x"></i></label>
 				{% block menu %}{% endblock %}
 				<footer>
 					Mupy v{{ version }}

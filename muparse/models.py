@@ -15,6 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.db import models
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 
 
 class MuninNodes(models.Model):
@@ -99,13 +101,24 @@ class NodeGraphs(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return u'%s:%s:%s' %(self.node, self.graph, self.baseurl)
+        return u'%s:%s:%s' % (self.node, self.graph, self.baseurl)
 
 
 class SavedSearch(models.Model):
     description = models.CharField(max_length=255)
     display_type = models.CharField(max_length=64)
     graphs = models.ManyToManyField(NodeGraphs, blank=True, null=True)
+    user = models.ForeignKey(User)
+    default = models.BooleanField(default=False)
+
+    def get_absolute_url(self):
+        return reverse('load_search', kwargs={'search_id': self.id})
+
+    def get_delete_url(self):
+        return reverse('delete_search', kwargs={'search_id': self.id})
+
+    def get_default_url(self):
+        return reverse('default_search', kwargs={'search_id': self.id})
 
     def __unicode__(self):
         return self.description

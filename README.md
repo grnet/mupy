@@ -12,6 +12,7 @@ data into a db and provides a friendly user interface for retrieving munin graph
 - parse multiple Munin instances
 - save a search and use it again later
 - set permissions, which hosts can be seen by a specific user.
+- set read only users who can only see assigned searches to them.
 
 
 ### Munin version compatibility
@@ -23,7 +24,7 @@ Mupy was built on Munin version 1.4.5, but is supports version 2 as well.
 ### Installation Requirements
 Mupy's installation and operation depends on the following modules/packages
 
-* python-django (>=1.4.5)
+* python-django (=1.4.5)
 * python-mysqldb
 * python-ldap (if ldap user auth is needed)
 * django_auth_ldap
@@ -80,7 +81,7 @@ the changes.
 
 ### Screenshot
 
-<img src="https://github.com/grnet/mupy/blob/master/mupy/static/images/mupy_screenshot.jpeg" alt="MuPy">
+<img src="https://github.com/grnet/mupy/blob/master/mupy/static/images/mupy-screenshot.png" alt="MuPy">
 
 ## Demo
 Feel free to play with the [demo](http://mupy-demo.grnet.gr/ "Mupy Demo") we have set up at `http://mupy-demo.grnet.gr`.

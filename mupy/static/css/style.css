@@ -456,7 +456,6 @@ footer {
 	display: none;
 }
 
-
 #panes > li .empty {
 	padding: 10px;
 	text-align: center;
@@ -592,5 +591,13 @@ textarea {
 
 .delete {
 	color: red;
+	cursor: pointer;
+}
+
+.clear-selection {
+	background: #e73f3f;
+	margin: 0;
+	padding: 10px;
+	color: white;
 	cursor: pointer;
 }

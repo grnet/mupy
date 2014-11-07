@@ -174,6 +174,11 @@ $('document').ready(function () {
 
 	}
 
+	$('.clear-selection').on('click', function () {
+		$('#menu #panes input:checked').prop('checked', '');
+		refreshChecked();
+	});
+
 	function refreshChecked() {
 		selected = [];
 		$('#panes li.active li.last input:checked').each(function () {
@@ -209,6 +214,7 @@ $('document').ready(function () {
 		var graphsDiv = $('#graphs');
 		var period = $('input:radio[name=period]:checked').val();
 		var grouping = $('input:radio[name=grouping]:checked').val();
+		var refresh = $('input:radio[name=refresh]:checked').val();
 		var graphs = [];
 		$('#panes li.active li.last input:checked').each(function () {
 			var current = $(this).closest('li');
@@ -239,7 +245,13 @@ $('document').ready(function () {
 		for (var item in graphs) {
 			html += graphs[item].html;
 		}
-		graphsDiv.html(html);
+		if (refresh !== '0') {
+			setInterval(function () {
+				graphsDiv.html(html);
+			}, parseInt(refresh, 10) * 60);
+		} else {
+			graphsDiv.html(html);
+		}
 	});
 
 	$('#panes li').on('change', 'ul li input', function () {

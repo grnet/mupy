@@ -5,9 +5,13 @@ from south.v2 import SchemaMigration
 from django.db import models
 
 class Migration(SchemaMigration):
-    
+
+    depends_on = (
+        ("accounts", "0001_initial"),
+    )
+
     def forwards(self, orm):
-        
+
         # Adding model 'NodeGroup'
         db.create_table('muparse_nodegroup', (
             ('url', self.gf('django.db.models.fields.CharField')(max_length=512)),
@@ -66,10 +70,10 @@ class Migration(SchemaMigration):
             ('nodegraphs', models.ForeignKey(orm['muparse.nodegraphs'], null=False))
         ))
         db.create_unique('muparse_savedsearch_graphs', ['savedsearch_id', 'nodegraphs_id'])
-    
-    
+
+
     def backwards(self, orm):
-        
+
         # Deleting model 'NodeGroup'
         db.delete_table('muparse_nodegroup')
 
@@ -90,8 +94,8 @@ class Migration(SchemaMigration):
 
         # Removing M2M table for field graphs on 'SavedSearch'
         db.delete_table('muparse_savedsearch_graphs')
-    
-    
+
+
     models = {
         'muparse.graph': {
             'Meta': {'object_name': 'Graph'},
@@ -135,5 +139,5 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         }
     }
-    
+
     complete_apps = ['muparse']

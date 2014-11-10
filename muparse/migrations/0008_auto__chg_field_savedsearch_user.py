@@ -7,6 +7,10 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ("accounts", "0002_auto__add_field_userprofile_read_only"),
+    )
+
     def forwards(self, orm):
 
         # Changing field 'SavedSearch.user'

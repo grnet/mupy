@@ -204,7 +204,7 @@ def save_search(request):
         response = json.dumps({"result": "Successfully saved %s graphs as %s"%(len(graph_pks), search.description), 'errors': None})
         return HttpResponse(response, mimetype="application/json")
     else:
-        response = json.dumps({"result": "Errors: %s" %(form.errors.as_text), 'errors': True})
+        response = json.dumps({"result": "Errors: %s" %(form.errors.as_text()), 'errors': True})
         return HttpResponse(response, mimetype="application/json")
 
 

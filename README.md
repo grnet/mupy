@@ -26,6 +26,7 @@ Mupy's installation and operation depends on the following modules/packages
 
 * python-django (=1.4.5)
 * python-mysqldb
+* python-requests
 * python-ldap (if ldap user auth is needed)
 * django_auth_ldap
 * python-bs4 (won't work with <4)

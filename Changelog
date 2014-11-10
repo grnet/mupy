@@ -4,6 +4,7 @@
 Requirements:
 	-south migration to include database changes
 	-changes in settings.py.dist: MUNIN_NODES (just remove version attribute)
+	-install python-requests
 
 Features:
 	-read only users (admin users can assign saved searches to read only users)

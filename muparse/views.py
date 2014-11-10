@@ -181,6 +181,7 @@ def get_node_tree_category(request, user_id):
     cache.set('user_%s_tree_cat'%(request.user.pk), bz2.compress(glist), 60 * 60 * 24 *5)
     return HttpResponse(glist, mimetype="application/json")
 
+
 @login_required
 @never_cache
 def save_search(request):
@@ -200,10 +201,10 @@ def save_search(request):
         search = form.save(commit=False)
         search.save()
         form.save_m2m()
-        response = json.dumps({"result": "Successfully saved %s graphs as %s"%(len(graph_pks), search.description), 'errors': 'None'})
+        response = json.dumps({"result": "Successfully saved %s graphs as %s"%(len(graph_pks), search.description), 'errors': None})
         return HttpResponse(response, mimetype="application/json")
     else:
-        response = json.dumps({"result": "Errors: %s" %(form.errors), 'errors': "True"})
+        response = json.dumps({"result": "Errors: %s" %(form.errors.as_text), 'errors': True})
         return HttpResponse(response, mimetype="application/json")
 
 

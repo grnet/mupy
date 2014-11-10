@@ -152,8 +152,12 @@ $('document').ready(function () {
 			$("#id_display_type").val($('#tabs li').index($('#tabs li.active')));
 			var formData = $(this).serialize();
 			$.post($(this).data('post'), formData, function(out) {
-				swal('Success', out.result, 'success');
-				loadSavedSearches();
+				if (out.errors) {
+					swal('Error', out.result, 'warning');
+				} else {
+					swal('Success', out.result, 'success');
+					loadSavedSearches();
+				}
 			});
 		})
 	}

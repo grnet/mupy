@@ -7,16 +7,20 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
-    depends_on = (
-        ("accounts", "0002_auto__add_field_userprofile_read_only"),
-    )
-
     def forwards(self, orm):
+        # Adding field 'SavedSearch.default'
+        db.add_column('muparse_savedsearch', 'default',
+                      self.gf('django.db.models.fields.BooleanField')(default=False),
+                      keep_default=False)
+
 
         # Changing field 'SavedSearch.user'
-        db.alter_column('muparse_savedsearch', 'user_id', self.gf('django.db.models.fields.related.ForeignKey')(default='', to=orm['auth.User']))
+        db.alter_column('muparse_savedsearch', 'user_id', self.gf('django.db.models.fields.related.ForeignKey')(default=1, to=orm['auth.User']))
 
     def backwards(self, orm):
+        # Deleting field 'SavedSearch.default'
+        db.delete_column('muparse_savedsearch', 'default')
+
 
         # Changing field 'SavedSearch.user'
         db.alter_column('muparse_savedsearch', 'user_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True))
@@ -107,6 +111,7 @@ class Migration(SchemaMigration):
         },
         'muparse.savedsearch': {
             'Meta': {'object_name': 'SavedSearch'},
+            'default': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'description': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'display_type': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
             'graphs': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['muparse.NodeGraphs']", 'null': 'True', 'blank': 'True'}),

@@ -1,4 +1,18 @@
 ===========
+1.0 RELEASE
+
+Requirements:
+	-south migration to include database changes
+	-changes in settings.py.dist: MUNIN_NODES (just remove version attribute)
+
+Features:
+	-read only users (admin users can assign saved searches to read only users)
+	-parse both munin v1.4 and v2 (autodiscover version)
+	-new UI
+	-default saved searches (shown by default)
+
+
+===========
 0.9 RELEASE
 New Feature (check Requirements)
 

@@ -66,6 +66,19 @@ Whenever a user is created, the administrator (set in the `ADMIN` in
 local_settings), receives an email notification to go and chose which hosts can
  be viewed by the new user. The new user cannot see any host by default.
 
+#### Read only users
+A user is read only by default. An admin can assign to him nodes and saved searches to watch through the admin interface.
+
+#### Searches
+After making a search, one can save it by clicking the save button on the menu.
+Then the search will appear in the searches section of the menu.
+
+A user can also select a default search, which will appear after the next login
+on the initial page.
+
+A search can be deleted by clicking the X button on its right, on the saved searches menu.
+
+
 ### Attention - Notes
 - If using sqlite3, migrations dont work, some changes must be made manually.
 

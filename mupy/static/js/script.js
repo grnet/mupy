@@ -4,6 +4,8 @@ $('document').ready(function () {
 	var readonly = $('.menu-wrapper').hasClass('read_only');
 	var menu = $('#menu');
 	var tabs = $('#tabs li');
+	var panes = $('#panes');
+	var panesli = panes.find('li');
 
 	$('body').addClass('loading');
 
@@ -49,14 +51,12 @@ $('document').ready(function () {
 	}
 
 	function loadTab(tab, callback) {
-		var panes = $('#panes');
-		var li = panes.find('li');
 		var firstLi = panes.find('> li');
 		$(tab).siblings().each(function () {
 			$(this).removeClass('active');
 		})
 		$(tab).addClass('active');
-		li.each(function () {
+		panesli.each(function () {
 			$(this).removeClass('active');
 		});
 		$(firstLi[tabs.index(tab)]).addClass('active');
@@ -184,7 +184,7 @@ $('document').ready(function () {
 		$('a.loadsearch').removeClass('active');
 		$(this).addClass('active');
 		ev.preventDefault();
-		$('#panes li input').prop('checked', '');
+		panesli.find('input').prop('checked', '');
 		$.getJSON($(this).prop('href'), function (data) {
 			var selectedItems = data.result.split(',');
 			$(tabs[data.display_type]).trigger('click');
@@ -248,7 +248,7 @@ $('document').ready(function () {
 		refreshChecked();
 	});
 
-	$('#panes li').on('click', '.expand', function () {
+	panesli.on('click', '.expand', function () {
 		$(this).toggleClass('open')
 		$(this).parent().find('> ul').toggleClass('active');
 	});
@@ -299,7 +299,7 @@ $('document').ready(function () {
 		}
 	});
 
-	$('#panes li').on('change', 'ul li input', function () {
+	panesli.on('change', 'ul li input', function () {
 		if ($(this).prop('checked')) {
 			$(this).closest('li').find('ul li input').each(function () {
 				$(this).prop('checked', 'checked');

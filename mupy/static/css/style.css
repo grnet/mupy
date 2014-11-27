@@ -433,9 +433,6 @@ footer {
 	cursor: pointer;
 }
 
-.item.save.hidden {
-	display: none;
-}
 
 .menu-header > span {
 	margin: 0 10px;
@@ -521,7 +518,7 @@ footer {
 	cursor: pointer;
 	display: inline-block;
 	font-weight: 800;
-	width: 80%;
+	width: 93%;
 }
 
 #panes > li ul li .expand i {
@@ -642,7 +639,9 @@ textarea {
 	left: 0;
 	right: 0;
 	margin-bottom: 124px;
+	color: silver;
 }
+
 
 .submit-search {
 	position: absolute;

@@ -74,6 +74,10 @@ local_settings), receives an email notification to go and chose which hosts can
 #### Read only users
 A user is read only by default. An admin can assign to him nodes and saved searches to watch through the admin interface.
 
+#### Limits
+If a user is assigned more than 1000 graphs then, mupy will be sloppy and irritating to use.
+So assigning too many graphs to a user is strongly discouraged.
+
 #### Searches
 After making a search, one can save it by clicking the save button on the menu.
 Then the search will appear in the searches section of the menu.

@@ -1,4 +1,14 @@
 ===========
+1.0.1 RELEASE
+
+Features:
+	-Document about htacces
+	-Show username in logout button
+
+Fixes:
+	-Discourage superusers from being able to see all the graphs, because mupy gets really slow
+
+===========
 1.0 RELEASE
 
 Requirements:

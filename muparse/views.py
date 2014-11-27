@@ -25,7 +25,7 @@ from muparse.forms import *
 from accounts.models import UserProfile
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.core.cache import cache
 
 
@@ -49,12 +49,11 @@ def get_node_tree(request, user_id):
     parsed_node = []
     parsed_group = []
     graphs = NodeGraphs.objects.all().select_related('node', 'graph', 'node__group', 'graph__category').order_by('node__group', 'node', 'graph__category__name')
-    if not request.user.is_superuser:
-        try:
-            nodes = request.user.get_profile().nodes.all()
-        except UserProfile.DoesNotExist:
-            raise Http404
-        graphs = graphs.filter(node__in=nodes)
+    try:
+        nodes = request.user.get_profile().nodes.all()
+    except UserProfile.DoesNotExist:
+        raise Http404
+    graphs = graphs.filter(node__in=nodes)
     len_graphs = len(graphs)
     for index, graph in enumerate(graphs):
         if graph.node not in parsed_node:

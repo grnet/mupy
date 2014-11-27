@@ -621,7 +621,9 @@ textarea {
 	background: #e73f3f;
 	margin: 0;
 	padding: 10px;
+	float: left;
 	color: white;
+	width: 100%;
 	cursor: pointer;
 }
 

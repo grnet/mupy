@@ -15,7 +15,6 @@
 				<i class="fa fa-area-chart"></i><span>Graphs</span>
 			</div>
 			<div class="menu-content">
-				<h5 class="clear-selection">Clear selection</h5>
 				<ul id="tabs" class="col-md-12">
 					<li data-href="{% url getjson_all user.pk %}" class="active">All</li>
 					<li data-href="{% url getjson_category user.pk %}">By Type</li>
@@ -32,6 +31,7 @@
 						</div>
 					</li>
 				</ul>
+				<h5 class="clear-selection hidden">Clear selection</h5>
 			</div>
 		</div>
 		<div class="item options">

@@ -230,7 +230,7 @@ $('document').ready(function () {
 			$('.menu-header.submit').removeClass('hidden');
 			$('.item.save').removeClass('hidden');
 			$('.menu-header.submit .selected').text(selected.length);
-			$('h5.clear-selection').remove('hidden');
+			$('h5.clear-selection').removeClass('hidden');
 		} else {
 			$('.menu-header.submit').addClass('hidden');
 			$('.item.save').addClass('hidden');

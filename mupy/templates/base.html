@@ -23,6 +23,7 @@
 				<label for="menu-toggle" class="menu-toggle"><i class="fa fa-navicon fa-2x"></i></label>
 				{% block menu %}{% endblock %}
 				<footer>
+					{% block static %}{% endblock %}
 					<div class="item profile">
 						<div class="menu-header">
 							<i class="fa fa-user"></i><span><a href="{% url logout %}" id="logout">Logout {{ request.user.username }}</a></span>

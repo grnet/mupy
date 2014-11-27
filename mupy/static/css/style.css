@@ -76,7 +76,7 @@ body{
     min-height: 410px;
 }
 
-#menu .item.saved_searches.hidden {
+.item.saved_searches.hidden {
 	display: none;
 
 }
@@ -291,7 +291,7 @@ ul.dynatree-container {
 	top: 0;
 	left: 0;
 	right: 0;
-	bottom: 80px;
+	bottom: 168px;
 }
 
 .menu-toggle i {
@@ -470,7 +470,9 @@ footer {
 
 #panes > li ul li {
 	text-align: left;
+	padding: 4px 0;
 }
+
 
 #panes ul {
 	max-height: 0;
@@ -481,11 +483,9 @@ footer {
 }
 
 #panes ul li label {
-	padding: 5px;
 	display: inline-block;
-	width: 90%;
-	line-height: 15px;
-	margin:0 ;
+	line-height: 10px;
+	margin: 0;
 	cursor: pointer;
 }
 
@@ -504,6 +504,11 @@ footer {
 #panes > li ul li .expand {
 	cursor: pointer;
 	display: inline-block;
+	font-weight: 800;
+}
+
+#panes > li ul li .expand i {
+	margin-left: 5px;
 }
 
 
@@ -518,7 +523,7 @@ footer {
 
 #panes > li ul li label .ui-input {
 	margin-right: 10px;
-	font-size: 20px;
+	font-size: 13px;
 }
 
 #panes > li ul li label .ui-input .unchecked{
@@ -602,12 +607,30 @@ textarea {
 	color: white;
 	cursor: pointer;
 }
+
 .profile {
 	position: absolute;
 	bottom: 0;
 	left: 0;
 	right: 0;
 	margin-bottom: 40px;
+}
+
+
+.saved_searches {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin-bottom: 124px;
+}
+
+.submit-search {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin-bottom: 82px;
 }
 
 .read_only .delete {
@@ -619,5 +642,9 @@ textarea {
 }
 
 .read_only .clear-selection {
+	display: none;
+}
+
+.clear-selection.hidden {
 	display: none;
 }

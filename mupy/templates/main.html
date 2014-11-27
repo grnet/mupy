@@ -10,22 +10,6 @@
 		<div class="header">
 			<a href="{% url home %}"><img src="{% static 'images/mupy_logo.png' %}" class="logoimg" height='104px'></a>
 		</div>
-		<div class="item saved_searches {% if not saved %}hidden{% endif %}" data-url="{% url saved_searches %}">
-			<div class="menu-header">
-				<i class="fa fa-heart"></i><span>Saved Searches</span>
-			</div>
-			<div class="menu-content">
-				{% for search in saved %}
-				<div>
-					<a class="loadsearch" href="{% url load_search search.id %}">{{ search }}</a><label data-url={{ search.get_default_url }}><input type="radio" name="default-search"><i class="fa default-search fa-star"></i><i class="fa default-search-empty fa-star-o"></i></label><i data-url={{ search.get_delete_url }} class="fa fa-times delete"></i>
-				</div>
-				{% empty%}
-				<div>
-					No saved Searches
-				</div>
-				{% endfor %}
-			</div>
-		</div>
 		<div class="item ">
 			<div class="menu-header">
 				<i class="fa fa-area-chart"></i><span>Graphs</span>
@@ -52,7 +36,7 @@
 		</div>
 		<div class="item options">
 			<div class="menu-header">
-				<i class="fa fa-cogs"></i><span>Views options</span>
+				<i class="fa fa-cogs"></i><span>Views settings</span>
 			</div>
 			<div class="menu-content">
 				<h5>Graph Period</h5>
@@ -62,7 +46,7 @@
 						<label><input type="radio" name="period" value="month"><span class="ui-input"><i class="checked fa fa-check-circle"></i><i class="unchecked fa fa-circle-thin"></i></span> month</label>
 						<label><input type="radio" name="period" value="year"><span class="ui-input"><i class="checked fa fa-check-circle"></i><i class="unchecked fa fa-circle-thin"></i></span> year</label>
 				</div>
-				<h5>Choose Grouping</h5>
+				<h5>Grouping</h5>
 				<div>
 					<label><input type="radio" name="grouping" value="nogroup" checked="checked"><span class="ui-input"><i class="checked fa fa-check-circle"></i><i class="unchecked fa fa-circle-thin"></i></span> none</label>
 					<label><input type="radio" name="grouping" value="nodename"><span class="ui-input"><i class="checked fa fa-check-circle"></i><i class="unchecked fa fa-circle-thin"></i></span> hostname</label>
@@ -93,10 +77,29 @@
 				</div>
 			</div>
 		</div>
-		<div class="item">
-			<div class="menu-header submit hidden">
-				<span>Show <span class="selected"></span> graphs</span><i class="fa fa-arrow-right"></i>
+	</div>
+{% endblock %}
+
+{% block static %}
+	<div class="item saved_searches {% if not saved %}hidden{% endif %}" data-url="{% url saved_searches %}">
+		<div class="menu-header">
+			<i class="fa fa-heart"></i><span>Saved Searches</span>
+		</div>
+		<div class="menu-content">
+			{% for search in saved %}
+			<div>
+				<a class="loadsearch" href="{% url load_search search.id %}">{{ search }}</a><label data-url={{ search.get_default_url }}><input type="radio" name="default-search"><i class="fa default-search fa-star"></i><i class="fa default-search-empty fa-star-o"></i></label><i data-url={{ search.get_delete_url }} class="fa fa-times delete"></i>
 			</div>
+			{% empty%}
+			<div>
+				No saved Searches
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+	<div class="item submit-search">
+		<div class="menu-header submit hidden">
+			<span>Show <span class="selected"></span> graphs</span><i class="fa fa-arrow-right"></i>
 		</div>
 	</div>
 {% endblock %}

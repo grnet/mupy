@@ -1,4 +1,3 @@
-
 $('document').ready(function () {
 	'use strict';
 	var selected = [];
@@ -26,9 +25,14 @@ $('document').ready(function () {
 				if (readonly) {
 					html += ' disabled '
 				}
-				html += '><span class="ui-input"><i class="checked fa fa-check-circle"></i><i class="unchecked fa fa-circle-thin"></i></span>'+ data[i].title + '</label>'
+				html += '><span class="ui-input"><i class="checked fa fa-check-circle"></i><i class="unchecked fa fa-circle-thin"></i></span></label>';
 				if (data[i].children) {
-					html += '<span class="expand"><i class="plus fa fa-plus-square"></i><i class="minus fa fa-minus-square"></i></span>';
+					html += '<span class="expand">'
+				}
+				html +=  data[i].title;
+				if (data[i].children) {
+
+					html += '<i class="plus fa fa-plus-square"></i><i class="minus fa fa-minus-square"></i></span>';
 					html += getChildren(data[i].children);
 				}
 				html +='</li>';
@@ -71,9 +75,13 @@ $('document').ready(function () {
 					if (readonly) {
 						html += ' disabled '
 					}
-					html += '><span class="ui-input"><i class="checked fa fa-check-circle"></i><i class="unchecked fa fa-circle-thin"></i></span>'+ data[i].title + '</label>'
+					html += '><span class="ui-input"><i class="checked fa fa-check-circle"></i><i class="unchecked fa fa-circle-thin"></i></span></label>'
 					if (data[i].children) {
-						html += '<span class="expand"><i class="plus fa fa-plus-square"></i><i class="minus fa fa-minus-square"></i></span>';
+						html += '<span class="expand">'
+					}
+					html +=  data[i].title;
+					if (data[i].children) {
+						html += '<i class="plus fa fa-plus-square"></i><i class="minus fa fa-minus-square"></i></span>';
 						html += getChildren(data[i].children);
 					}
 					html += '</li>';
@@ -211,6 +219,8 @@ $('document').ready(function () {
 		} else {
 			$('.menu-header.submit').addClass('hidden');
 			$('.item.save').addClass('hidden');
+			$('h5.clear-selection').addClass('hidden');
+
 		}
 	}
 

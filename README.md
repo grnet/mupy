@@ -62,6 +62,10 @@ The munin nodes are stored in the dictionary `MUNIN_NODES` in local_settings.py.
 Look at sample_local_settings for an example. If a node is older than v2 an extra
 attribute must be set, `version`. Nodes can also be added through the admin interface.
 
+#### htaccess
+If a node is under htaccess, then the `MUNIN_URL` one should set, must have the following form:
+`https://username:password@munin.node.org/`.
+
 ### Usage
 Whenever a user is created, the administrator (set in the `ADMIN` in
 local_settings), receives an email notification to go and chose which hosts can

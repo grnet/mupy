@@ -25,7 +25,7 @@
 				<footer>
 					<div class="item profile">
 						<div class="menu-header">
-							<i class="fa fa-user"></i><span><a href="{% url logout %}" id="logout">Logout</a></span>
+							<i class="fa fa-user"></i><span><a href="{% url logout %}" id="logout">Logout {{ request.user.username }}</a></span>
 						</div>
 					</div>
 					Mupy v{{ version }}

@@ -20,7 +20,7 @@ import bz2
 from django.shortcuts import render
 from django.template.context import RequestContext
 from django.http import HttpResponse
-from muparse.models import *
+from muparse.models import NodeGraphs
 from muparse.forms import *
 from accounts.models import UserProfile
 from django.views.decorators.cache import never_cache
@@ -36,10 +36,22 @@ def home(request):
     return render(request, 'main.html', {'saved': saved_searches, 'default': default})
 
 
+def common_start(sa, sb):
+    '''
+    returns the longest common substring from the beginning of sa and sb
+    '''
+    def _iter():
+        for a, b in zip(sa, sb):
+            if a == b:
+                yield a
+            else:
+                return
+
+    return ''.join(_iter())
+
+
 @login_required
-def get_node_tree(request, user_id):
-    if int(request.user.pk) != int(user_id):
-        raise Http404
+def get_node_tree(request):
     glist = cache.get('user_%s_tree' % (request.user.pk))
     if glist:
         glist = bz2.decompress(glist)
@@ -48,7 +60,12 @@ def get_node_tree(request, user_id):
     nlist = []
     parsed_node = []
     parsed_group = []
-    graphs = NodeGraphs.objects.all().select_related('node', 'graph', 'node__group', 'graph__category').order_by('node__group', 'node', 'graph__category__name')
+    graphs = NodeGraphs.objects.all().prefetch_related(
+        'node',
+        'graph',
+        'node__group',
+        'graph__category'
+    ).order_by('node__group', 'node', 'graph__category__name')
     try:
         nodes = request.user.get_profile().nodes.all()
     except UserProfile.DoesNotExist:
@@ -63,10 +80,11 @@ def get_node_tree(request, user_id):
                 nlist.append(ndict)
             ndict = {}
             ndict['title'] = graph.node.name
-            ndict['key'] = "node_%s" % (graph.node.pk)
-            ndict['href'] = graph.node.url
             ndict['children'] = []
-            ndict['type'] = "node"
+            # ndict['url'] = graph.node.url.replace(
+            #     common_start(graph.node.url, graph.baseurl),
+            #     ''
+            # )
             parsed_node.append(graph.node)
         if graph.node.group not in parsed_group:
             if parsed_group:
@@ -76,46 +94,35 @@ def get_node_tree(request, user_id):
                 nlist = []
             grdict = {}
             grdict['title'] = graph.node.group.name
-            grdict['key'] = "group_%s" % (graph.node.group.pk)
-            grdict['href'] = graph.node.group.url
             grdict['children'] = []
-            grdict['type'] = "group"
+            grdict['url'] = common_start(graph.baseurl, graph.node.url)
             parsed_group.append(graph.node.group)
         if graph.graph.category.name not in parsed_graph_category:
             if parsed_graph_category:
                 ndict['children'].append(gcdict)
             gcdict = {}
             gcdict['title'] = graph.graph.category.name
-            gcdict['key'] = 'graphCategory_%s_%s'  % (graph.node.pk, graph.graph.category.pk)
             gcdict['children'] = []
-            gcdict['type'] = "graph_category"
+            gcdict['url'] = graph.pageurl.replace(common_start(graph.baseurl, graph.node.url), '')
             parsed_graph_category.append(graph.graph.category.name)
         gdict = {}
-        gdict['type'] = "graph"
         gdict['title'] = graph.graph.name
-        gdict['nodename'] = graph.node.name
-        gdict['graphname'] = graph.graph.name
-        gdict['slug'] = graph.graph.slug
-        gdict['url'] = graph.baseurl
-        gdict['key'] = "graph_%s" %(graph.pk)
-        gdict['pageurl'] = graph.pageurl
-        gdict['nodeurl'] = graph.node.url
+        gdict['url'] = graph.baseurl.replace(common_start(graph.baseurl, graph.node.url), '')
+        gdict['key'] = 'graph_%s' % (graph.pk)
         gcdict['children'].append(gdict)
-        if (index == (len_graphs-1)):
+        if (index == (len_graphs - 1)):
             nlist.append(ndict)
-            nlist.sort(key=lambda item:item['title'], reverse=False)
-            grdict['children']= nlist
+            nlist.sort(key=lambda item: item['title'], reverse=False)
+            grdict['children'] = nlist
             grlist.append(grdict)
             ndict['children'].append(gcdict)
     glist = json.dumps(grlist)
-    cache.set('user_%s_tree'%(request.user.pk), bz2.compress(glist), 60 * 60 * 24 *5)
+    cache.set('user_%s_tree' % (request.user.pk), bz2.compress(glist), 60 * 60 * 24 *5)
     return HttpResponse(glist, mimetype="application/json")
 
 
 @login_required
-def get_node_tree_category(request, user_id):
-    if int(request.user.pk) != int(user_id):
-        raise Http404
+def get_node_tree_category(request):
     glist = cache.get('user_%s_tree_cat' % (request.user.pk))
     if glist:
         glist = bz2.decompress(glist)
@@ -123,7 +130,7 @@ def get_node_tree_category(request, user_id):
     grlist = []
     parsed_group = []
     parsed_graph_category = []
-    parsed_graph_name =[]
+    parsed_graph_name = []
     graphs = NodeGraphs.objects.all().select_related('node', 'graph', 'node__group', 'graph__category').order_by('graph__category__name', 'graph__name', 'node__group', 'node__name')
     if not request.user.is_superuser:
         try:
@@ -138,9 +145,8 @@ def get_node_tree_category(request, user_id):
                 grlist.append(gcdict)
             gcdict = {}
             gcdict['title'] = graph.graph.category.name
-            gcdict['key'] = "graphCategory_%s_%s" %(graph.node.pk, graph.graph.category.pk)
+            gcdict['key'] = "graphCategory_%s_%s" % (graph.node.pk, graph.graph.category.pk)
             gcdict['children'] = []
-            gcdict['type'] = "graph_category"
             parsed_graph_category.append(graph.graph.category.name)
 
         if graph.graph.name not in parsed_graph_name:
@@ -156,28 +162,28 @@ def get_node_tree_category(request, user_id):
         if graph.node.group.name not in parsed_group:
             grdict = {}
             grdict['title'] = graph.node.group.name
-            grdict['key'] = "group_%s" %(graph.node.group.pk)
-            grdict['href'] = graph.node.group.url
+            grdict['key'] = "group_%s" % (graph.node.group.pk)
+            # grdict['href'] = graph.node.group.url
             grdict['children'] = []
-            grdict['type'] = "group"
+            grdict['baseurl'] = graph.node.url
             gdict['children'].append(grdict)
             parsed_group.append(graph.node.group.name)
 
         ndict = {}
-        ndict['nodename'] = graph.node.name
+        # ndict['nodename'] = graph.node.name
         ndict['title'] = graph.node.name
         ndict['graphname'] = graph.graph.name
-        ndict['key'] = "graph_%s" %(graph.pk)
-        ndict['url'] = graph.baseurl
-        ndict['pageurl'] = graph.pageurl
-        ndict['nodeurl'] = graph.node.url
-        ndict['type'] = "graph"
+        ndict['key'] = "graph_%s" % (graph.pk)
+        # ndict['url'] = graph.baseurl
+        # ndict['pageurl'] = graph.pageurl
+        # ndict['nodeurl'] = graph.node.url
+        # ndict['type'] = "graph"
         grdict['children'].append(ndict)
 
-        if (index == (len_graphs-1)):
+        if (index == (len_graphs - 1)):
             grlist.append(gcdict)
     glist = json.dumps(grlist)
-    cache.set('user_%s_tree_cat'%(request.user.pk), bz2.compress(glist), 60 * 60 * 24 *5)
+    cache.set('user_%s_tree_cat' % (request.user.pk), bz2.compress(glist), 60 * 60 * 24 *5)
     return HttpResponse(glist, mimetype="application/json")
 
 
@@ -217,13 +223,12 @@ def load_search(request, search_id=None):
             nodes = request.user.get_profile().nodes.all()
         except UserProfile.DoesNotExist:
             raise Http404
-        graphs.extend(["%s"%(i.pk) for i in savedsearches.graphs.filter(node__in=nodes)])
+        graphs.extend(["%s" % (i.pk) for i in savedsearches.graphs.filter(node__in=nodes)])
     else:
-        graphs.extend(["%s"%(i.pk) for i in savedsearches.graphs.all()])
+        graphs.extend(["%s" % (i.pk) for i in savedsearches.graphs.all()])
     graphs = ','.join(graphs)
     result = json.dumps({'result':graphs, 'display_type': savedsearches.display_type, 'description': savedsearches.description})
     return HttpResponse(result, mimetype="application/json")
-
 
 
 @login_required

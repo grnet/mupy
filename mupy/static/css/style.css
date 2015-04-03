@@ -353,8 +353,6 @@ ul.dynatree-container {
 	background: #EEEEEE;
 	z-index: 1000;
 	min-height: 800px;
-	transition: width 0.5s, left 0.5s;
-	webkit-transition: width 0.5s, left 0.5s;
 	border-right: 1px solid #dddddd;
 
 }
@@ -396,15 +394,11 @@ ul.dynatree-container {
 	top: 0;
 	left: 0;
 	z-index: -1;
-	transition: width 0.5s;
-	-webkit-transition: width 0.5s;
 }
 
 .body-wrapper {
 	position: relative;
 	left: 0;
-	transition: left 0.5s;
-	-webkit-transition: left 0.5s;
 }
 
 footer {
@@ -447,8 +441,7 @@ footer {
 	max-height: 0;
 	overflow: hidden;
 	background: white;
-	-webkit-transition: max-height .5s, margin-left .5s;
-    transition: max-height .5s, margin-left .5s;
+
 }
 
 .menu-header.active ~ .menu-content {
@@ -491,8 +484,7 @@ footer {
 	max-height: 0;
 	overflow: hidden;
 	margin-left: 5%;
-	-webkit-transition: max-height .5s, margin-left .5s;
-    transition: max-height .5s, margin-left .5s;
+
 }
 
 #panes ul li label {

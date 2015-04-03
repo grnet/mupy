@@ -22,10 +22,12 @@ $('document').ready(function () {
 				if (!data[i].children) {
 					html += 'class="last"';
 					html += 'data-img="' + data[i].url +'"';
-					html += 'data-page="' + data[i].pageurl + '"';
 					html += 'data-key="' + data[i].key + '"';
-					html += 'data-host="' + data[i].nodename + '"';
-					html += 'data-type="' + data[i].graphname + '"';
+					html += 'data-type="' + data[i].title + '"';
+				} else {
+					if (data[i].url) {
+						html += 'data-url="' + data[i].url + '"';
+					}
 				}
 				html += '><label><input type="checkbox" ';
 				if (readonly) {
@@ -37,7 +39,6 @@ $('document').ready(function () {
 				}
 				html +=  data[i].title;
 				if (data[i].children) {
-
 					html += '<i class="plus fa fa-plus-square"></i><i class="minus fa fa-minus-square"></i></span>';
 					html += getChildren(data[i].children);
 				}
@@ -77,6 +78,9 @@ $('document').ready(function () {
 					html +='<li';
 					if (!data[i].children) {
 						html += 'class="last"';
+					}
+					if (data[i].url) {
+						html += ' data-url="' + data[i].url + '"';
 					}
 					html += '><label><input type="checkbox"';
 					if (readonly) {
@@ -264,7 +268,12 @@ $('document').ready(function () {
 		$('#panes li.active li.last input:checked').each(function () {
 			var current = $(this).closest('li');
 			var randomNo = Math.floor(Math.random()*9999999);
-			graphs.push({'host': current.data('host'), 'type': current.data('type'), 'html': '<a data-host="' + current.data('host') + '" class="col-4" href="' + current.data('page') + '" target="_blank"><h4>' + current.data('host') + ' - ' + current.data('type') + '</h4><img src="' + current.data('img') + '-' + period + '.png?r=' + randomNo + '"  width="479" height="280"></a>'});
+			var parents = $(this).parents().filter('li[data-url]');
+			var type = $(parents[0]);
+			var host = $(type.parents()[1]);
+			var baseurl = $(parents[1]).data('url');
+			console.log(baseurl);
+			graphs.push({'host': host.find('> span').text(), 'type': current.data('type'), 'html': '<a data-host="' + host.find('> span').text() + '" class="col-4" href="' + baseurl + type.data('url') + '" target="_blank"><h4>' + host.find('> span').text() + ' - ' + current.data('type') + '</h4><img src="' + baseurl + current.data('img') + '-' + period + '.png?r=' + randomNo + '"  width="479" height="280"></a>'});
 		});
 		if  (grouping === 'nodename') {
 			graphs.sort(function (a, b) {

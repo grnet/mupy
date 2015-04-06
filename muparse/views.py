@@ -81,10 +81,6 @@ def get_node_tree(request):
             ndict = {}
             ndict['title'] = graph.node.name
             ndict['children'] = []
-            # ndict['url'] = graph.node.url.replace(
-            #     common_start(graph.node.url, graph.baseurl),
-            #     ''
-            # )
             parsed_node.append(graph.node)
         if graph.node.group not in parsed_group:
             if parsed_group:

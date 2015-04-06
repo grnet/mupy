@@ -196,6 +196,9 @@ $('document').ready(function () {
 			for (var i in selectedItems) {
 				var current = items.filter('[data-key="graph_' + selectedItems[i] +'"]');
 				current.find('input').prop('checked', 'checked');
+				current.parents().filter('li').each(function (item) {
+					$(this).find('> label input').prop('checked', 'checked');
+				});
 			}
 			$('.menu-header.submit').trigger('click');
 			refreshChecked();
@@ -272,7 +275,6 @@ $('document').ready(function () {
 			var type = $(parents[0]);
 			var host = $(type.parents()[1]);
 			var baseurl = $(parents[1]).data('url');
-			console.log(baseurl);
 			graphs.push({'host': host.find('> span').text(), 'type': current.data('type'), 'html': '<a data-host="' + host.find('> span').text() + '" class="col-4" href="' + baseurl + type.data('url') + '" target="_blank"><h4>' + host.find('> span').text() + ' - ' + current.data('type') + '</h4><img src="' + baseurl + current.data('img') + '-' + period + '.png?r=' + randomNo + '"  width="479" height="280"></a>'});
 		});
 		if  (grouping === 'nodename') {

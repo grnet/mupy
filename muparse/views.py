@@ -18,14 +18,13 @@ import json
 import bz2
 
 from django.shortcuts import render
-from django.template.context import RequestContext
 from django.http import HttpResponse
 from muparse.models import NodeGraphs
 from muparse.forms import *
 from accounts.models import UserProfile
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404
 from django.core.cache import cache
 
 
@@ -91,7 +90,7 @@ def get_node_tree(request):
             grdict = {}
             grdict['title'] = graph.node.group.name
             grdict['children'] = []
-            grdict['url'] = common_start(graph.baseurl, graph.node.url)
+            grdict['baseurl'] = common_start(graph.baseurl, graph.node.url)
             parsed_group.append(graph.node.group)
         if graph.graph.category.name not in parsed_graph_category:
             if parsed_graph_category:
@@ -99,7 +98,7 @@ def get_node_tree(request):
             gcdict = {}
             gcdict['title'] = graph.graph.category.name
             gcdict['children'] = []
-            gcdict['url'] = graph.pageurl.replace(common_start(graph.baseurl, graph.node.url), '')
+            gcdict['nodeurl'] = graph.pageurl.replace(common_start(graph.baseurl, graph.node.url), '')
             parsed_graph_category.append(graph.graph.category.name)
         gdict = {}
         gdict['title'] = graph.graph.name
@@ -141,16 +140,14 @@ def get_node_tree_category(request):
                 grlist.append(gcdict)
             gcdict = {}
             gcdict['title'] = graph.graph.category.name
-            gcdict['key'] = "graphCategory_%s_%s" % (graph.node.pk, graph.graph.category.pk)
             gcdict['children'] = []
+            gcdict['nodeurl'] = graph.pageurl.replace(common_start(graph.baseurl, graph.node.url), '')
             parsed_graph_category.append(graph.graph.category.name)
 
         if graph.graph.name not in parsed_graph_name:
             parsed_group = []
             gdict = {}
-            gdict['type'] = "graph"
             gdict['title'] = graph.graph.name
-            gdict['slug'] = graph.graph.slug
             gdict['children'] = []
             gcdict['children'].append(gdict)
             parsed_graph_name.append(graph.graph.name)
@@ -158,24 +155,16 @@ def get_node_tree_category(request):
         if graph.node.group.name not in parsed_group:
             grdict = {}
             grdict['title'] = graph.node.group.name
-            grdict['key'] = "group_%s" % (graph.node.group.pk)
-            # grdict['href'] = graph.node.group.url
             grdict['children'] = []
-            grdict['baseurl'] = graph.node.url
+            grdict['baseurl'] = common_start(graph.baseurl, graph.node.url)
             gdict['children'].append(grdict)
             parsed_group.append(graph.node.group.name)
 
         ndict = {}
-        # ndict['nodename'] = graph.node.name
         ndict['title'] = graph.node.name
-        ndict['graphname'] = graph.graph.name
         ndict['key'] = "graph_%s" % (graph.pk)
-        # ndict['url'] = graph.baseurl
-        # ndict['pageurl'] = graph.pageurl
-        # ndict['nodeurl'] = graph.node.url
-        # ndict['type'] = "graph"
+        ndict['url'] = graph.baseurl.replace(common_start(graph.baseurl, graph.node.url), '')
         grdict['children'].append(ndict)
-
         if (index == (len_graphs - 1)):
             grlist.append(gcdict)
     glist = json.dumps(grlist)

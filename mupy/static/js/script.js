@@ -25,8 +25,11 @@ $('document').ready(function () {
 					html += 'data-key="' + data[i].key + '"';
 					html += 'data-type="' + data[i].title + '"';
 				} else {
-					if (data[i].url) {
-						html += 'data-url="' + data[i].url + '"';
+					if (data[i].nodeurl) {
+						html += 'data-nodeurl="' + data[i].nodeurl + '"';
+					}
+					if (data[i].baseurl) {
+						html += 'data-baseurl="' + data[i].baseurl + '"';
 					}
 				}
 				html += '><label><input type="checkbox" ';
@@ -79,8 +82,11 @@ $('document').ready(function () {
 					if (!data[i].children) {
 						html += 'class="last"';
 					}
-					if (data[i].url) {
-						html += ' data-url="' + data[i].url + '"';
+					if (data[i].baseurl) {
+						html += ' data-baseurl="' + data[i].baseurl + '"';
+					}
+					if (data[i].nodeurl) {
+						html += ' data-nodeurl="' + data[i].nodeurl + '"';
 					}
 					html += '><label><input type="checkbox"';
 					if (readonly) {
@@ -271,11 +277,9 @@ $('document').ready(function () {
 		$('#panes li.active li.last input:checked').each(function () {
 			var current = $(this).closest('li');
 			var randomNo = Math.floor(Math.random()*9999999);
-			var parents = $(this).parents().filter('li[data-url]');
-			var type = $(parents[0]);
-			var host = $(type.parents()[1]);
-			var baseurl = $(parents[1]).data('url');
-			graphs.push({'host': host.find('> span').text(), 'type': current.data('type'), 'html': '<a data-host="' + host.find('> span').text() + '" class="col-4" href="' + baseurl + type.data('url') + '" target="_blank"><h4>' + host.find('> span').text() + ' - ' + current.data('type') + '</h4><img src="' + baseurl + current.data('img') + '-' + period + '.png?r=' + randomNo + '"  width="479" height="280"></a>'});
+			var baseurl = $($(this).parents().filter('li[data-baseurl]')[0]).data('baseurl');
+			var host = $($(this).parents().filter('li[data-nodeurl]')[0]);
+			graphs.push({'host': host.find('> span').text(), 'type': current.data('type'), 'html': '<a data-host="' + host.find('> span').text() + '" class="col-4" href="' + baseurl + host.data('nodeurl') + '" target="_blank"><h4>' + host.find('> span').text() + ' - ' + current.data('type') + '</h4><img src="' + baseurl + current.data('img') + '-' + period + '.png?r=' + randomNo + '"  width="479" height="280"></a>'});
 		});
 		if  (grouping === 'nodename') {
 			graphs.sort(function (a, b) {

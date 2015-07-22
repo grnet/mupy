@@ -32,6 +32,10 @@ body.loading:after {
 }
 
 
+#graphs .graph {
+	height: 400px;
+}
+
 #tabs {
 	background: none;
 	border: none;
@@ -333,7 +337,6 @@ ul.dynatree-container {
 	bottom: 0;
 	background: #EEEEEE;
 	z-index: 1000;
-	min-height: 800px;
 	position: fixed;
 	float: left;
 }

@@ -8,45 +8,8 @@
 </a>&nbsp;&nbsp;<a href="#" id="savedsearch_{{s.pk}}" class="savedsearches_class">{{s.description}} ({{s.graphs.all|length}})</a>
 
 </div>
-							{% endfor %}
+{% endfor %}
 
-						{% else %}<span>no saved searches yet</span>
-						{% endif %}
-<script>
-$("[id^=savedsearch_]").click(function(){
-	id = this.id.replace("savedsearch_", '');
-	url = "{% url load_search %}";
-	url = url+""+id;
-	$.getJSON(url, function(data){
-			clearGraphData();
-			var array = data.result.split(',')
-			loaded_graphs = array;
-			tab = data.display_type;
-			$("#id_description").val(data.description);
-			$( "#tabs" ).tabs('select', tab);
-			$("#tree_menu_"+tab).dynatree("getTree").reload();
-		});
-	return false;
-});
-$("[id^=deletesearch_]").click(function(){
-	id = this.id.replace("deletesearch_", '');
-	name = $("#savedsearch_"+id).text();
-	url = "{% url delete_search %}";
-	url = url+""+id;
-	var r=confirm("You are about to delete search: "+name+"\n"
-			+"Press OK to continue or Cancel to cancel delete");
-	if (r==false){
-		return false;
-	}
-	else{
-		$.getJSON(url, function(data){
-				alert(data.result)
-				clearGraphData();
-				tab = 2;
-				$( "#tabs" ).tabs('load', tab);
+{% else %}<span>no saved searches yet</span>
+{% endif %}
 
-			});
-	}
-	return false;
-});
-</script>

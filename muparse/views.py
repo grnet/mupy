@@ -15,24 +15,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import json
-import bz2
 
 from django.shortcuts import render
 from django.http import HttpResponse
-from muparse.models import NodeGraphs
-# from muparse.forms import *
+from muparse.models import SavedSearch
+from muparse.forms import SavedSearchForm
 from accounts.models import UserProfile
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from django.core.cache import cache
 
 
 @login_required
 def home(request):
-    # saved_searches = SavedSearch.objects.filter(user=request.user)
-    # default = saved_searches.filter(default=True) or False
-    return render(request, 'main.html', {})
+    saved_search = SavedSearch.objects.filter(user=request.user, default=True)
+    if saved_search:
+        graphs = saved_search[0].graphs.all()
+    return render(request, 'main.html', {'graphs': graphs})
 
 
 @login_required
@@ -70,18 +69,15 @@ def save_search(request):
 @never_cache
 def load_search(request, search_id=None):
     savedsearches = SavedSearch.objects.get(pk=search_id)
-    graphs = []
     if not request.user.is_superuser:
         try:
             nodes = request.user.get_profile().nodes.all()
         except UserProfile.DoesNotExist:
             raise Http404
-        graphs.extend(["%s" % (i.pk) for i in savedsearches.graphs.filter(node__in=nodes)])
+        graphs = savedsearches.graphs.filter(node__in=nodes)
     else:
-        graphs.extend(["%s" % (i.pk) for i in savedsearches.graphs.all()])
-    graphs = ','.join(graphs)
-    result = json.dumps({'result':graphs, 'display_type': savedsearches.display_type, 'description': savedsearches.description})
-    return HttpResponse(result, mimetype="application/json")
+        graphs = savedsearches.graphs.all()
+    return render(request, 'partial/render_graphs.html', {'graphs': graphs})
 
 
 @login_required

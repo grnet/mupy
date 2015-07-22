@@ -100,6 +100,9 @@ class NodeGraphs(models.Model):
     pageurl = models.CharField(max_length=512)
     updated = models.DateTimeField(auto_now=True)
 
+    def img_url(self):
+        return '%s-day.png' % self.baseurl
+
     def __unicode__(self):
         return u'%s:%s:%s' % (self.node, self.graph, self.baseurl)
 
@@ -122,3 +125,17 @@ class SavedSearch(models.Model):
 
     def __unicode__(self):
         return self.description
+
+
+def common_start(sa, sb):
+    '''
+    returns the longest common substring from the beginning of sa and sb
+    '''
+    def _iter():
+        for a, b in zip(sa, sb):
+            if a == b:
+                yield a
+            else:
+                return
+
+    return ''.join(_iter())

@@ -1,7 +1,7 @@
 import bz2
 import json
 from django import template
-from muparse.models import SavedSearch, NodeGraphs
+from muparse.models import SavedSearch, NodeGraphs, common_start
 from django.core.cache import cache
 
 register = template.Library()
@@ -136,16 +136,3 @@ def load_graphs_by_type(context):
         cache.set('user_%s_tree_cat' % (request.user.pk), bz2.compress(glist), 60 * 60 * 24 *5)
     return {'nodes': grlist}
 
-
-def common_start(sa, sb):
-    '''
-    returns the longest common substring from the beginning of sa and sb
-    '''
-    def _iter():
-        for a, b in zip(sa, sb):
-            if a == b:
-                yield a
-            else:
-                return
-
-    return ''.join(_iter())

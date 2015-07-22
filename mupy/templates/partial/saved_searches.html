@@ -5,7 +5,7 @@
 	<div class="menu-content">
 		{% for search in saved %}
 		<div>
-			<a class="loadsearch {% if search in default %}default{% endif %}" href="{% url load_search search.id %}">{{ search }}</a><label><input type="radio" {% if search in default %} checked='checked'{% endif %} name="default-search"><i class="fa default-search fa-star"></i><i class="fa default-search-empty fa-star-o"></i></label><i data-url={{ search.get_delete_url }} class="fa fa-times delete"></i>
+			<a class="loadsearch {% if search in default %}default{% endif %}" href="{% url load_search search.id %}">{{ search }}</a><label data-url="{% url default_search search.id %}"><input type="radio" {% if search in default %} checked='checked'{% endif %} name="default-search"><i class="fa default-search fa-star"></i><i class="fa default-search-empty fa-star-o"></i></label><i data-url={{ search.get_delete_url }} class="fa fa-times delete"></i>
 		</div>
 		{% empty%}
 		<div>

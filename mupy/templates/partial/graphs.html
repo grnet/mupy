@@ -1,6 +1,6 @@
 <ul>
 	{% for node in nodes %}
-		<li>
+		<li {% if node.baseurl %}data-baseurl='{{ node.baseurl }}'{% endif %} {% if node.nodeurl %}data-nodeurl='{{ node.nodeurl }}'{% endif %}>
 			<label>
 				<input type="checkbox">
 				<span class="ui-input">
@@ -15,7 +15,7 @@
     		</span>
     		<ul>
     			{% for child in node.children %}
-    			<li>
+    			<li {% if not bytype %} data-nodename='{{ child.title }}'{% endif %}>
     				<label>
     				   	<input type="checkbox">
     				   		<span class="ui-input">
@@ -29,7 +29,7 @@
     				   	</span>
 		    			<ul>
 		    				{% for category in child.children %}
-		    				<li>
+		    				<li {% if category.nodeurl %}data-nodeurl="{{ category.nodeurl }}"{% endif %} {% if category.baseurl %}data-baseurl='{{ category.baseurl }}'{% endif %}>
 		                	<label>
 		                		<input type="checkbox">
 		                		<span class="ui-input">
@@ -44,7 +44,7 @@
 		                	</span>
 		                	<ul>
 		                		{% for graph in category.children %}
-		                		<li class="last" data-img="{{ graph.url }}" data-key="{{ graph.key }}" data-type="{{ graph.title }}">
+		                		<li class="last" {% if bytype %} data-nodename='{{ graph.title }}'{% endif %} data-img="{{ graph.url }}" data-key="{{ graph.key }}" data-type="{% if bytype %}{{ child.title }}{% else %}{{ graph.title }}{% endif %}">
                         			<label>
                         				<input type="checkbox">
                         				<span class="ui-input">

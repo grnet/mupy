@@ -43,6 +43,7 @@ def load_graphs(context):
                 parsed_graph_category = []
                 if parsed_node:
                     ndict['children'].append(gcdict)
+
                     nlist.append(ndict)
                 ndict = {}
                 ndict['title'] = graph.node.name
@@ -65,6 +66,7 @@ def load_graphs(context):
                 gcdict = {}
                 gcdict['title'] = graph.graph.category.name
                 gcdict['children'] = []
+                gcdict['nodeurl'] = graph.pageurl.replace(common_start(graph.baseurl, graph.node.url), '')
                 parsed_graph_category.append(graph.graph.category.name)
             gdict = {}
             gdict['title'] = graph.graph.name
@@ -134,5 +136,5 @@ def load_graphs_by_type(context):
                 grlist.append(gcdict)
         glist = json.dumps(grlist)
         cache.set('user_%s_tree_cat' % (request.user.pk), bz2.compress(glist), 60 * 60 * 24 *5)
-    return {'nodes': grlist}
+    return {'nodes': grlist, 'bytype': True}
 

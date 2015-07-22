@@ -6,21 +6,13 @@ body{
 }
 
 
-body.loading:after {
-	content: "Loading...";
-	display: block;
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: 0;
-	position: fixed;
-	background: #eeeeee;
-	opacity: 0.5;
-	z-index: 1000;
+#menu.loading {
+	background: #C0C0C0 none repeat scroll 0% 0%;
+	color: #FFF;
+	opacity: 0.1;
 	text-align: center;
-	padding: 20% 0;
-	font-size: 30px;
 	font-weight: 800;
+	padding: 20% 0px;
 }
 
 #mupy_container{
@@ -34,6 +26,10 @@ body.loading:after {
 
 #graphs .graph {
 	height: 400px;
+}
+
+#graphs .graph img {
+	max-width: 100%;
 }
 
 #tabs {
@@ -171,10 +167,6 @@ a.loadsearch ~ label {
 	color:	#C77405;
 }
 
-#logout{
-	text-decoration: none;
-	color:	#1C94C4;
-}
 
 #logout:hover{
 	text-decoration: none;
@@ -300,6 +292,19 @@ ul.dynatree-container {
 	float: left;
 	margin-left: 30%;
 }
+
+#mupy_page.full {
+	width: 100%;
+	margin-left: 0;
+	z-index: 1000000;
+}
+
+
+
+#mupy_page.full .close {
+	display: inline-block;
+}
+
 .menu-toggle {
 	width: 40px;
 	height: 40px;
@@ -336,7 +341,6 @@ ul.dynatree-container {
 	top: 0;
 	bottom: 0;
 	background: #EEEEEE;
-	z-index: 1000;
 	position: fixed;
 	float: left;
 }
@@ -390,6 +394,10 @@ footer {
 	bottom: 0;
 	left: 0;
 	right: 0;
+}
+
+footer a {
+	color: white;
 }
 
 .black {
@@ -612,14 +620,6 @@ textarea {
 	color: white;
 	width: 100%;
 	cursor: pointer;
-}
-
-.profile {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	margin-bottom: 40px;
 }
 
 

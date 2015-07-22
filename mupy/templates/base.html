@@ -16,22 +16,19 @@
 	<body>
 		<div class="body-wrapper clearfix">
 			{% block menu_button %}
-			<div id="menu">
+			<div id="menu" class="loading">
 				{% include 'partial/menu.html'%}
 				<div class="fixed">
-					<div class="item profile">
-						<div class="menu-header">
-							<i class="fa fa-user"></i><span><a href="{% url logout %}" id="logout">Logout {{ request.user.username }}</a></span>
-						</div>
-					</div>
 					<footer>
 						Mupy v{{ version }}
+							| <a href="{% url logout %}" id="logout"><i class="fa fa-user"></i> <span>Logout {{ request.user.username }}</span></a>
 					</footer>
 				</div>
 			</div>
 			{% endblock %}
 			<div id="mupy_page">
 				<div id="mupy_container" class="clearfix">
+					<span class="fullscreen"><i class="fa fa-bars fa-2x"></i></span>
 					{% block content %}{% endblock %}
 				</div>
 			</div>

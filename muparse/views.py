@@ -69,15 +69,18 @@ def save_search(request):
 @never_cache
 def load_search(request, search_id=None):
     savedsearches = SavedSearch.objects.get(pk=search_id)
+    graphs = []
     if not request.user.is_superuser:
         try:
             nodes = request.user.get_profile().nodes.all()
         except UserProfile.DoesNotExist:
             raise Http404
-        graphs = savedsearches.graphs.filter(node__in=nodes)
+        graphs.extend(["%s" % (i.pk) for i in savedsearches.graphs.filter(node__in=nodes)])
     else:
-        graphs = savedsearches.graphs.all()
-    return render(request, 'partial/render_graphs.html', {'graphs': graphs})
+        graphs.extend(["%s" % (i.pk) for i in savedsearches.graphs.all()])
+    graphs = ','.join(graphs)
+    result = json.dumps({'result': graphs, 'display_type': savedsearches.display_type, 'description': savedsearches.description})
+    return HttpResponse(result, mimetype="application/json")
 
 
 @login_required

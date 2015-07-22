@@ -1,4 +1,14 @@
 ===========
+1.1 RELEASE
+
+Fixes:
+	- Improve the generall speed of the ui
+	- Now every user has access in all nodes by default
+	- Remove read only feature for some users
+	- Load default search while fetching available graphs
+	- Small redesign
+
+===========
 1.0.2 RELEASE
 
 Fixes:

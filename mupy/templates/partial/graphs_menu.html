@@ -1,0 +1,14 @@
+{% load mupy_tags %}
+<ul id="tabs" class="col-md-12">
+	<li class="active">All</li>
+	<li>By Type</li>
+</ul>
+<ul id="panes"  class="col-md-12">
+	<li class="active">
+		{% load_graphs %}
+	</li>
+	<li>
+		{% load_graphs_by_type %}
+	</li>
+</ul>
+<h5 class="clear-selection hidden">Clear selection</h5>

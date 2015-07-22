@@ -651,3 +651,7 @@ textarea {
 	left: 0;
 	right: 70%;
 }
+
+.fa.hidden {
+	display: none;
+}

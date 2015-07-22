@@ -2,9 +2,7 @@ import bz2
 import json
 from django import template
 from muparse.models import SavedSearch, NodeGraphs
-from accounts.models import UserProfile
 from django.core.cache import cache
-from muparse.views import common_start
 
 register = template.Library()
 
@@ -17,7 +15,7 @@ def show_saved_searches(context):
 
 
 @register.inclusion_tag('partial/graphs.html', takes_context=True)
-def load_graphs(context, by_type=False):
+def load_graphs(context):
     request = context.get('request')
     glist = cache.get('user_%s_tree' % (request.user.pk))
     if glist:
@@ -81,4 +79,73 @@ def load_graphs(context, by_type=False):
                 ndict['children'].append(gcdict)
         glist = json.dumps(grlist)
         cache.set('user_%s_tree' % (request.user.pk), bz2.compress(glist), 60 * 60 * 24 *5)
-    return {'nodes': grlist, 'by_type': by_type}
+    return {'nodes': grlist}
+
+
+@register.inclusion_tag('partial/graphs.html', takes_context=True)
+def load_graphs_by_type(context):
+    request = context.get('request')
+    glist = cache.get('user_%s_tree_cat' % (request.user.pk))
+    if glist:
+        grlist = json.loads(bz2.decompress(glist))
+    else:
+        grlist = []
+        gcdict = {}
+        parsed_group = []
+        parsed_graph_category = []
+        parsed_graph_name = []
+        graphs = NodeGraphs.objects.all().select_related('node', 'graph', 'node__group', 'graph__category').order_by('graph__category__name', 'graph__name', 'node__group', 'node__name')
+        if not request.user.is_superuser:
+            nodes = request.user.get_profile().nodes.all()
+            graphs = graphs.filter(node__in=nodes)
+        len_graphs = len(graphs)
+        for index, graph in enumerate(graphs):
+            if graph.graph.category.name not in parsed_graph_category:
+                if parsed_graph_category:
+                    grlist.append(gcdict)
+                gcdict = {}
+                gcdict['title'] = graph.graph.category.name
+                gcdict['children'] = []
+                gcdict['nodeurl'] = graph.pageurl.replace(common_start(graph.baseurl, graph.node.url), '')
+                parsed_graph_category.append(graph.graph.category.name)
+
+            if graph.graph.name not in parsed_graph_name:
+                parsed_group = []
+                gdict = {}
+                gdict['title'] = graph.graph.name
+                gdict['children'] = []
+                gcdict['children'].append(gdict)
+                parsed_graph_name.append(graph.graph.name)
+
+            if graph.node.group.name not in parsed_group:
+                grdict = {}
+                grdict['title'] = graph.node.group.name
+                grdict['children'] = []
+                grdict['baseurl'] = common_start(graph.baseurl, graph.node.url)
+                gdict['children'].append(grdict)
+                parsed_group.append(graph.node.group.name)
+
+            ndict = {}
+            ndict['title'] = graph.node.name
+            ndict['key'] = "graph_%s" % (graph.pk)
+            ndict['url'] = graph.baseurl.replace(common_start(graph.baseurl, graph.node.url), '')
+            grdict['children'].append(ndict)
+            if (index == (len_graphs - 1)):
+                grlist.append(gcdict)
+        glist = json.dumps(grlist)
+        cache.set('user_%s_tree_cat' % (request.user.pk), bz2.compress(glist), 60 * 60 * 24 *5)
+    return {'nodes': grlist}
+
+
+def common_start(sa, sb):
+    '''
+    returns the longest common substring from the beginning of sa and sb
+    '''
+    def _iter():
+        for a, b in zip(sa, sb):
+            if a == b:
+                yield a
+            else:
+                return
+
+    return ''.join(_iter())

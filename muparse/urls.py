@@ -18,8 +18,7 @@ from django.conf.urls.defaults import patterns, include, url
 urlpatterns = patterns(
     '',
     url(r'^/?$', 'muparse.views.home', name='home'),
-    url(r'^json_cat/$', 'muparse.views.get_node_tree_category', name='getjson_category'),
-    url(r'^json/$', 'muparse.views.get_node_tree', name='getjson_all'),
+    url(r'^menu/$', 'muparse.views.get_menu', name='menu'),
     url(r'^savedsearch/$', 'muparse.views.save_search', name='save_search'),
     url(r'^savedearches/$', 'muparse.views.saved_searches', name='saved_searches'),
     url(r'^loadsearch/(?P<search_id>\d+)/?$', 'muparse.views.load_search', name='load_search'),

@@ -5,24 +5,13 @@
 		<div class="header">
 			<a href="{% url home %}"><img src="{% static 'images/mupy_logo.png' %}" class="logoimg" height='104px'></a>
 		</div>
-		<div class="item ">
+		<div class="item graphs">
 			<div class="menu-header active">
-				<i class="fa fa-area-chart"></i><span>Graphs</span>
+				<i class="fa fa-area-chart"></i><span>Graphs</span><i class="fa fa-spinner  fa-spin loading"></i>
+
 			</div>
-			<div class="menu-content">
-				<ul id="tabs" class="col-md-12">
-					<li data-href="{% url getjson_all %}" class="active">All</li>
-					<li data-href="{% url getjson_category %}">By Type</li>
-				</ul>
-				<ul id="panes"  class="col-md-12">
-					<li class="active">
-						{% load_graphs %}
-					</li>
-					<li>
-						load_graphs by_type='True'
-					</li>
-				</ul>
-				<h5 class="clear-selection hidden">Clear selection</h5>
+			<div class="menu-content" id="graphs_menu" data-url='{% url menu %}'>
+
 			</div>
 		</div>
 		<div class="item options">

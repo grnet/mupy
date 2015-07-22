@@ -631,18 +631,6 @@ textarea {
 
 }
 
-.read_only .delete {
-	display: none;
-}
-
-.read_only .item.save {
-	display: none;
-}
-
-.read_only .clear-selection {
-	display: none;
-}
-
 .clear-selection.hidden {
 	display: none;
 }

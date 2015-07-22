@@ -24,14 +24,22 @@ from accounts.models import UserProfile
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
+from muparse.models import NodeGraphs
 
 
 @login_required
 def home(request):
-    saved_search = SavedSearch.objects.filter(user=request.user, default=True)
+    saved_search = SavedSearch.objects.filter(user=request.user)
     if saved_search:
+        default = saved_search.filter(default=True)
+        if default:
+            saved_search = default
         graphs = saved_search[0].graphs.all()
-    return render(request, 'main.html', {'graphs': graphs})
+    else:
+        nodes = request.user.get_profile().nodes.all()
+        graphs = NodeGraphs.objects.filter(node__in=nodes)[:50]
+        default = False
+    return render(request, 'main.html', {'graphs': graphs, 'default': default})
 
 
 @login_required
@@ -58,10 +66,10 @@ def save_search(request):
         search = form.save(commit=False)
         search.save()
         form.save_m2m()
-        response = json.dumps({"result": "Successfully saved %s graphs as %s"%(len(graph_pks), search.description), 'errors': None})
+        response = json.dumps({"result": "Successfully saved %s graphs as %s" % (len(graph_pks), search.description), 'errors': None})
         return HttpResponse(response, mimetype="application/json")
     else:
-        response = json.dumps({"result": "Errors: %s" %(form.errors.as_text()), 'errors': True})
+        response = json.dumps({"result": "Errors: %s" % (form.errors.as_text()), 'errors': True})
         return HttpResponse(response, mimetype="application/json")
 
 

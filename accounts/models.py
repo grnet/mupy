@@ -21,13 +21,11 @@ from django.db.models.signals import post_save
 from django.core.mail import send_mail
 from django.conf import settings
 from muparse.models import Node
-from django.core.exceptions import ImproperlyConfigured
 
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
     nodes = models.ManyToManyField(Node, blank=True, null=True)
-    read_only = models.BooleanField(default=True)
 
     def get_nodes(self):
         ret = ''
@@ -51,7 +49,8 @@ class UserProfile(models.Model):
 
 def create_user_profile(sender, instance, created, **kwargs):
     if created and not kwargs.get('raw', False):
-        UserProfile.objects.create(user=instance)
+        profile = UserProfile.objects.create(user=instance)
+        [profile.nodes.add(node) for node in Node.objects.all()]
         to_emails = [admin[1] for admin in settings.ADMINS]
         try:
             send_mail(
@@ -61,14 +60,10 @@ def create_user_profile(sender, instance, created, **kwargs):
                 ),
                 settings.DEFAULT_FROM_EMAIL,
                 to_emails,
-                fail_silently=False
+                # fail_silently=False
             )
         except:
-            raise ImproperlyConfigured(
-                'Account Created. Could not notify'
-                ' admin about user creation. Please make sure django can'
-                ' send Emails'
-            )
+            pass
 
 
 post_save.connect(create_user_profile, sender=User, dispatch_uid='create_UserProfile')

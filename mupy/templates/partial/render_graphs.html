@@ -1,8 +1,9 @@
+{% if not default %}
+<div class="alert alert-danger" role="alert">There is no default search yet. Please Select graphs and save/star your selection.</div>
+{% endif %}
 {% for graph in graphs %}
 		<a class="col-md-4 graph" target="_blank" href="{{ graph.node.url }}">
 			<h4>{{ graph.node.name }} - {{ graph.graph.name }}</h4>
 			<img src="{{ graph.img_url }}" alt="">
 		</a>
-{% empty %}
-There is no default search yet. Please Select graphs and save/star your selection.
 {% endfor %}

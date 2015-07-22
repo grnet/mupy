@@ -20,7 +20,7 @@ import bz2
 from django.shortcuts import render
 from django.http import HttpResponse
 from muparse.models import NodeGraphs
-from muparse.forms import *
+# from muparse.forms import *
 from accounts.models import UserProfile
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
@@ -30,9 +30,9 @@ from django.core.cache import cache
 
 @login_required
 def home(request):
-    saved_searches = SavedSearch.objects.filter(user=request.user)
-    default = saved_searches.filter(default=True) or False
-    return render(request, 'main.html', {'saved': saved_searches, 'default': default})
+    # saved_searches = SavedSearch.objects.filter(user=request.user)
+    # default = saved_searches.filter(default=True) or False
+    return render(request, 'main.html', {})
 
 
 def common_start(sa, sb):

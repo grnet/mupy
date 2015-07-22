@@ -28,6 +28,7 @@ body.loading:after {
 	clear: both;
     content: ".";
     display: block;
+    border-left: 1px solid #dddddd;
 }
 
 
@@ -109,16 +110,14 @@ a.loadsearch ~ label {
 	width: 10%;
 }
 
-#menu .item a.loadsearch ~ label input ~ .default-search {
-	display: none;
-}
 
-#menu .item a.loadsearch ~ label input:checked ~ .default-search {
-	display: inline-block;
-}
-
-#menu .item a.loadsearch ~ label input:checked ~ .default-search-empty {
-	display: none;
+#menu > .menu-wrapper {
+    position: absolute;
+    overflow: auto;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 90px;
 }
 
 #menu .item a.loadsearch.active {
@@ -292,6 +291,11 @@ ul.dynatree-container {
 	display: none;
 }
 
+#mupy_page {
+	width: 70%;
+	float: left;
+	margin-left: 30%;
+}
 .menu-toggle {
 	width: 40px;
 	height: 40px;
@@ -303,14 +307,7 @@ ul.dynatree-container {
 	cursor: pointer;
 	text-align: center;
 }
-#menu > .menu-wrapper {
-	position: absolute;
-	overflow: auto;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 168px;
-}
+
 
 .menu-toggle i {
 	line-height: 40px;
@@ -329,37 +326,16 @@ ul.dynatree-container {
 	color: white;
 }
 
-#menu-toggle:checked ~ .body-wrapper {
-	left: 30%;
-}
-
-#menu-toggle:checked ~ .body-wrapper #menu {
-	left: 0;
-}
-
-#menu-toggle:checked ~ .body-wrapper #menu:after {
-	width: 30%;
-	background: #eeeeee;
-	height: 65px;
-
-}
 
 #menu {
-	position: fixed;
-	left: -30%;
 	width: 30%;
 	top: 0;
 	bottom: 0;
 	background: #EEEEEE;
 	z-index: 1000;
 	min-height: 800px;
-	border-right: 1px solid #dddddd;
-
-}
-
-#menu.initial {
-	width: 100%;
-	left: 0;
+	position: fixed;
+	float: left;
 }
 
 
@@ -399,6 +375,7 @@ ul.dynatree-container {
 .body-wrapper {
 	position: relative;
 	left: 0;
+	background: #EEEEEE;
 }
 
 footer {
@@ -446,6 +423,7 @@ footer {
 
 .menu-header.active ~ .menu-content {
 	max-height: 4000px;
+	overflow: auto;
 }
 
 .menu-header.active, .menu-header:hover {
@@ -495,7 +473,7 @@ footer {
 }
 
 
-#panes ul.active {
+#panes li.active > ul  {
 	margin-left: 5%;
 	max-height: 3000px;
 	overflow: auto;
@@ -518,11 +496,11 @@ footer {
 }
 
 
-#panes > li ul li .expand .plus, #panes > li ul li .expand.open .minus {
+#panes > li ul li > .expand  .plus, #panes > li ul li.active > .expand .minus {
 	display: inline-block;
 }
 
-#panes > li ul li .expand.open .plus, #panes > li ul li .expand .minus {
+#panes > li ul li.active > .expand .plus, #panes > li ul li > .expand .minus {
 	display: none;
 }
 
@@ -556,6 +534,23 @@ input[type="radio"] {
 input[type="radio"]:checked ~ .ui-input .checked {
 	display: inline-block;
 	color: #3b68f3;
+}
+
+
+input[type="radio"]:checked ~ .default-search {
+	display: inline-block;
+}
+
+input[type="radio"]:checked ~ .default-search-empty {
+	display: none;
+}
+
+input[type="radio"] ~ .default-search {
+	display: none;
+}
+
+input[type="radio"] ~ .default-search-empty {
+	display: inline-block;
 }
 
 input[type="radio"] ~ .ui-input .unchecked {
@@ -625,22 +620,12 @@ textarea {
 }
 
 
-.saved_searches {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	margin-bottom: 124px;
-	color: silver;
+.menu-header.submit {
+	background: #00d86d;
 }
+.menu-header.submit:hover {
+	background: green;
 
-
-.submit-search {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	margin-bottom: 82px;
 }
 
 .read_only .delete {
@@ -657,4 +642,12 @@ textarea {
 
 .clear-selection.hidden {
 	display: none;
+}
+
+
+.fixed {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 70%;
 }

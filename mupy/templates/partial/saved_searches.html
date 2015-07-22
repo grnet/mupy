@@ -1,0 +1,16 @@
+<div class="item saved_searches {% if not saved %}hidden{% endif %}" data-url="{% url saved_searches %}">
+	<div class="menu-header">
+		<i class="fa fa-heart"></i><span>Saved Searches</span>
+	</div>
+	<div class="menu-content">
+		{% for search in saved %}
+		<div>
+			<a class="loadsearch" href="{% url load_search search.id %}">{{ search }}</a><label data-url={{ search.get_default_url }}><input type="radio" {% if search in default %} checked='checked'{% endif %} name="default-search"><i class="fa default-search fa-star"></i><i class="fa default-search-empty fa-star-o"></i></label><i data-url={{ search.get_delete_url }} class="fa fa-times delete"></i>
+		</div>
+		{% empty%}
+		<div>
+			No saved Searches
+		</div>
+		{% endfor %}
+	</div>
+</div>

@@ -12,35 +12,34 @@
 
     <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}" />
     <title>Mupy</title>
-    <script src="{% static 'js/jquery/jquery.js' %}" type="text/javascript"></script>
-	{% block extrahead %}{% endblock %}
 	</head>
 	<body>
-		<input type="checkbox" id="menu-toggle">
-		<div class="body-wrapper">
+		<div class="body-wrapper clearfix">
 			{% block menu_button %}
-			<div id="menu" {% if not default %} class="initial" {% endif %}>
-				<label for="menu-toggle" class="menu-toggle"><i class="fa fa-navicon fa-2x"></i></label>
-				{% block menu %}{% endblock %}
-				<footer>
-					{% block static %}{% endblock %}
+			<div id="menu">
+				{% include 'partial/menu.html'%}
+				<div class="fixed">
 					<div class="item profile">
 						<div class="menu-header">
 							<i class="fa fa-user"></i><span><a href="{% url logout %}" id="logout">Logout {{ request.user.username }}</a></span>
 						</div>
 					</div>
-					Mupy v{{ version }}
-				</footer>
+					<footer>
+						Mupy v{{ version }}
+					</footer>
+				</div>
 			</div>
 			{% endblock %}
 			<div id="mupy_page">
-				<div id="mupy_container">
+				<div id="mupy_container" class="clearfix">
 					{% block content %}{% endblock %}
 				</div>
 			</div>
 		</div>
 	</body>
+    <script src="{% static 'js/jquery/jquery.js' %}" type="text/javascript"></script>
     <script src='{% static 'js/bootstrap.min.js' %}' type="text/javascript"></script>
 	<script src='{% static 'js/jquery/jquery.cookie.js' %}' type="text/javascript"></script>
     <script src="{% static 'js/sweet-alert/sweet-alert.min.js' %}" type="text/javascript"></script>
+	{% block extrajs %}{% endblock %}
 </html>

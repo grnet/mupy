@@ -1,0 +1,69 @@
+<ul>
+	{% for node in nodes %}
+		<li>
+			<label>
+				<input type="checkbox">
+				<span class="ui-input">
+					<i class="checked fa fa-check-circle"></i>
+    				<i class="unchecked fa fa-circle-thin"></i>
+    			</span>
+    		</label>
+    		<span class="expand">
+    			{{ node.title }}
+    			<i class="plus fa fa-plus-square"></i>
+    			<i class="minus fa fa-minus-square"></i>
+    		</span>
+    		<ul>
+    			{% for child in node.children %}
+    			<li>
+    				<label>
+    				   	<input type="checkbox">
+    				   		<span class="ui-input">
+    				   			<i class="checked fa fa-check-circle"></i>
+    				   			<i class="unchecked fa fa-circle-thin"></i>
+    				   		</span>
+    				   	</label>
+    				   	<span class="expand">{{ child.title }}
+    				   		<i class="plus fa fa-plus-square"></i>
+    				   		<i class="minus fa fa-minus-square"></i>
+    				   	</span>
+		    			<ul>
+		    				{% for category in child.children %}
+		    				<li>
+		                	<label>
+		                		<input type="checkbox">
+		                		<span class="ui-input">
+		                			<i class="checked fa fa-check-circle"></i>
+		                			<i class="unchecked fa fa-circle-thin"></i>
+		                		</span>
+		                	</label>
+		                	<span class="expand">
+		                		{{ category.title }}
+		                		<i class="plus fa fa-plus-square"></i>
+		                		<i class="minus fa fa-minus-square"></i>
+		                	</span>
+		                	<ul>
+		                		{% for graph in category.children %}
+		                		<li class="last" data-img="{{ graph.url }}" data-key="{{ graph.key }}" data-type="{{ graph.title }}">
+                        			<label>
+                        				<input type="checkbox">
+                        				<span class="ui-input">
+                        					<i class="checked fa fa-check-circle"></i>
+                        					<i class="unchecked fa fa-circle-thin"></i>
+                        				</span>
+                        			</label>
+                        			{{ graph.title }}
+		                		</li>
+		                		{% endfor %}
+		                	</ul>
+		                </li>
+		                {% endfor %}
+		            </ul>
+    			</li>
+    			{% endfor %}
+    		</ul>
+		</li>
+	{% empty %}
+		<li>No nodes found</li>
+	{% endfor %}
+</ul>

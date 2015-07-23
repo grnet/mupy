@@ -9,10 +9,10 @@ Its functionality is pretty straightforward. It parses the HTML DOM of a munin s
 data into a db and provides a friendly user interface for retrieving munin graphs.
 
 ### Features
+- compare graphs side by side
 - parse multiple Munin instances
 - save a search and use it again later
 - set permissions, which hosts can be seen by a specific user.
-- set read only users who can only see assigned searches to them.
 
 
 ### Munin version compatibility
@@ -43,12 +43,12 @@ create an alias for the static dir in your apache conf and a WSGI script alias e
 		Alias /static       /<installation_location>/mupy/static
 		WSGIScriptAlias /      /<installation_location>/mupy/apache/django.wsgi
 
-3. Copy `sample_local_settings.py` to `local_settings.py`
+3. Copy `local_settings.py.dist` to `local_settings.py`
 4. Run `./manage.py syncdb --noinput`
 5. Run `./manage.py migrate`
 6. Run `./manage.py createsuperuser`
 7. Run `./manage.py collectstatic`
-8. Add the nodes you need to parse. See Adding Nodes.
+8. Add the nodes you need to parse. See Adding Nodes section.
 9. Run `./manage.py parse_munin` to parse the `MUNIN_URL` and store data into db. A daily cronjob of this command is suggested.
 10. Restart Apache (or `touch apache/django.wsgi`) and enjoy
 
@@ -71,9 +71,6 @@ Whenever a user is created, the administrator (set in the `ADMIN` in
 local_settings), receives an email notification to go and chose which hosts can
  be viewed by the new user. The new user cannot see any host by default.
 
-#### Read only users
-A user is read only by default. An admin can assign to him nodes and saved searches to watch through the admin interface.
-
 #### Limits
 If a user is assigned more than 1000 graphs then, mupy will be sloppy and irritating to use.
 So assigning too many graphs to a user is strongly discouraged.
@@ -89,8 +86,6 @@ A search can be deleted by clicking the X button on its right, on the saved sear
 
 
 ### Attention - Notes
-- If using sqlite3, migrations dont work, some changes must be made manually.
-
 - If using ldap without groups, all new users are marked as inactive by default. This will change in future releases.
 
 #### Selecting which hosts can be viewed by users

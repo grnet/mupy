@@ -2,17 +2,26 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 PROJECT_DIR = os.path.join(BASE_DIR, 'mupy')
 
-DEBUG = True
+# Debug is used in order to show tracebacks in the browser.
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
+
+# The addresses django should be waiting for connections
+# '*' means accept connections from everyone
 ALLOWED_HOSTS = ['*']
 
+# Insert some random characters here.
+# Used to create csrf certificate.
 SECRET_KEY = ''
 
+
+# admin emails
 ADMINS = (
     ('example', 'foo@example.org'),
 )
 
+# The address from which you want mupy to send emails
 DEFAULT_FROM_EMAIL = 'foo@bar.com'
 
 # db connection info
@@ -33,6 +42,7 @@ STATIC_URL = '/static/'
 
 TIME_ZONE = 'Europe/Athens'
 
+# Caches
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
@@ -43,9 +53,13 @@ CACHES = {
     # },
 }
 
-# how many days should we keep data in the db
+# how many days should we keep scraped data in the db
+# After this limit, the saved graphs will be deleted.
 DATA_EXPIRES = '2'
 
+# avaialable munin_nodes:
+# Format:
+# version (1 or 2), {name, url, cgi, image_path}
 MUNIN_NODES = (
     (
         1, {
@@ -67,7 +81,7 @@ MUNIN_NODES = (
 
 
 AUTHENTICATION_BACKENDS = (
-    'django_auth_ldap.backend.LDAPBackend',
+    # 'django_auth_ldap.backend.LDAPBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -140,5 +154,3 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 #     "is_staff": "cn=staff, ou=Groups, dc=foo, dc=bar, dc=org",
 #     "is_superuser": "cn=NOC, ou=Groups,dc=foo, dc=bar, dc=org"
 # }
-
-

@@ -291,6 +291,7 @@ ul.dynatree-container {
 	width: 70%;
 	float: left;
 	margin-left: 30%;
+	transition: all 1s;
 }
 
 #mupy_page.full {

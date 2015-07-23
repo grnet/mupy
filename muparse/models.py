@@ -36,6 +36,10 @@ class MuninNodes(models.Model):
             'image_path': self.image_path
         }
 
+    class Meta:
+        verbose_name_plural = "Munin Node"
+        verbose_name_plural = "Munin Nodes"
+
 
 class NodeGroup(models.Model):
     name = models.CharField(max_length=255)
@@ -58,6 +62,7 @@ class GraphCategory(models.Model):
 
     class Meta:
         ordering = ['name']
+        verbose_name_plural = "Graph Categories"
 
 
 class Graph(models.Model):
@@ -106,6 +111,9 @@ class NodeGraphs(models.Model):
     def __unicode__(self):
         return u'%s:%s:%s' % (self.node, self.graph, self.baseurl)
 
+    class Meta:
+        verbose_name_plural = "Node Graphs"
+
 
 class SavedSearch(models.Model):
     description = models.CharField(max_length=255)
@@ -125,6 +133,9 @@ class SavedSearch(models.Model):
 
     def __unicode__(self):
         return self.description
+
+    class Meta:
+        verbose_name_plural = "Saved Searches"
 
 
 def common_start(sa, sb):

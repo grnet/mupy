@@ -57,9 +57,7 @@ CACHES = {
 # After this limit, the saved graphs will be deleted.
 DATA_EXPIRES = '2'
 
-# avaialable munin_nodes:
-# Format:
-# version (1 or 2), {name, url, cgi, image_path}
+# available munin_nodes. Nodes can be added through the admin interface.
 MUNIN_NODES = (
     (
         1, {

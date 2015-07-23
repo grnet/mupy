@@ -299,6 +299,10 @@ ul.dynatree-container {
 	z-index: 1000000;
 }
 
+.fullscreen:hover {
+	cursor: pointer;
+}
+
 
 
 #mupy_page.full .close {

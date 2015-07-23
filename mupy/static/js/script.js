@@ -8,6 +8,7 @@ $('document').ready(function () {
 	var panes;
 	var graphsMenu = menu.find('#graphs_menu');
 	var selected = [];
+	var sortable = Sortable.create($('#graphs')[0]);
 
 	$('.fullscreen').on('click', function () {
 		$('#mupy_page').toggleClass('full');
@@ -50,6 +51,8 @@ $('document').ready(function () {
 	menu.find('.menu-header').on('click', function () {
 		$(this).toggleClass('active');
 	});
+
+
 
 
 	// Graphs tree
@@ -150,6 +153,8 @@ $('document').ready(function () {
 		} else {
 			graphsDiv.html(html);
 		}
+		sortable.destroy();
+		sortable = Sortable.create($('#graphs')[0]);
 	});
 
 	// delete saved search

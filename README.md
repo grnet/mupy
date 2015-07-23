@@ -33,6 +33,11 @@ Mupy's installation and operation depends on the following modules/packages
 * memcached
 * python-django-south
 
+#### Pip
+pip install -r requirements.txt
+
+### Configuring and installing MuPy
+
 1. Untar the package (or clone via git) to your desired location, copy sample_local_settings.py to local_settings.py, apache/django.wsgi.dist to local files ommiting dist and edit loca_settings.py and apache/django.wsgi according to your needs. Pay special attention to:
 	- `MUNIN_URL` : url that munin welcome page lives, eg. "http://munin.example.com"
 	- `MUNIN_CGI_PATH` : if images are updated frequently (without the need to visit) then set the cgi path here, eg. "cgi-bin/munin-cgi-graph/"
@@ -44,6 +49,7 @@ create an alias for the static dir in your apache conf and a WSGI script alias e
 		WSGIScriptAlias /      /<installation_location>/mupy/apache/django.wsgi
 
 3. Copy `local_settings.py.dist` to `local_settings.py`
+4. edit `local_settings.py`
 4. Run `./manage.py syncdb --noinput`
 5. Run `./manage.py migrate`
 6. Run `./manage.py createsuperuser`

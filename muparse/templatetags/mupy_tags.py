@@ -10,9 +10,13 @@ register = template.Library()
 @register.inclusion_tag('partial/saved_searches.html', takes_context=True)
 def show_saved_searches(context):
     user = context.get('request').user
-    saved_searches = SavedSearch.objects.filter(user=user)
-    default = saved_searches.filter(default=True) or False
-    return {'saved': saved_searches, 'default': default}
+    try:
+        saved_searches = SavedSearch.objects.filter(user=user)
+    except:
+        saved_searches =  SavedSearch.objects.none()
+    finally:
+        default = saved_searches.filter(default=True) or False
+        return {'saved': saved_searches, 'default': default}
 
 
 @register.inclusion_tag('partial/graphs.html', takes_context=True)
